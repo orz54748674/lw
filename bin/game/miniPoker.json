@@ -1,0 +1,72 @@
+[
+  {
+    "Name": "no",
+    "PrizeType": 0,
+    "Odds": 0,
+    "Example": [],
+    "Description": ""
+  },
+  {
+    "Name": "2j,(>=J)",
+    "PrizeType": 1,
+    "Odds": 270,
+    "Example": [],
+    "Description": ""
+  },
+  {
+    "Name": "2-2,(2-2-1)",
+    "PrizeType": 2,
+    "Odds": 500,
+    "Example": [],
+    "Description": ""
+  },
+  {
+    "Name": "3-1-1",
+    "PrizeType": 3,
+    "Odds": 800,
+    "Example": [],
+    "Description": ""
+  },
+  {
+    "Name": "1-2-3-4-5",
+    "PrizeType": 4,
+    "Odds": 1300,
+    "Example": [],
+    "Description": ""
+  },
+  {
+    "Name": "one color",
+    "PrizeType": 5,
+    "Odds": 2000,
+    "Example": [],
+    "Description": ""
+  },
+  {
+    "Name": "3-2",
+    "PrizeType": 6,
+    "Odds": 5000,
+    "Example": [],
+    "Description": ""
+  },
+  {
+    "Name": "4-1",
+    "PrizeType": 7,
+    "Odds": 15000,
+    "Example": [],
+    "Description": ""
+  },
+  {
+    "Name": "one color(1-2-3-4-5)",
+    "PrizeType": 8,
+    "Odds": 100000,
+    "Example": [],
+    "Description": ""
+  },
+  {
+    "Name": "one color(1-2-3-4-5,有J)",
+    "PrizeType": 9,
+    "Odds": 1000000,
+    "Example": [],
+    "Description": ""
+  }
+]

@@ -1,0 +1,68 @@
+package slotLs
+
+import (
+	"vn/common/errCode"
+	"vn/common/protocol"
+	"vn/common/utils"
+	"vn/framework/mqant-modules/room"
+	"vn/framework/mqant/gate"
+	"vn/framework/mqant/log"
+	"vn/game"
+	vGate "vn/gate"
+	"vn/storage/userStorage"
+)
+
+func (this *MyTable) Enter(session gate.Session,msg map[string]interface{})  (err error) {
+	player := &room.BasePlayerImp{}
+	player.Bind(session)
+
+	player.OnRequest(session)
+	userID := session.GetUserID()
+	if !this.BroadCast{
+		this.BroadCast = true
+	}
+	if userID == ""{
+		log.Info("your userid is empty")
+		return nil
+	}
+	modeType := ModeType(msg["modeType"].(string))
+	this.Players[userID] = player
+	this.UserID = userID
+	user := userStorage.QueryUserId(utils.ConvertOID(userID))
+	if user.Type == userStorage.TypeNormal{
+		this.Role = USER
+	}
+	this.Name = user.NickName
+
+	if modeType == NORMAL && this.ModeType != Free{
+		this.ModeType = NORMAL
+	}
+	if this.ModeType != Free && modeType != TRIALFREE{
+		this.JieSuanData = JieSuanData{}
+		this.JieSuanDataFree = JieSuanData{}
+		this.JieSuanDataTrial = JieSuanData{}
+		this.JieSuanDataTrialFree = JieSuanData{}
+	}
+	tableInfoRet := this.GetTableInfo()
+	_ = this.sendPack(session.GetSessionID(),game.Push,tableInfoRet,protocol.UpdateTableInfo,nil)
+	//end := time.Now().UnixNano()
+	//log.Info("cost time = %d",time.Duration(end -start) / time.Millisecond)
+	return nil
+}
+func (this *MyTable) QuitTable(session gate.Session)  (err error)  {
+	userID := session.GetUserID()
+	sb := vGate.QuerySessionBean(userID)
+	if this.IsInFreeGame(){
+		if sb != nil {
+			this.sendPack(session.GetSessionID(), game.Push, "", protocol.QuitTable, errCode.XiaZhuCantQuit)
+		}
+		return nil
+	}
+	ret := this.DealProtocolFormat("",protocol.QuitTable,nil)
+	this.onlinePush.SendCallBackMsgNR([]string{sb.SessionId}, game.Push, ret)
+	this.onlinePush.ExecuteCallBackMsg(this.Trace())
+	if !this.IsInCheckout{
+		this.PutQueue(protocol.ClearTable)
+	}
+	return nil
+}

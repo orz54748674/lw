@@ -1,0 +1,240 @@
+{
+  "Settings": {
+    "MongodbHost": "172.19.0.7:27017",
+    "MongodbDB": "vn",
+    "MongodbUser": "vnuser",
+    "MongodbPassword": "Ibdj782_vn_",
+    "MysqlDns": "root:opop2M@tcp(127.0.0.1:4306)/vn?charset=utf8mb4&parseTime=True&loc=Local",
+    "httpPort": 8080,
+    "tcpPort": 9001,
+    "wssPort": 9002,
+    "loginTokenExpire": 7,
+    "sessionExpireSecond": 60,
+    "newUserBalance": 1000000,
+    "smsCodeExpireSecond": 90,
+    "mongoIncDataExpireDay": 30,
+    "devProxy": "",
+    "env": "prod",
+    "ipWhiteList": "127.0.0.1,192.168.1.1",
+    "adminIp": "127.0.0.1"
+  },
+  "Module": {
+    "hello": [
+      {
+        "Id": "Hello01",
+        "ProcessID": "development"
+      }
+    ],
+    "admin": [
+      {
+        "Id": "admin01",
+        "ProcessID": "development"
+      }
+    ],
+    "http_gate": [
+      {
+        "Id": "http01",
+        "ProcessID": "development"
+      }
+    ],
+    "Gate": [
+      {
+        "Id": "Gate01",
+        "ProcessID": "development"
+      }
+    ],
+    "yxx": [
+      {
+        "Id": "yxx01",
+        "ProcessID": "development"
+      }
+    ],
+    "fish": [
+      {
+        "Id": "fish01",
+        "ProcessID": "development"
+      }
+    ],
+    "bjl": [
+      {
+        "Id": "bjl01",
+        "ProcessID": "development"
+      }
+    ],
+    "roshambo": [
+      {
+        "Id": "roshambo01",
+        "ProcessID": "development"
+      }
+    ],
+    "guessBigSmall": [
+      {
+        "Id": "guessBigSmall01",
+        "ProcessID": "development"
+      }
+    ],
+    "sd": [
+      {
+        "Id": "sd01",
+        "ProcessID": "development"
+      }
+    ],
+    "dx": [
+      {
+        "Id": "dxRoom01",
+        "ProcessID": "development"
+      }
+    ],
+    "chat": [
+      {
+        "Id": "chat01",
+        "ProcessID": "development"
+      }
+    ],
+    "lobby": [
+      {
+        "Id": "lobby01",
+        "ProcessID": "development"
+      }
+    ],
+    "pay": [
+      {
+        "Id": "pay01",
+        "ProcessID": "development"
+      }
+    ],
+    "cardSss": [
+      {
+        "Id": "cardSss01",
+        "ProcessID": "development"
+      }
+    ],
+    "cardCddS": [
+      {
+        "Id": "cardCddS01",
+        "ProcessID": "development"
+      }
+    ],
+    "mini_poker": [
+      {
+        "Id": "mini_poker01",
+        "ProcessID": "development"
+      }
+    ],
+    "reptile": [
+      {
+        "Id": "reptile01",
+        "ProcessID": "development"
+      }
+    ],
+    "lottery": [
+      {
+        "Id": "lottery01",
+        "ProcessID": "development"
+      }
+    ],
+    "settle": [
+      {
+        "Id": "settle01",
+        "ProcessID": "development"
+      }
+    ],
+    "apiXg": [
+      {
+        "Id": "apiXg01",
+        "ProcessID": "development"
+      }
+    ],
+    "apiAe": [
+      {
+        "Id": "apiAe01",
+        "ProcessID": "development",
+        "Settings": {}
+      }
+    ],
+    "apiAwc": [
+      {
+        "Id": "apiAwc01",
+        "ProcessID": "development",
+        "Settings": {}
+      }
+    ],
+    "apiCq": [
+      {
+        "Id": "apiCq01",
+        "ProcessID": "development"
+      }
+    ],
+    "apiCmd": [
+      {
+        "Id": "apiCmd01",
+        "ProcessID": "development"
+      }
+    ],
+    "data": [
+      {
+        "Id": "data01",
+        "ProcessID": "development"
+      }
+    ],
+    "apiWm": [
+      {
+        "Id": "apiWm01",
+        "ProcessID": "development",
+        "Settings": {}
+      }
+    ],
+    "apiSbo": [
+      {
+        "Id": "apiSbo01",
+        "ProcessID": "development",
+        "Settings": {}
+      }
+    ],
+    "activity": [
+      {
+        "Id": "activity01",
+        "ProcessID": "development",
+        "Settings": {}
+      }
+    ],
+    "apiSaBa": [
+      {
+        "Id": "apiSaBa01",
+        "ProcessID": "development",
+        "Settings": {}
+      }
+    ],
+    "sms_gate": [
+      {
+        "Id": "sms_gate01",
+        "ProcessID": "development",
+        "Settings": {}
+      }
+    ],
+    "apiSpadeGame": [
+      {
+        "Id": "apiSpadeGame01",
+        "ProcessID": "development",
+        "Settings": {}
+      }
+    ]
+  },
+  "Mqtt": {
+    "WirteLoopChanNum": 10,
+    "ReadPackLoop": 1,
+    "ReadTimeout": 600,
+    "WriteTimeout": 300
+  },
+  "Rpc": {
+    "MaxCoroutine": 10000,
+    "RpcExpired": 1,
+    "LogSuccess": false
+  },
+  "Log":{
+    "file":{
+      "daily":true,
+      "level":7
+    }
+  }
+}

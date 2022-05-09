@@ -1,0 +1,49 @@
+.vscode
+/bin/conf/server.json
+/bin/server.json
+/bin/logs/*
+luckyWin
+go_build_vn_test
+# phpstorm project files
+__*
+.idea
+*.orign
+*.orig
+# netbeans project files
+nbproject
+
+# zend studio for eclipse project files
+.buildpath
+.project
+.settings
+
+# windows thumbnail cache
+Thumbs.db
+
+# composer vendor dir
+#!/vendor
+#/vendor/*
+#!/vendor/mdmsoft
+/vendor
+/composer.lock
+
+# composer itself is not needed
+composer.phar
+
+# Mac DS_Store Files
+.DS_Store
+
+# phpunit itself is not needed
+phpunit.phar
+# local phpunit config
+/phpunit.xml
+
+# vagrant runtime
+/.vagrant
+*.exe
+test.go
+test*.go
+test/*
+go_build_vn
+
+./static/spade/*
