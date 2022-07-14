@@ -2,8 +2,8 @@ package server
 
 import (
 	"context"
-	"vn/framework/mqant/registry"
 	"time"
+	"vn/framework/mqant/registry"
 )
 
 // Options Options

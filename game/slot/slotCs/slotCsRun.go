@@ -14,9 +14,9 @@ import (
 )
 
 func (this *MyTable) ClearTable() { //
-	if !this.IsInCheckout{
-		if this.ModeType == NORMAL && this.JieSuanData.BonusGame{
-			if this.BonusGameData.TotalSymbolScore > 0{
+	if !this.IsInCheckout {
+		if this.ModeType == NORMAL && this.JieSuanData.BonusGame {
+			if this.BonusGameData.TotalSymbolScore > 0 {
 				this.EventID = string(game.SlotCs) + "_" + "Bonus" + "_" + strconv.FormatInt(time.Now().Unix(), 10)
 				bill := walletStorage.NewBill(this.UserID, walletStorage.TypeIncome, walletStorage.EventGameSlotCs, this.EventID, this.BonusGameData.TotalSymbolScore)
 				walletStorage.OperateVndBalance(bill)
@@ -30,7 +30,7 @@ func (this *MyTable) ClearTable() { //
 		myRoom.DestroyTable(this.tableID)
 	}
 }
-func (this *MyTable) TableInit(module module.RPCModule,app module.App,tableID string){
+func (this *MyTable) TableInit(module module.RPCModule, app module.App, tableID string) {
 	this.Players = map[string]room.BasePlayer{}
 	this.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 	this.GameConf = slotCsStorage.GetRoomConf()
@@ -46,7 +46,7 @@ func (this *MyTable) TableInit(module module.RPCModule,app module.App,tableID st
 	}
 	this.onlinePush.OnlinePushInit(this, 512)
 
-	this.ReelsList = ReelsListNormal2      //ReelsNormalList
+	this.ReelsList = ReelsListNormal2    //ReelsNormalList
 	this.ReelsListTrial = ReelsListTrial //ReelsNormalList
 	this.BonusSymbolList = BonusSymbolList
 	this.BonusGameData = BonusGameData{}
@@ -56,7 +56,7 @@ func (this *MyTable) TableInit(module module.RPCModule,app module.App,tableID st
 	this.CoinNum = CoinNum[0]
 	this.XiaZhuV = this.CoinValue * this.CoinNum
 	this.TrialModeConf = TrialModeConf{
-		VndBalance:    200000000,
+		VndBalance: 200000000,
 	}
 
 	this.onlinePush = &vGate.OnlinePush{
@@ -72,9 +72,9 @@ func (this *MyTable) TableInit(module module.RPCModule,app module.App,tableID st
 	//}()
 }
 func (this *MyTable) OnTimer() { //定时任务
-	if this.JieSuanData.BonusGame{
-		if this.CountDown <= 0 && this.BonusGameData.State > 0{
-			this.PutQueue(protocol.BonusTimeOut,this.Players[this.UserID].Session())
+	if this.JieSuanData.BonusGame {
+		if this.CountDown <= 0 && this.BonusGameData.State > 0 {
+			this.PutQueue(protocol.BonusTimeOut, this.Players[this.UserID].Session())
 		}
 	}
 	this.CountDown--

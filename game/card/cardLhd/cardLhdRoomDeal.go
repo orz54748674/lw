@@ -22,7 +22,7 @@ func (self *Room) GenerateTableID() string {
 	roomData := cardLhdStorage.GetRoomData()
 	for true {
 		tableID = rand.Intn(1000000)
-		if tableID < 100000{
+		if tableID < 100000 {
 			tableID = tableID + 100000
 		}
 		_, ok := roomData.TablesInfo[strconv.Itoa(tableID)]
@@ -35,18 +35,18 @@ func (self *Room) GenerateTableID() string {
 	return strconv.Itoa(tableID)
 }
 func (self *Room) CreateTable(tableID string) (r string, err error) {
-	if tableID == ""{
-		tableID = "000000"//self.GenerateTableID() //服务器生成桌子id
+	if tableID == "" {
+		tableID = "000000" //self.GenerateTableID() //服务器生成桌子id
 	}
 	_, err = self.room.CreateById(self.App, tableID, self.NewTable)
 	if err != nil {
 		return "", err
 	}
-	self.tablesID.Store(tableID,tableID)
+	self.tablesID.Store(tableID, tableID)
 	self.curTableID = tableID
 	return "success", nil
 }
-func (self *Room) DestroyTable(tableID string){
+func (self *Room) DestroyTable(tableID string) {
 	self.room.DestroyTable(tableID)
 	self.tablesID.Delete(tableID)
 }
@@ -71,7 +71,7 @@ func (self *Room) NewTable(module module.App, tableId string) (room.BaseTable, e
 	return table, nil
 }
 
-func (self *Room) TableQueue(session gate.Session, msg map[string]interface{}) (map[string]interface{},error) {
+func (self *Room) TableQueue(session gate.Session, msg map[string]interface{}) (map[string]interface{}, error) {
 	//	table_id := msg["table_id"].(string)
 	action := msg["action"].(string)
 	table := self.room.GetTable(self.curTableID) //
@@ -85,16 +85,16 @@ func (self *Room) TableQueue(session gate.Session, msg map[string]interface{}) (
 		log.Info("--------------- table.PutQueue error---tableID = %s", self.curTableID, "---error = %s", erro)
 		return errCode.ServerError.GetI18nMap(), nil
 	}
-	return  errCode.Success(nil).SetAction(game.Nothing).GetMap(),nil
+	return errCode.Success(nil).SetAction(game.Nothing).GetMap(), nil
 }
-func (self *Room) GetShortCutList(session gate.Session, msg map[string]interface{}) (map[string]interface{},error) {
+func (self *Room) GetShortCutList(session gate.Session, msg map[string]interface{}) (map[string]interface{}, error) {
 	var tableID string
 	userID := session.GetUserID()
 	self.tablesID.Range(func(key, value interface{}) bool {
 		table := self.room.GetTable(value.(string)) //
-		if table != nil{
+		if table != nil {
 			myTable := (table.(interface{})).(*MyTable)
-			if myTable.PlayerIsTable(userID){
+			if myTable.PlayerIsTable(userID) {
 				tableID = value.(string)
 				return false
 			}
@@ -103,24 +103,24 @@ func (self *Room) GetShortCutList(session gate.Session, msg map[string]interface
 	})
 	table := self.room.GetTable(tableID) //(self.curTableID)
 	if table == nil {
-		log.Info("--------------- table not exist---tableID = %s",tableID)
+		log.Info("--------------- table not exist---tableID = %s", tableID)
 		return errCode.ServerError.GetI18nMap(), nil
 	}
 	erro := table.PutQueue(protocol.GetShortCutList, session, msg)
 	if erro != nil {
-		log.Info("--------------- table.PutQueue error---tableID = %s",tableID,"---error = %s",erro)
+		log.Info("--------------- table.PutQueue error---tableID = %s", tableID, "---error = %s", erro)
 		return errCode.ServerError.GetI18nMap(), nil
 	}
-	return  errCode.Success(nil).SetAction(game.Nothing).GetMap(),nil
+	return errCode.Success(nil).SetAction(game.Nothing).GetMap(), nil
 }
-func (self *Room) SendShortCut(session gate.Session, msg map[string]interface{}) (map[string]interface{},error) {
+func (self *Room) SendShortCut(session gate.Session, msg map[string]interface{}) (map[string]interface{}, error) {
 	var tableID string
 	userID := session.GetUserID()
 	self.tablesID.Range(func(key, value interface{}) bool {
 		table := self.room.GetTable(value.(string)) //
-		if table != nil{
+		if table != nil {
 			myTable := (table.(interface{})).(*MyTable)
-			if myTable.PlayerIsTable(userID){
+			if myTable.PlayerIsTable(userID) {
 				tableID = value.(string)
 				return false
 			}
@@ -129,48 +129,48 @@ func (self *Room) SendShortCut(session gate.Session, msg map[string]interface{})
 	})
 	table := self.room.GetTable(tableID) //(self.curTableID)
 	if table == nil {
-		log.Info("--------------- table not exist---tableID = %s",tableID)
+		log.Info("--------------- table not exist---tableID = %s", tableID)
 		return errCode.ServerError.GetI18nMap(), nil
 	}
 	erro := table.PutQueue(protocol.SendShortCut, session, msg)
 	if erro != nil {
-		log.Info("--------------- table.PutQueue error---tableID = %s",tableID,"---error = %s",erro)
+		log.Info("--------------- table.PutQueue error---tableID = %s", tableID, "---error = %s", erro)
 		return errCode.ServerError.GetI18nMap(), nil
 	}
-	return  errCode.Success(nil).SetAction(game.Nothing).GetMap(),nil
+	return errCode.Success(nil).SetAction(game.Nothing).GetMap(), nil
 }
-func (self *Room) QuitTable(session gate.Session, msg map[string]interface{}) (map[string]interface{},error) {
+func (self *Room) QuitTable(session gate.Session, msg map[string]interface{}) (map[string]interface{}, error) {
 	//	table_id := msg["table_id"].(string)
 	userID := session.GetUserID()
 	table := self.room.GetTable(self.curTableID) //
 
-	if table != nil{
+	if table != nil {
 		erro := table.PutQueue(protocol.QuitTable, session, userID)
 		if erro != nil {
 			log.Info("--------------- table.PutQueue error---tableID = %s", self.curTableID, "---error = %s", erro)
 			return errCode.ServerError.GetI18nMap(), nil
 		}
-		return  errCode.Success(nil).SetAction(game.Nothing).GetMap(),nil
-	}else{
-		return  errCode.Success("").GetMap(), nil
+		return errCode.Success(nil).SetAction(game.Nothing).GetMap(), nil
+	} else {
+		return errCode.Success("").GetMap(), nil
 	}
 }
-func (self *Room) onLogin(uid string) (map[string]interface{}, error){
-//	log.Info("--------------------------------------login success----------------")
+func (self *Room) onLogin(uid string) (map[string]interface{}, error) {
+	//	log.Info("--------------------------------------login success----------------")
 	self.tablesID.Range(func(key, value interface{}) bool {
 		table := self.room.GetTable(value.(string)) //
-		if table != nil{
+		if table != nil {
 			myTable := (table.(interface{})).(*MyTable)
-			if myTable.PlayerIsTable(uid){
+			if myTable.PlayerIsTable(uid) {
 				msg := make(map[string]interface{})
 				sb := vGate.QuerySessionBean(uid)
-				if sb == nil{
+				if sb == nil {
 					log.Info("session is nil")
 					return false
 				}
 				msg["ServerID"] = self.GetServerID()
 				msg["TableID"] = myTable.tableID
-				ret := myTable.DealProtocolFormat(msg,protocol.Reenter,nil)
+				ret := myTable.DealProtocolFormat(msg, protocol.Reenter, nil)
 				myTable.onlinePush.SendCallBackMsgNR([]string{sb.SessionId}, game.Push, ret)
 				myTable.onlinePush.ExecuteCallBackMsg(myTable.Trace())
 				return false
@@ -181,18 +181,18 @@ func (self *Room) onLogin(uid string) (map[string]interface{}, error){
 
 	return nil, nil
 }
-func (self *Room) CheckPlayerInGame(session gate.Session, msg map[string]interface{}) (map[string]interface{},error){
+func (self *Room) CheckPlayerInGame(session gate.Session, msg map[string]interface{}) (map[string]interface{}, error) {
 	userID := session.GetUserID()
-	res := make(map[string]interface{},2)
+	res := make(map[string]interface{}, 2)
 	res["InGame"] = false
 	self.tablesID.Range(func(key, value interface{}) bool {
 		table := self.room.GetTable(value.(string)) //
-		if table != nil{
+		if table != nil {
 			myTable := (table.(interface{})).(*MyTable)
-			if myTable.PlayerIsTable(userID){
+			if myTable.PlayerIsTable(userID) {
 				res["InGame"] = true
 				res["TableInfo"] = myTable.GetTableInfo(true)
-				res["SelfInfo"] = myTable.GetPlayerInfo(userID,true)
+				res["SelfInfo"] = myTable.GetPlayerInfo(userID, true)
 				res["PlayerInfo"] = myTable.PositionList
 				return false
 			}
@@ -201,12 +201,12 @@ func (self *Room) CheckPlayerInGame(session gate.Session, msg map[string]interfa
 	})
 	return errCode.Success(res).GetMap(), nil
 }
-func (self *Room) onDisconnect(uid string) (map[string]interface{}, error){
-//	log.Info("--------------------------------------disconnect----------------")
+func (self *Room) onDisconnect(uid string) (map[string]interface{}, error) {
+	//	log.Info("--------------------------------------disconnect----------------")
 	return nil, nil
 }
 
-func (self *Room) GetPlayerList(session gate.Session, msg map[string]interface{}) (map[string]interface{},error){
+func (self *Room) GetPlayerList(session gate.Session, msg map[string]interface{}) (map[string]interface{}, error) {
 	roomData := cardLhdStorage.GetRoomData()
 	table := self.room.GetTable(roomData.CurTableID)
 	if table == nil {
@@ -214,13 +214,13 @@ func (self *Room) GetPlayerList(session gate.Session, msg map[string]interface{}
 		return errCode.ServerError.GetI18nMap(), nil
 	}
 	myTable := table.(*MyTable)
-	res,erro := myTable.GetPlayerList(session,msg)
-	if res == nil{
-		return erro,nil
+	res, erro := myTable.GetPlayerList(session, msg)
+	if res == nil {
+		return erro, nil
 	}
 	return errCode.Success(res).GetMap(), nil
 }
-func (self *Room) GetResultsRecord(session gate.Session, msg map[string]interface{}) (map[string]interface{},error){
+func (self *Room) GetResultsRecord(session gate.Session, msg map[string]interface{}) (map[string]interface{}, error) {
 	roomData := cardLhdStorage.GetRoomData()
 	table := self.room.GetTable(roomData.CurTableID)
 	if table == nil {
@@ -228,22 +228,21 @@ func (self *Room) GetResultsRecord(session gate.Session, msg map[string]interfac
 		return errCode.ServerError.GetI18nMap(), nil
 	}
 	myTable := table.(*MyTable)
-	res,erro := myTable.GetResultsRecord(session,msg)
-	if res == nil{
-		return erro,nil
+	res, erro := myTable.GetResultsRecord(session, msg)
+	if res == nil {
+		return erro, nil
 	}
 	return errCode.Success(res).GetMap(), nil
 }
 
-
-func (self *Room) Info(session gate.Session, msg map[string]interface{}) (map[string]interface{},error){
+func (self *Room) Info(session gate.Session, msg map[string]interface{}) (map[string]interface{}, error) {
 	roomData := cardLhdStorage.GetRoomData()
 	table := self.room.GetTable(roomData.CurTableID)
 	if table == nil {
 		log.Info("--------------- table not exist---")
 		return errCode.ServerError.GetI18nMap(), nil
 	}
-	res := make(map[string]interface{},2)
+	res := make(map[string]interface{}, 2)
 	res["cardLhdServerId"] = roomData.TablesInfo[roomData.CurTableID].ServerID
 
 	return errCode.Success(res).GetMap(), nil

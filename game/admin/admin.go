@@ -46,6 +46,7 @@ func (s *Admin) OnInit(app module.App, settings *conf.ModuleSettings) {
 }
 
 const AdminUid = "605d84730356a24829e88c23"
+
 func (s *Admin) login(session gate.Session, msg map[string]interface{}) (map[string]interface{}, error) {
 	session.Bind(AdminUid)
 	return errCode.Success(nil).GetI18nMap(), nil

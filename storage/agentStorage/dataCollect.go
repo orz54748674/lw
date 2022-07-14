@@ -218,7 +218,7 @@ type AgentMemberData struct {
 	Date              string `gorm:"index:idx_member"`
 	Uid               string `gorm:"index:idx_member"`
 	Account           string
-	NickName		  string
+	NickName          string
 	SuperiorAccount1  string //上一级代理
 	SuperiorAccount2  string //上二级代理
 	SuperiorAccount3  string //上三级代理

@@ -34,12 +34,12 @@ func (s *DataController) start(w http.ResponseWriter, r *http.Request) {
 	start.Ip = utils.GetIP(r)
 	common.ExecQueueFunc(func() {
 		ipInfo := dataStorage.IpInfo{Ip: start.Ip}
-		if err := ipInfo.RequestIpInfo();err == nil{
+		if err := ipInfo.RequestIpInfo(); err == nil {
 			ipInfo.Save()
 		}
 	})
 
-	if start.Uuid == "undefined" || start.Uuid == ""{
+	if start.Uuid == "undefined" || start.Uuid == "" {
 		log.Error("uuid is empty.")
 		return
 	}
@@ -53,5 +53,3 @@ func getParam(param url.Values, key string) string {
 	}
 	return ""
 }
-
-

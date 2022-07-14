@@ -18,6 +18,8 @@ package basemodule
 import (
 	"context"
 	"fmt"
+	"github.com/pkg/errors"
+	"os"
 	"vn/framework/mqant/conf"
 	"vn/framework/mqant/log"
 	"vn/framework/mqant/module"
@@ -27,8 +29,6 @@ import (
 	"vn/framework/mqant/server"
 	"vn/framework/mqant/service"
 	"vn/framework/mqant/utils"
-	"github.com/pkg/errors"
-	"os"
 )
 
 // BaseModule 默认的RPCModule实现

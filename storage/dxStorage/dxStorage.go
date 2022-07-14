@@ -99,14 +99,14 @@ func InsertBetLog(dxBetLog *DxBetLog) {
 	//	common.GetMysql().Create(dxBetLog)
 	//})
 }
-func InsertBetLogMany(dxBetLog []DxBetLog)  {
+func InsertBetLogMany(dxBetLog []DxBetLog) {
 	c := common.GetMongoDB().Collection(cGameDxBetLog)
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	var data = make([]interface{},len(dxBetLog))
-	for i,d := range dxBetLog{
+	var data = make([]interface{}, len(dxBetLog))
+	for i, d := range dxBetLog {
 		data[i] = d
 	}
-	if _,err := c.InsertMany(ctx,data);err!= nil{
+	if _, err := c.InsertMany(ctx, data); err != nil {
 		log.Error(err.Error())
 	}
 }
@@ -247,12 +247,12 @@ func QueryRealRefundAmount(gameId int64, amount int64, refundType string) int64 
 					"GameId": gameId,
 					//"HasCheckout":0,
 					"UserType": UserTypeNormal,
-					"CurBig": bson.M{"$gt": amount},
+					"CurBig":   bson.M{"$gt": amount},
 				},
 			}},
 			{{"$group",
 				bson.M{"_id": "$GameId",
-				"sum": bson.M{"$sum": "$Big"}}}},
+					"sum": bson.M{"$sum": "$Big"}}}},
 		}
 	}
 	var q map[string]interface{}
@@ -267,17 +267,18 @@ func QueryRealRefundAmount(gameId int64, amount int64, refundType string) int64 
 }
 
 type DxUserBet struct {
-	Uid    string `bson:"_id"`
-	Small  int64  `bson:"Small"`
-	Big    int64  `bson:"Big"`
-	Result int64  `bson:"Result"`
-	Refund int64  `bson:"Refund"`
-	UserType []string  `bson:"UserType"`
+	Uid      string   `bson:"_id"`
+	Small    int64    `bson:"Small"`
+	Big      int64    `bson:"Big"`
+	Result   int64    `bson:"Result"`
+	Refund   int64    `bson:"Refund"`
+	UserType []string `bson:"UserType"`
 }
 
 func (s *DxUserBet) GetRealBet() int64 {
 	return s.Small + s.Big - s.Refund
 }
+
 //func QueryDxBetLogUnCheckOut(gameId int64) []DxUserBet {
 //	c := common.GetMongoDB().C(cGameDxBetLog)
 //	query := mongo.Pipeline{
@@ -307,14 +308,14 @@ func QueryDxBetLogNeedNotify(gameId int64) []DxUserBet {
 			{"$match", bson.D{
 				{"GameId", gameId},
 				//"HasCheckout":0,
-				{"UserType",    bson.M{"$nin": []string{UserTypeBot}}},
+				{"UserType", bson.M{"$nin": []string{UserTypeBot}}},
 				{"HasCheckout", 1},
 			}},
 		},
 		{{"$group", bson.D{
 			{"_id", "$Uid"},
-			{"Small",  bson.D{{"$sum", "$Small"}}},
-			{"Big",    bson.D{{"$sum", "$Big"}}},
+			{"Small", bson.D{{"$sum", "$Small"}}},
+			{"Big", bson.D{{"$sum", "$Big"}}},
 			{"Result", bson.D{{"$sum", "$Result"}}},
 			{"Refund", bson.D{{"$sum", "$Refund"}}},
 			{"UserType", bson.D{{"$push", "$UserType"}}},
@@ -329,37 +330,37 @@ func QueryDxBetLogNeedNotify(gameId int64) []DxUserBet {
 
 func Init(incDataExpireDay time.Duration) {
 	c := common.GetMongoDB().C(cGameDxBetLog)
-	key := bsonx.Doc{{Key: "CreateAt",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key,options.Index().
-		SetExpireAfterSeconds(int32(3*24*time.Hour/time.Second)));err != nil{
-		log.Error("create GameDxBetLog Index: %s",err)
+	key := bsonx.Doc{{Key: "CreateAt", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key, options.Index().
+		SetExpireAfterSeconds(int32(3*24*time.Hour/time.Second))); err != nil {
+		log.Error("create GameDxBetLog Index: %s", err)
 	}
 	c = common.GetMongoDB().C(cGameDxBetLog)
-	key2 := bsonx.Doc{{Key: "Uid",Value: bsonx.Int32(1)},{Key: "GameId",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key2,options.Index());err != nil{
-		log.Error("create GameDxBetLog Index: %s",err)
+	key2 := bsonx.Doc{{Key: "Uid", Value: bsonx.Int32(1)}, {Key: "GameId", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key2, options.Index()); err != nil {
+		log.Error("create GameDxBetLog Index: %s", err)
 	}
 	c = common.GetMongoDB().C(cGameDxBetLog)
-	key3 := bsonx.Doc{{Key: "GameId",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key3,options.Index());err != nil{
-		log.Error("create GameDxBetLog Index: %s",err)
+	key3 := bsonx.Doc{{Key: "GameId", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key3, options.Index()); err != nil {
+		log.Error("create GameDxBetLog Index: %s", err)
 	}
 	c2 := common.GetMongoDB().C(cGameDx)
-	k2 := bsonx.Doc{{Key: "CreateAt",Value: bsonx.Int32(1)}}
-	if err := c2.CreateIndex(k2,options.Index().
-		SetExpireAfterSeconds(int32(incDataExpireDay/time.Second)));err != nil{
-		log.Error("create dx Index: %s",err)
+	k2 := bsonx.Doc{{Key: "CreateAt", Value: bsonx.Int32(1)}}
+	if err := c2.CreateIndex(k2, options.Index().
+		SetExpireAfterSeconds(int32(incDataExpireDay/time.Second))); err != nil {
+		log.Error("create dx Index: %s", err)
 	}
 	c3 := common.GetMongoDB().C(cJackpotDetails)
-	k3 := bsonx.Doc{{Key: "CreateAt",Value: bsonx.Int32(1)}}
-	if err := c3.CreateIndex(k3,options.Index().
-		SetExpireAfterSeconds(int32(incDataExpireDay/time.Second)));err != nil{
-		log.Error("create JackpotDetails Index: %s",err)
+	k3 := bsonx.Doc{{Key: "CreateAt", Value: bsonx.Int32(1)}}
+	if err := c3.CreateIndex(k3, options.Index().
+		SetExpireAfterSeconds(int32(incDataExpireDay/time.Second))); err != nil {
+		log.Error("create JackpotDetails Index: %s", err)
 	}
 	c3 = common.GetMongoDB().C(cJackpotDetails)
-	k31 := bsonx.Doc{{Key: "GameId",Value: bsonx.Int32(1)}}
-	if err := c3.CreateIndex(k31,options.Index());err != nil{
-		log.Error("create JackpotDetails Index: %s",err)
+	k31 := bsonx.Doc{{Key: "GameId", Value: bsonx.Int32(1)}}
+	if err := c3.CreateIndex(k31, options.Index()); err != nil {
+		log.Error("create JackpotDetails Index: %s", err)
 	}
 	//_ = common.GetMysql().AutoMigrate(&Dx{})
 	//_ = common.GetMysql().AutoMigrate(&DxBetLog{})

@@ -83,8 +83,8 @@ func InsertSuoHaTableInfo(tableInfo TableInfo) error {
 
 func UpsertSuoHaTableInfo(info TableInfo) error {
 	c := common.GetMongoDB().C(cSuoHaTableInfo)
-	query := bson.M{"_id":info.Oid}
-	update := bson.M{"$set":bson.M{"CurPlayer":info.CurPlayer}}
+	query := bson.M{"_id": info.Oid}
+	update := bson.M{"$set": bson.M{"CurPlayer": info.CurPlayer}}
 	if _, err := c.Upsert(query, update); err != nil {
 		log.Error(err.Error())
 		return err

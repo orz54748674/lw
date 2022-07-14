@@ -14,15 +14,15 @@ type FishType struct {
 
 var FishTypeConf = map[int]FishType{
 	101: {
-		ID:         101,   //鱼的类型
-		Name:       "小小鱼", //鱼的名字
-		RewardMin:  2,     //最小奖励倍数
-		RewardMax:  2,     //最大奖励倍数
-		KillProMin: 5000,  //最小击杀概率
-		KillProMax: 5000,  //最大击杀概率
+		ID:         101,    //鱼的类型
+		Name:       "小小鱼",  //鱼的名字
+		RewardMin:  2,      //最小奖励倍数
+		RewardMax:  2,      //最大奖励倍数
+		KillProMin: 5000,   //最小击杀概率
+		KillProMax: 5000,   //最大击杀概率
 		Time:       100000, //生存时间周期
-		FType:      0,     // 0普通鱼, 1特殊鱼
-		Interval:   800,   //两条同路径最小间隔时间
+		FType:      0,      // 0普通鱼, 1特殊鱼
+		Interval:   800,    //两条同路径最小间隔时间
 	},
 	102: {
 		ID:         102,

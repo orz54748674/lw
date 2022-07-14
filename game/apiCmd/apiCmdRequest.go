@@ -15,11 +15,11 @@ import (
 )
 
 type Rep struct {
-	SerialKey string `json:"SerialKey"`
-	Timestamp int64 `json:"Timestamp"`
-	Code int `json:"Code"`
-	Message string `json:"Message"`
-	Data   interface{} `json:"data"`
+	SerialKey string      `json:"SerialKey"`
+	Timestamp int64       `json:"Timestamp"`
+	Code      int         `json:"Code"`
+	Message   string      `json:"Message"`
+	Data      interface{} `json:"data"`
 }
 
 type RepStatus struct {
@@ -49,7 +49,7 @@ func IsUserExist(account string) (exist bool, err error) {
 
 func CreateToken(account string) (string, error) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	tmp := utils.RandomString(32,r)
+	tmp := utils.RandomString(32, r)
 	err := apiCmdStorage.UpsertCmdUserToken(account, tmp)
 	if err != nil {
 		return "", err
@@ -224,7 +224,9 @@ func GetBetRecordTiming() {
 			fmt.Println("CMD GetBetRecordTiming record............", record)
 
 			curID := int(record["Id"].(float64))
-			if int64(curID) > maxID {maxID = int64(curID)}
+			if int64(curID) > maxID {
+				maxID = int64(curID)
+			}
 			curReferenceNo := record["ReferenceNo"].(string)
 			account := record["SourceName"].(string)
 			uid := apiCmdStorage.GetUidByAccount(account)

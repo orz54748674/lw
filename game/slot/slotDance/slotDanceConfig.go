@@ -93,7 +93,6 @@ var ReelsList87 = [][]slotDanceStorage.Symbol{
 		slotDanceStorage.D3,
 		slotDanceStorage.SCATTER,
 		slotDanceStorage.D6,
-
 	},
 	{
 		slotDanceStorage.D2,
@@ -121,7 +120,6 @@ var ReelsList87 = [][]slotDanceStorage.Symbol{
 		slotDanceStorage.D1,
 		slotDanceStorage.D1,
 		slotDanceStorage.D4,
-
 	},
 	{
 		slotDanceStorage.D7,
@@ -149,7 +147,6 @@ var ReelsList87 = [][]slotDanceStorage.Symbol{
 		slotDanceStorage.D1,
 		slotDanceStorage.WILD,
 		slotDanceStorage.D6,
-
 	},
 	{
 		slotDanceStorage.D4,
@@ -177,7 +174,6 @@ var ReelsList87 = [][]slotDanceStorage.Symbol{
 		slotDanceStorage.D1,
 		slotDanceStorage.D3,
 		slotDanceStorage.D1,
-
 	},
 	{
 		slotDanceStorage.D1,
@@ -205,7 +201,6 @@ var ReelsList87 = [][]slotDanceStorage.Symbol{
 		slotDanceStorage.SCATTER,
 		slotDanceStorage.D2,
 		slotDanceStorage.D1,
-
 	},
 }
 var ReelsList110 = [][]slotDanceStorage.Symbol{
@@ -235,7 +230,6 @@ var ReelsList110 = [][]slotDanceStorage.Symbol{
 		slotDanceStorage.D1,
 		slotDanceStorage.D3,
 		slotDanceStorage.SCATTER,
-
 	},
 	{
 		slotDanceStorage.D2,
@@ -263,7 +257,6 @@ var ReelsList110 = [][]slotDanceStorage.Symbol{
 		slotDanceStorage.D8,
 		slotDanceStorage.D1,
 		slotDanceStorage.D3,
-
 	},
 	{
 		slotDanceStorage.D1,
@@ -291,7 +284,6 @@ var ReelsList110 = [][]slotDanceStorage.Symbol{
 		slotDanceStorage.D8,
 		slotDanceStorage.D2,
 		slotDanceStorage.WILD,
-
 	},
 	{
 		slotDanceStorage.D3,
@@ -319,7 +311,6 @@ var ReelsList110 = [][]slotDanceStorage.Symbol{
 		slotDanceStorage.D5,
 		slotDanceStorage.D8,
 		slotDanceStorage.D4,
-
 	},
 	{
 		slotDanceStorage.D2,
@@ -347,23 +338,12 @@ var ReelsList110 = [][]slotDanceStorage.Symbol{
 		slotDanceStorage.D5,
 		slotDanceStorage.D3,
 		slotDanceStorage.D4,
-
 	},
 }
 var ReelsListBase = [][]slotDanceStorage.Symbol{
-	{
-
-	},
-	{
-
-	},
-	{
-
-	},
-	{
-
-	},
-	{
-
-	},
+	{},
+	{},
+	{},
+	{},
+	{},
 }

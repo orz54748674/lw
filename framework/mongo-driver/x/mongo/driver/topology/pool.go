@@ -13,9 +13,9 @@ import (
 	"sync/atomic"
 	"time"
 
+	"golang.org/x/sync/semaphore"
 	"vn/framework/mongo-driver/event"
 	"vn/framework/mongo-driver/x/mongo/driver/address"
-	"golang.org/x/sync/semaphore"
 )
 
 // ErrPoolConnected is returned from an attempt to connect an already connected pool

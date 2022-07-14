@@ -7,8 +7,8 @@ import (
 )
 
 type chargeNotify struct {
-	vgPay    *payWay.VgPay
-	official *payWay.Official
+	vgPay     *payWay.VgPay
+	official  *payWay.Official
 	NapTuDong *payWay.NapTuDong
 }
 
@@ -26,8 +26,8 @@ func (s *chargeNotify) Dispatch(w http.ResponseWriter, r *http.Request) {
 	case "naptudong":
 		s.NapTuDong.NotifyCharge(w, r)
 	case "official":
-		s.official.NotifyCharge(w,r)
+		s.official.NotifyCharge(w, r)
 	default:
-		_,_=w.Write([]byte("404"))
+		_, _ = w.Write([]byte("404"))
 	}
 }

@@ -198,6 +198,7 @@ Again:
 	}
 	return resActivity
 }
+
 //计算鼓励金
 func CalcEncouragementFunc(uid string) {
 
@@ -212,7 +213,7 @@ func CalcEncouragementFunc(uid string) {
 		time.Sleep(2 * time.Second)
 		conf := activityStorage.QueryActivityEncouragementConf()
 		wallet := walletStorage.QueryWallet(utils.ConvertOID(uid))
-		if wallet.VndBalance + wallet.SafeBalance >= conf.MinVnd { //余额大于鼓励金的最低限制
+		if wallet.VndBalance+wallet.SafeBalance >= conf.MinVnd { //余额大于鼓励金的最低限制
 			return
 		}
 		encouragement := activityStorage.QueryEncouragementAllByUid(uid)
@@ -239,7 +240,7 @@ func CalcEncouragementFunc(uid string) {
 			msg["Action"] = actionTodayEncourageFinish
 			msg["GameType"] = game.Activity
 			msg["remainReceiveCnt"] = 0
-			protocol.SendPack(uid,game.Push,msg)
+			protocol.SendPack(uid, game.Push, msg)
 			return
 		}
 
@@ -262,7 +263,7 @@ func CalcEncouragementFunc(uid string) {
 			msg["Data"] = data
 			msg["Action"] = actionEncouragementChargeHint
 			msg["GameType"] = game.Activity
-			protocol.SendPack(uid,game.Push,msg)
+			protocol.SendPack(uid, game.Push, msg)
 			return
 		}
 
@@ -305,7 +306,7 @@ func CalcEncouragementFunc(uid string) {
 		msg["Data"] = data
 		msg["Action"] = actionEncouragementReceiveHint
 		msg["GameType"] = game.Activity
-		protocol.SendPack(uid,game.Push,msg)
+		protocol.SendPack(uid, game.Push, msg)
 		activityStorage.InsertActivityEncouragement(&activityStorage.ActivityEncouragement{ //
 			ActivityID: conf.Oid.Hex(),
 			Uid:        uid,

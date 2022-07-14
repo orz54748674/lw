@@ -11,8 +11,8 @@ import (
 
 type GameReconnect struct {
 	Oid      primitive.ObjectID `bson:"_id,omitempty",json:"Oid"`
-	Uid 	 string          `bson:"Uid"`
-	ServerID   string             `bson:"ServerID"，json:"ServerID"` //
+	Uid      string             `bson:"Uid"`
+	ServerID string             `bson:"ServerID"，json:"ServerID"` //
 }
 
 var (
@@ -28,7 +28,7 @@ func InitGameReconnect() {
 	}
 	log.Info("init gameReconnect of mongo db")
 }
-func UpsertGameReconnect(uid string,serverID string) {
+func UpsertGameReconnect(uid string, serverID string) {
 	c := common.GetMongoDB().C(cGameReconnect)
 	query := bson.M{"Uid": uid}
 	update := bson.M{"ServerID": serverID}

@@ -105,16 +105,16 @@ func (s *Impl) AgentInfo(session gate.Session, params map[string]interface{}) (m
 	}
 	inviteData := agentStorage.QueryAgentInviteData(uOid)
 	agentInfo := &agentStorage.AgentInfo{
-		TodayProfit:       agentStorage.QueryTodayProfit(uOid,0),
-		SumProfit:         agent.SumIncome,
-		InvitedCount:      inviteData.Count,
-		AliveCount:        agent.Count,
-		BetAmount1: agentStorage.QueryTodayProfitBet(uOid,1),
-		BetAmount2: agentStorage.QueryTodayProfitBet(uOid,2),
-		BetAmount3: agentStorage.QueryTodayProfitBet(uOid,3),
-		Profit1: agentStorage.QueryTodayProfit(uOid,1),
-		Profit2: agentStorage.QueryTodayProfit(uOid,2),
-		Profit3: agentStorage.QueryTodayProfit(uOid,3),
+		TodayProfit:  agentStorage.QueryTodayProfit(uOid, 0),
+		SumProfit:    agent.SumIncome,
+		InvitedCount: inviteData.Count,
+		AliveCount:   agent.Count,
+		BetAmount1:   agentStorage.QueryTodayProfitBet(uOid, 1),
+		BetAmount2:   agentStorage.QueryTodayProfitBet(uOid, 2),
+		BetAmount3:   agentStorage.QueryTodayProfitBet(uOid, 3),
+		Profit1:      agentStorage.QueryTodayProfit(uOid, 1),
+		Profit2:      agentStorage.QueryTodayProfit(uOid, 2),
+		Profit3:      agentStorage.QueryTodayProfit(uOid, 3),
 	}
 	res := make(map[string]interface{}, 2)
 	wallet := walletStorage.QueryWallet(utils.ConvertOID(session.GetUserID()))
@@ -254,7 +254,7 @@ func (s *Impl) ModifyPassword(session gate.Session, params map[string]interface{
 	uid := session.GetUserID()
 	login := userStorage.QueryLogin(utils.ConvertOID(uid))
 	_, err := utils.CheckParams2(params, []string{"OldPwd", "NewPwd", "ConfirmPwd"})
-	if err != nil || login == nil{
+	if err != nil || login == nil {
 		return errCode.ErrParams.GetI18nMap(), nil
 	}
 	OldPwd := params["OldPwd"].(string)
@@ -384,13 +384,13 @@ func (s *Impl) wallet(session gate.Session, msg map[string]interface{}) (map[str
 	wallet := walletStorage.QueryWallet(utils.ConvertOID(userID))
 	userInfo := userStorage.QueryUserInfo(utils.ConvertOID(userID))
 	res := map[string]interface{}{
-		"wallet": wallet,
+		"wallet":     wallet,
 		"safeStatus": userInfo.SafeStatus,
 	}
 	return errCode.Success(res).GetMap(), nil
 }
 
-func RefreshLobbyBubble(uid primitive.ObjectID){
+func RefreshLobbyBubble(uid primitive.ObjectID) {
 	activity.RefreshNormalActivity(uid)
 	activity.RefreshDayActivity(uid)
 }
@@ -400,8 +400,8 @@ func (s *Impl) GetRankList(session gate.Session, params map[string]interface{}) 
 		return errCode.ErrParams.GetI18nMap(), nil
 	}
 	gameType := params["gameType"].(string)
-	res := make(map[string]interface{},1)
-	res["RankList"] = gameStorage.GetGameWinLoseRank(game.Type(gameType),20)
+	res := make(map[string]interface{}, 1)
+	res["RankList"] = gameStorage.GetGameWinLoseRank(game.Type(gameType), 20)
 	return errCode.Success(res).GetI18nMap(), nil
 }
 func (s *Impl) GameInviteRecord(session gate.Session, params map[string]interface{}) (map[string]interface{}, error) {
@@ -410,26 +410,26 @@ func (s *Impl) GameInviteRecord(session gate.Session, params map[string]interfac
 	return errCode.Success(res).GetI18nMap(), nil
 }
 func (s *Impl) SetSafeStatus(session gate.Session, params map[string]interface{}) (map[string]interface{}, error) {
-	_, err := utils.CheckParams2(params, []string{"Status","PassWord"})
+	_, err := utils.CheckParams2(params, []string{"Status", "PassWord"})
 	if err != nil {
 		return errCode.ErrParams.GetI18nMap(), nil
 	}
 	uid := session.GetUserID()
 	login := userStorage.QueryLogin(utils.ConvertOID(uid))
-	if login == nil{
-		return errCode.Forbidden.GetI18nMap(),nil
+	if login == nil {
+		return errCode.Forbidden.GetI18nMap(), nil
 	}
 	userInfo := userStorage.QueryUserInfo(utils.ConvertOID(uid))
-	if userInfo.SafeStatus == 0{
-		return errCode.PleaseActivationSafe.GetI18nMap(),nil
+	if userInfo.SafeStatus == 0 {
+		return errCode.PleaseActivationSafe.GetI18nMap(), nil
 	}
 	password := params["PassWord"].(string)
 	if password != login.Password {
-		return errCode.PasswordErr.GetI18nMap(),nil
+		return errCode.PasswordErr.GetI18nMap(), nil
 	}
-	status,_ := utils.ConvertInt(params["Status"])
-	userStorage.SetUserInfoSafeStatus(utils.ConvertOID(uid),int(status))
-	res := make(map[string]interface{},1)
+	status, _ := utils.ConvertInt(params["Status"])
+	userStorage.SetUserInfoSafeStatus(utils.ConvertOID(uid), int(status))
+	res := make(map[string]interface{}, 1)
 	res["Status"] = status
 	return errCode.Success(res).GetI18nMap(), nil
 }

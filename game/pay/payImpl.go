@@ -49,7 +49,7 @@ func (s *Impl) payInfo(session gate.Session, params map[string]interface{}) (map
 		receiveBankList[k].Phone = ""
 	}
 	user := userStorage.QueryUserId(utils.ConvertOID(session.GetUserID()))
-	code := strconv.FormatInt(user.ShowId % 10000000,10)//utils.Base58encode(int(user.ShowId))
+	code := strconv.FormatInt(user.ShowId%10000000, 10) //utils.Base58encode(int(user.ShowId))
 	for len(code) < 7 {
 		code = "0" + code
 	}
@@ -97,7 +97,7 @@ func (s *Impl) charge(session gate.Session, params map[string]interface{}) (map[
 		for _, pattern := range patternList {
 			match, _ := regexp.MatchString(pattern, accountName)
 			if !match {
-				return errCode.DouDouAccountNotAllow.GetI18nMap(),nil
+				return errCode.DouDouAccountNotAllow.GetI18nMap(), nil
 			}
 		}
 		receiveId := params["receiveId"].(string)
@@ -135,7 +135,7 @@ func (s *Impl) charge(session gate.Session, params map[string]interface{}) (map[
 		if len(res) > 0 {
 			err := res[0].Interface().(*common.Err)
 			//if err.Code == 0 {
-				payStorage.InsertOrder(order)
+			payStorage.InsertOrder(order)
 			//}
 			return err.GetI18nMap(), nil
 		}
@@ -233,7 +233,7 @@ func (s *Impl) adminOrder(session gate.Session, params map[string]interface{}) (
 		err := &common.Err{Code: -1, ErrMsg: "order is not found."}
 		return err.GetMap(), nil
 	}
-	if order.Status == payStorage.StatusSuccess{
+	if order.Status == payStorage.StatusSuccess {
 		return errCode.Success(nil).GetI18nMap(), nil
 	}
 	uid := order.UserId
@@ -245,7 +245,7 @@ func (s *Impl) adminOrder(session gate.Session, params map[string]interface{}) (
 	order.AdminId = uint(adminId)
 	if status == payStorage.StatusSuccess && order.Status != payStorage.StatusSuccess {
 		payWay.SuccessOrder(order)
-	} else  {
+	} else {
 		order.Status = int(status)
 		order.UpdateAt = utils.Now()
 		payStorage.UpdateOrder(order)
@@ -455,13 +455,13 @@ func (s *Impl) agentIncome2wallet(session gate.Session, params map[string]interf
 }
 func (s *Impl) safe2wallet(session gate.Session, params map[string]interface{}) (map[string]interface{}, error) {
 	if check, ok := utils.CheckParams2(params,
-		[]string{"amount","safeType"}); ok != nil {
+		[]string{"amount", "safeType"}); ok != nil {
 		return errCode.ErrParams.SetKey(check).GetI18nMap(), ok
 	}
 	uid := session.GetUserID()
 	safeType := params["safeType"].(string)
-	if safeType != "Store" && safeType != "Pick"{
-		return errCode.ErrParams.SetKey().GetI18nMap(),nil
+	if safeType != "Store" && safeType != "Pick" {
+		return errCode.ErrParams.SetKey().GetI18nMap(), nil
 	}
 	amount, _ := utils.ConvertInt(params["amount"])
 	if amount < 1 {
@@ -469,22 +469,22 @@ func (s *Impl) safe2wallet(session gate.Session, params map[string]interface{}) 
 	}
 	wallet := walletStorage.QueryWallet(utils.ConvertOID(uid))
 	var bill *walletStorage.Bill
-	if safeType == "Store"{
+	if safeType == "Store" {
 		if wallet.VndBalance < amount {
 			return errCode.AmountNotAllow.GetI18nMap(), nil
 		}
 		bill = walletStorage.NewBill(uid, walletStorage.TypeIncome, walletStorage.EventSafeChange, "", amount)
-	}else if safeType == "Pick"{
+	} else if safeType == "Pick" {
 		userInfo := userStorage.QueryUserInfo(utils.ConvertOID(uid))
-		if userInfo.SafeStatus == 1{
+		if userInfo.SafeStatus == 1 {
 			return errCode.PleaseUnlockSafe.GetI18nMap(), nil
 		}
-		if wallet.SafeBalance < amount{
+		if wallet.SafeBalance < amount {
 			return errCode.AmountNotAllow.GetI18nMap(), nil
 		}
 		bill = walletStorage.NewBill(uid, walletStorage.TypeExpenses, walletStorage.EventSafeChange, "", -amount)
 	}
-	if bill == nil{
+	if bill == nil {
 		return errCode.ServerBusy.GetI18nMap(), nil
 	}
 	bill.Oid = primitive.NewObjectID()
@@ -496,26 +496,26 @@ func (s *Impl) safe2wallet(session gate.Session, params map[string]interface{}) 
 	}
 	return errCode.Success(nil).GetI18nMap(), nil
 }
-func(s *Pay) DealProtocolFormat(in interface{},action string,gameType string,error *common.Err) []byte{
+func (s *Pay) DealProtocolFormat(in interface{}, action string, gameType string, error *common.Err) []byte {
 	info := struct {
-		Data interface{}
+		Data     interface{}
 		GameType string
-		Action string
-		ErrMsg string
-		Code int
+		Action   string
+		ErrMsg   string
+		Code     int
 	}{
-		Data: in,
+		Data:     in,
 		GameType: gameType,
-		Action: action,
+		Action:   action,
 	}
-	if error == nil{
+	if error == nil {
 		info.Code = 0
 		info.ErrMsg = "操作成功"
-	}else {
+	} else {
 		info.Code = error.Code
 		info.ErrMsg = error.SetKey().ErrMsg
 	}
-	ret,_ := json.Marshal(info)
+	ret, _ := json.Marshal(info)
 	return ret
 }
 func (s *Pay) giftCode(session gate.Session, params map[string]interface{}) (map[string]interface{}, error) {
@@ -535,7 +535,7 @@ func (s *Pay) giftCode(session gate.Session, params map[string]interface{}) (map
 			if sb == nil {
 				return
 			}
-			ret := s.DealProtocolFormat(nil,actionGiftCode,"pay",errCode.GiftCodeErr)
+			ret := s.DealProtocolFormat(nil, actionGiftCode, "pay", errCode.GiftCodeErr)
 			s.push.SendCallBackMsgNR([]string{sb.SessionId}, game.Push, ret)
 			return
 		}
@@ -543,20 +543,20 @@ func (s *Pay) giftCode(session gate.Session, params map[string]interface{}) (map
 			if sb == nil {
 				return
 			}
-			ret := s.DealProtocolFormat(nil,actionGiftCode,"pay",errCode.GiftCodeUsed)
+			ret := s.DealProtocolFormat(nil, actionGiftCode, "pay", errCode.GiftCodeUsed)
 			s.push.SendCallBackMsgNR([]string{sb.SessionId}, game.Push, ret)
 			return
 		}
-		if chargeCode.Belong != "mline"{
+		if chargeCode.Belong != "mline" {
 			invite := agentStorage.QueryInvite(utils.ConvertOID(uid))
 			if invite.Oid.IsZero() || invite.ParentOid.IsZero() {
-				ret := s.DealProtocolFormat(nil,actionGiftCode,"pay",errCode.GiftCodeErr)
+				ret := s.DealProtocolFormat(nil, actionGiftCode, "pay", errCode.GiftCodeErr)
 				s.push.SendCallBackMsgNR([]string{sb.SessionId}, game.Push, ret)
 				return
-			}else{
+			} else {
 				baba := userStorage.QueryUserId(invite.ParentOid)
 				if chargeCode.Belong != baba.Account {
-					ret := s.DealProtocolFormat(nil,actionGiftCode,"pay",errCode.GiftCodeErr)
+					ret := s.DealProtocolFormat(nil, actionGiftCode, "pay", errCode.GiftCodeErr)
 					s.push.SendCallBackMsgNR([]string{sb.SessionId}, game.Push, ret)
 					return
 				}
@@ -568,7 +568,7 @@ func (s *Pay) giftCode(session gate.Session, params map[string]interface{}) (map
 			if sb == nil {
 				return
 			}
-			ret := s.DealProtocolFormat(nil,actionGiftCode,"pay",errCode.ServerBusy)
+			ret := s.DealProtocolFormat(nil, actionGiftCode, "pay", errCode.ServerBusy)
 			s.push.SendCallBackMsgNR([]string{sb.SessionId}, game.Push, ret)
 			return
 		}
@@ -590,15 +590,15 @@ func (s *Pay) giftCode(session gate.Session, params map[string]interface{}) (map
 				UpdateAt:   time.Now(),
 				CreateAt:   time.Now(),
 			})
-			userStorage.IncUserGiftCode(utils.ConvertOID(uid),int64(chargeCode.Amount))
+			userStorage.IncUserGiftCode(utils.ConvertOID(uid), int64(chargeCode.Amount))
 		}
 		if sb == nil {
 			return
 		}
-		ret := s.DealProtocolFormat(nil,actionGiftCode,"pay",nil)
+		ret := s.DealProtocolFormat(nil, actionGiftCode, "pay", nil)
 		s.push.SendCallBackMsgNR([]string{sb.SessionId}, game.Push, ret)
 		return
 	})
 
-	return  errCode.Success(nil).SetAction(game.Nothing).GetMap(), nil
+	return errCode.Success(nil).SetAction(game.Nothing).GetMap(), nil
 }

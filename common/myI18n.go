@@ -7,16 +7,18 @@ import (
 	"sync"
 	"vn/common/utils"
 )
+
 //var CurLanguage = "zh_CN"
 var CurLanguage = "VN"
 var i18 *i18n.I18n
 var once18 sync.Once
+
 func getI18n() *i18n.I18n {
-	if i18 != nil{
+	if i18 != nil {
 		return i18
 	}
 	once18.Do(func() {
-		if i18 != nil{
+		if i18 != nil {
 			return
 		}
 		path := utils.GetProjectAbsPath()
@@ -32,4 +34,3 @@ func getI18n() *i18n.I18n {
 func I18str(key string, args ...interface{}) string {
 	return string(getI18n().T(CurLanguage, key, args))
 }
-

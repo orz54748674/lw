@@ -31,6 +31,7 @@ var ErrInvalidHex = errors.New("the provided hex string is not a valid ObjectID"
 
 // ObjectID is the BSON ObjectID type.
 type ObjectID [12]byte
+
 func (s ObjectID) GormValue(ctx context.Context, db *gorm.DB) clause.Expr {
 	return clause.Expr{
 		SQL:  "?",
@@ -43,12 +44,13 @@ func (s *ObjectID) Scan(value interface{}) error {
 		return errors.New(fmt.Sprint("Failed to unmarshal oid value:", value))
 	}
 	var err error
-	*s,err = ObjectIDFromHex(string(byte))
+	*s, err = ObjectIDFromHex(string(byte))
 	return err
 }
 func (j ObjectID) Value() (driver.Value, error) {
-	return j.Hex(),nil
+	return j.Hex(), nil
 }
+
 // NilObjectID is the zero value for ObjectID.
 var NilObjectID ObjectID
 

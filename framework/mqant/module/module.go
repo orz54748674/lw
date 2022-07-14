@@ -17,11 +17,11 @@ package module
 
 import (
 	"context"
+	"github.com/nats-io/nats.go"
 	"vn/framework/mqant/conf"
 	"vn/framework/mqant/registry"
 	"vn/framework/mqant/rpc"
 	"vn/framework/mqant/selector"
-	"github.com/nats-io/nats.go"
 )
 
 // ProtocolMarshal 数据包装

@@ -148,9 +148,9 @@ func QueryUsers() []User {
 	}
 	return user
 }
-func QueryUserNums(query map[string]interface{}) int64 {//获取用户数量
+func QueryUserNums(query map[string]interface{}) int64 { //获取用户数量
 	c := common.GetMongoDB().C(cUser)
-	num,err := c.Find(query).Count()
+	num, err := c.Find(query).Count()
 	if err != nil {
 		return 0
 	}
@@ -166,7 +166,7 @@ func QueryUserId(id primitive.ObjectID) User {
 	return user
 }
 
-func QueryTokenByAccount(account string) User{
+func QueryTokenByAccount(account string) User {
 	c := common.GetMongoDB().C(cUser)
 	var user User
 	if err := c.Find(bson.M{"Account": account}).One(&user); err != nil {
@@ -174,6 +174,7 @@ func QueryTokenByAccount(account string) User{
 	}
 	return user
 }
+
 //func UpdateTokenTime(id primitive.ObjectID) error{
 //	c := common.GetMgo().C(cToken)
 //	selector := bson.M{"_id":id}
@@ -333,6 +334,7 @@ func IncUserActivityTotal(uid primitive.ObjectID, amount int64) {
 	userInfo := QueryUserInfo(uid)
 	updateUserInfo2mysql(userInfo)
 }
+
 //增加GiftCode总和
 func IncUserGiftCode(uid primitive.ObjectID, amount int64) {
 	c := common.GetMongoDB().C(cUserInfo)
@@ -373,10 +375,10 @@ func QueryUserInfo(uid primitive.ObjectID) UserInfo {
 	}
 	return userInfo
 }
-func SetUserInfoVipLevel(uid primitive.ObjectID,level int) *common.Err {
+func SetUserInfoVipLevel(uid primitive.ObjectID, level int) *common.Err {
 	c := common.GetMongoDB().C(cUserInfo)
 	selector := bson.M{"_id": uid}
-	update := bson.M{"$set":bson.M{"VipLevel":level}}
+	update := bson.M{"$set": bson.M{"VipLevel": level}}
 	_, err := c.Upsert(selector, update)
 	if err != nil {
 		log.Error("Upsert user userInfo VipLevel error: %s", err)
@@ -386,10 +388,10 @@ func SetUserInfoVipLevel(uid primitive.ObjectID,level int) *common.Err {
 	updateUserInfo2mysql(userInfo)
 	return nil
 }
-func SetUserInfoSafeStatus(uid primitive.ObjectID,status int) *common.Err {
+func SetUserInfoSafeStatus(uid primitive.ObjectID, status int) *common.Err {
 	c := common.GetMongoDB().C(cUserInfo)
 	selector := bson.M{"_id": uid}
-	update := bson.M{"$set":bson.M{"SafeStatus":status}}
+	update := bson.M{"$set": bson.M{"SafeStatus": status}}
 	_, err := c.Upsert(selector, update)
 	if err != nil {
 		log.Error("Upsert user userInfo SafeStatus error: %s", err)

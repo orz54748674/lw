@@ -108,7 +108,7 @@ func (h *DgHttp) GetBalance(w http.ResponseWriter, r *http.Request) {
 	wallet := walletStorage.QueryWallet(utils.ConvertOID(dgUserInfo.Uid))
 	rep.CodeId = 0
 	rep.Member.UserName = username
-	rep.Member.Balance = float64(wallet.VndBalance)/1000
+	rep.Member.Balance = float64(wallet.VndBalance) / 1000
 	rep.Token = tmpToken
 	h.encryptResponse(w, rep)
 	fmt.Println("getBalance..........", rep)
@@ -118,13 +118,13 @@ func (h *DgHttp) GetBalance(w http.ResponseWriter, r *http.Request) {
 func (h *DgHttp) Transfer(w http.ResponseWriter, r *http.Request) {
 	type MemberInfo struct {
 		UserName string  `json:"username"`
-		Amount float64 `json:"amount"`
+		Amount   float64 `json:"amount"`
 		Balance  float64 `json:"balance"`
 	}
 	rep := struct {
 		CodeId int        `json:"codeId"`
 		Token  string     `json:"token"`
-		Data string `json:"data"`
+		Data   string     `json:"data"`
 		Member MemberInfo `json:"member"`
 	}{}
 	paramMap := make(map[string]interface{})
@@ -158,13 +158,13 @@ func (h *DgHttp) Transfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	wallet := walletStorage.QueryWallet(utils.ConvertOID(usrInfo.Uid))
-	balance := float64(wallet.VndBalance)/1000
+	balance := float64(wallet.VndBalance) / 1000
 	transferAmount := int64(amount * 1000)
 	rep.Token = tmpToken
 	rep.Member.UserName = username
 	rep.Member.Amount = amount
 	rep.Data = serialNo
-	if transferAmount < 0 && wallet.VndBalance + transferAmount < 0 {
+	if transferAmount < 0 && wallet.VndBalance+transferAmount < 0 {
 		rep.CodeId = 1
 		rep.Member.Balance = balance
 		h.encryptResponse(w, rep)
@@ -178,10 +178,10 @@ func (h *DgHttp) Transfer(w http.ResponseWriter, r *http.Request) {
 	bill := walletStorage.NewBill(usrInfo.Uid, billType, walletStorage.EventApiDg, serialNo, transferAmount)
 	walletStorage.OperateVndBalanceV1(bill)
 
-	apiDgStorage.InsertTransferRecord(serialNo, strconv.Itoa(int(ticketId)), username, tmpToken, int64(balance * 1000), transferAmount)
+	apiDgStorage.InsertTransferRecord(serialNo, strconv.Itoa(int(ticketId)), username, tmpToken, int64(balance*1000), transferAmount)
 
 	rep.CodeId = 0
-	rep.Member.Balance = float64(wallet.VndBalance)/1000
+	rep.Member.Balance = float64(wallet.VndBalance) / 1000
 	h.encryptResponse(w, rep)
 	return
 }
@@ -189,8 +189,8 @@ func (h *DgHttp) Transfer(w http.ResponseWriter, r *http.Request) {
 func (h *DgHttp) CheckTransfer(w http.ResponseWriter, r *http.Request) {
 	paramMap := make(map[string]interface{})
 	rep := struct {
-		CodeId int        `json:"codeId"`
-		Token  string     `json:"token"`
+		CodeId int    `json:"codeId"`
+		Token  string `json:"token"`
 	}{}
 	if err := h.parse(r, &paramMap); err != nil {
 		rep.CodeId = 1
@@ -200,7 +200,6 @@ func (h *DgHttp) CheckTransfer(w http.ResponseWriter, r *http.Request) {
 
 	tmpToken := paramMap["token"].(string)
 	serialNo := paramMap["data"].(string)
-
 
 	_, err := apiDgStorage.GetTransferRecordBySerialNo(serialNo)
 	if err != nil {
@@ -217,13 +216,13 @@ func (h *DgHttp) CheckTransfer(w http.ResponseWriter, r *http.Request) {
 func (h *DgHttp) Inform(w http.ResponseWriter, r *http.Request) {
 	paramMap := make(map[string]interface{})
 	type MemberInfo struct {
-		Username string `json:"username"`
-		Balance float64 `json:"balance"`
+		Username string  `json:"username"`
+		Balance  float64 `json:"balance"`
 	}
 	rep := struct {
 		CodeId int        `json:"codeId"`
 		Token  string     `json:"token"`
-		Data string `json:"data"`
+		Data   string     `json:"data"`
 		Member MemberInfo `json:"member"`
 	}{}
 	if err := h.parse(r, &paramMap); err != nil {
@@ -254,7 +253,7 @@ func (h *DgHttp) Inform(w http.ResponseWriter, r *http.Request) {
 	rep.Data = serialNo
 	rep.Member.Username = username
 	wallet := walletStorage.QueryWallet(utils.ConvertOID(uid))
-	balance := float64(wallet.VndBalance)/1000
+	balance := float64(wallet.VndBalance) / 1000
 	rep.Member.Balance = balance
 	if amount < 0 {
 		_, err := apiDgStorage.GetTransferRecordBySerialNo(serialNo)
@@ -264,7 +263,7 @@ func (h *DgHttp) Inform(w http.ResponseWriter, r *http.Request) {
 			if err := apiDgStorage.RemoveTransferRecordBySerialNo(serialNo); err != nil {
 				rep.CodeId = 98
 			} else {
-				bill := walletStorage.NewBill(uid, walletStorage.TypeIncome, walletStorage.EventApiDg, serialNo, int64(-amount * 1000))
+				bill := walletStorage.NewBill(uid, walletStorage.TypeIncome, walletStorage.EventApiDg, serialNo, int64(-amount*1000))
 				walletStorage.OperateVndBalanceV1(bill)
 			}
 
@@ -273,11 +272,11 @@ func (h *DgHttp) Inform(w http.ResponseWriter, r *http.Request) {
 		_, err := apiDgStorage.GetTransferRecordBySerialNo(serialNo)
 		if err != nil {
 			rep.CodeId = 0
-			bill := walletStorage.NewBill(uid, walletStorage.TypeIncome, walletStorage.EventApiDg, serialNo, int64(amount * 1000))
+			bill := walletStorage.NewBill(uid, walletStorage.TypeIncome, walletStorage.EventApiDg, serialNo, int64(amount*1000))
 			walletStorage.OperateVndBalanceV1(bill)
 			wallet := walletStorage.QueryWallet(utils.ConvertOID(uid))
-			tmpBalance := wallet.VndBalance + int64(amount * 1000)
-			apiDgStorage.InsertTransferRecord(serialNo, strconv.Itoa(int(ticketId)), username, tmpToken, tmpBalance, int64(amount * 1000))
+			tmpBalance := wallet.VndBalance + int64(amount*1000)
+			apiDgStorage.InsertTransferRecord(serialNo, strconv.Itoa(int(ticketId)), username, tmpToken, tmpBalance, int64(amount*1000))
 		} else {
 			rep.CodeId = 0
 		}
@@ -289,16 +288,16 @@ func (h *DgHttp) Inform(w http.ResponseWriter, r *http.Request) {
 func (h *DgHttp) Order(w http.ResponseWriter, r *http.Request) {
 	paramMap := make(map[string]interface{})
 	type ListInfo struct {
-		Username string `json:"username"`
+		Username string  `json:"username"`
 		TicketId float64 `json:"ticketId"`
-		Serial string `json:"serial"`
-		Amount float64 `json:"amount"`
+		Serial   string  `json:"serial"`
+		Amount   float64 `json:"amount"`
 	}
 	rep := struct {
-		CodeId int        `json:"codeId"`
-		Token  string     `json:"token"`
-		TicketId float64 `json:"ticketId"`
-		List []ListInfo `json:"list"`
+		CodeId   int        `json:"codeId"`
+		Token    string     `json:"token"`
+		TicketId float64    `json:"ticketId"`
+		List     []ListInfo `json:"list"`
 	}{}
 	if err := h.parse(r, &paramMap); err != nil {
 		rep.CodeId = 1
@@ -317,33 +316,33 @@ func (h *DgHttp) Order(w http.ResponseWriter, r *http.Request) {
 		rep.CodeId = 98
 		h.encryptResponse(w, rep)
 		return
- 	} else {
- 		rep.CodeId = 0
- 		for _, v := range transferRecords {
- 			var tmpList ListInfo
- 			tmpList.TicketId = ticketId
- 			tmpList.Username = v.Username
- 			tmpList.Amount = float64(v.Amount)/1000
- 			tmpList.Serial = v.SerialNo
- 			rep.List = append(rep.List, tmpList)
+	} else {
+		rep.CodeId = 0
+		for _, v := range transferRecords {
+			var tmpList ListInfo
+			tmpList.TicketId = ticketId
+			tmpList.Username = v.Username
+			tmpList.Amount = float64(v.Amount) / 1000
+			tmpList.Serial = v.SerialNo
+			rep.List = append(rep.List, tmpList)
 		}
 		h.encryptResponse(w, rep)
- 		return
+		return
 	}
 }
 
 func (h *DgHttp) Unsettle(w http.ResponseWriter, r *http.Request) {
 	paramMap := make(map[string]interface{})
 	type ListInfo struct {
-		Username string `json:"username"`
+		Username string  `json:"username"`
 		TicketId float64 `json:"ticketId"`
-		Serial string `json:"serial"`
-		Amount float64 `json:"amount"`
+		Serial   string  `json:"serial"`
+		Amount   float64 `json:"amount"`
 	}
 	rep := struct {
 		CodeId int        `json:"codeId"`
 		Token  string     `json:"token"`
-		List []ListInfo `json:"list"`
+		List   []ListInfo `json:"list"`
 	}{}
 	if err := h.parse(r, &paramMap); err != nil {
 		rep.CodeId = 1

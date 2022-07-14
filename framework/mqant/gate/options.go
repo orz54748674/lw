@@ -16,8 +16,8 @@
 package gate
 
 import (
-	"vn/framework/mqant/server"
 	"time"
+	"vn/framework/mqant/server"
 )
 
 //Option 网关配置项

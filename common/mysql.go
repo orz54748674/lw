@@ -20,29 +20,29 @@ var queueFunc *queue.EsQueue
 
 type QueueFuc func()
 
-func InitMysql(conf *DBConf)  {
+func InitMysql(conf *DBConf) {
 	onceMysql.Do(func() {
 		newLogger := myLog.New(
 			slog.New(os.Stdout, "\r\n", slog.LstdFlags), // io writer
 			myLog.Config{
-				SlowThreshold: time.Second/2,   // Slow SQL threshold
-				LogLevel:      logger.Error, // Log level
-				Colorful:      true,         // Disable color
+				SlowThreshold: time.Second / 2, // Slow SQL threshold
+				LogLevel:      logger.Error,    // Log level
+				Colorful:      true,            // Disable color
 			},
 		)
 		dsn := conf.MysqlDns
 		MysqlDB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 			Logger: newLogger,
 		})
-		db,_ := MysqlDB.DB()
+		db, _ := MysqlDB.DB()
 		db.SetMaxIdleConns(512)
 		db.SetMaxOpenConns(512)
-		db.SetConnMaxLifetime(30*time.Second)
+		db.SetConnMaxLifetime(30 * time.Second)
 		mysqlDB = MysqlDB
 		if err != nil {
 			log.Error("failed to connect database:", err)
 			os.Exit(1)
-		}else{
+		} else {
 			log.Info("connect mysql database success")
 		}
 		//queueFunc = queue.NewQueue(20480)
@@ -53,7 +53,9 @@ func InitMysql(conf *DBConf)  {
 		pool.Running()
 	})
 }
+
 var pool *ants.Pool
+
 func GetMysql() *gorm.DB {
 	if mysqlDB != nil {
 		return mysqlDB
@@ -62,9 +64,7 @@ func GetMysql() *gorm.DB {
 	return mysqlDB
 }
 
-
-
-func ExecQueueFunc(f QueueFuc){
+func ExecQueueFunc(f QueueFuc) {
 	//ok,quantity := queueFunc.Put(f)
 	//if !ok{
 	//	log.Error("mysql queue is full, cur quantity: %v",quantity)
@@ -72,7 +72,7 @@ func ExecQueueFunc(f QueueFuc){
 
 	if err := pool.Submit(func() {
 		f()
-	});err != nil{
+	}); err != nil {
 		log.Error("mysql queue error: %s", err)
 	}
 	//log.Info("Running: %v", length)

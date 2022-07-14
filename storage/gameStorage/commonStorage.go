@@ -8,34 +8,33 @@ import (
 	"vn/framework/mqant/log"
 )
 
-var(
+var (
 	cGameCommon = "gameCommon"
 )
+
 func InitGameCommon() {
 	c := common.GetMongoDB().C(cGameCommon)
-	key := bsonx.Doc{{Key: "Uid",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key,options.Index().SetUnique(true));err != nil{
-		log.Error("create gameCommon Index: %s",err)
+	key := bsonx.Doc{{Key: "Uid", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key, options.Index().SetUnique(true)); err != nil {
+		log.Error("create gameCommon Index: %s", err)
 	}
 	log.Info("init gameCommon of mongo db")
 }
-func IncGameCommonData(uid string,vnd int64) {
+func IncGameCommonData(uid string, vnd int64) {
 	c := common.GetMongoDB().C(cGameCommon)
 	query := bson.M{"Uid": uid}
 	update := bson.M{
-		"$inc": bson.M{"InRoomNeedVnd": vnd,
-		},
+		"$inc": bson.M{"InRoomNeedVnd": vnd},
 	}
 	if _, err := c.Upsert(query, update); err != nil {
 		log.Error(err.Error())
 	}
 }
-func UpsertInRoomNeedVnd(uid string,vnd int64) {
+func UpsertInRoomNeedVnd(uid string, vnd int64) {
 	c := common.GetMongoDB().C(cGameCommon)
 	query := bson.M{"Uid": uid}
 	update := bson.M{
-		"$set": bson.M{"InRoomNeedVnd": vnd,
-		},
+		"$set": bson.M{"InRoomNeedVnd": vnd},
 	}
 	if _, err := c.Upsert(query, update); err != nil {
 		log.Error(err.Error())
@@ -56,4 +55,3 @@ func RemoveAllGameCommonData() {
 		log.Error(e.Error())
 	}
 }
-

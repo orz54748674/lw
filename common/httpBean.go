@@ -16,7 +16,7 @@ type Err struct {
 	Action string
 }
 
-func (s *Err) Init()  {
+func (s *Err) Init() {
 	s.errKey = s.ErrMsg
 }
 func (s *Err) GetErr(args ...interface{}) string {

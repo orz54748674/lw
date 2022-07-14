@@ -16,11 +16,12 @@ type DeviceBlack struct {
 }
 type IpBlack struct {
 	Oid      primitive.ObjectID `bson:"_id,omitempty" json:"oid"`
-	Ip     string             `bson:"Ip" json:"Ip"`
+	Ip       string             `bson:"Ip" json:"Ip"`
 	Status   int                `bson:"Status" json:"status"`
 	CreateAt time.Time          `bson:"CreateAt" json:"createAt"`
 	UpdateAt time.Time          `bson:"UpdateAt" json:"updateAt"`
 }
+
 var cDeviceBlack = "deviceBlack"
 var cIpBlack = "ipBlack"
 

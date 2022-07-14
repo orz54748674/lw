@@ -80,7 +80,7 @@ func (h *handler) DisConnect(a gate.Agent) {
 		}
 	}()
 	session := a.GetSession()
-	if session != nil{
+	if session != nil {
 		sessionId := session.GetSessionID()
 		userQueue.Remove(sessionId)
 	}
@@ -302,12 +302,11 @@ func (h *handler) Send(span log.TraceSpan, Sessionid string, topic string, body 
 func (h *handler) SendByQueue(span log.TraceSpan, Sessionid string, topic string, body []byte) (result interface{}, err string) {
 	sessionSyncExec := getQueue(Sessionid)
 	sessionSyncExec.queue.Put(func() {
-		h.Send(span,Sessionid,topic,body)
+		h.Send(span, Sessionid, topic, body)
 	})
 	sessionSyncExec.execQueue()
-	return "success",""
+	return "success", ""
 }
-
 
 /**
  *批量发送消息,sessionid之间用,分割

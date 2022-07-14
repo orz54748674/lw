@@ -94,9 +94,9 @@ var (
 	EventGameAwc           = "gameAwc"
 	EventGameWm            = "gameWm"
 	EventGameSbo           = "gameSbo"
-	EventApiDg 			   = "apiDg"
+	EventApiDg             = "apiDg"
 	EventGameSaba          = "gameSaba"
-	EventGameCq9 		   = "apiCq9"
+	EventGameCq9           = "apiCq9"
 
 	//活动
 	EventGiftCode      = "giftCode"
@@ -109,10 +109,10 @@ var (
 	EventDayGame       = "dayGame"
 	EventDayInvite     = "dayInvite"
 	EventVip           = "vip"
-	EventVipWeek           = "vipWeek"
-	EventVipChargeGift           = "vipChargeGift"
-	EventTurnTable         = "turnTable"
-	EventSafeChange       = "SafeChange"
+	EventVipWeek       = "vipWeek"
+	EventVipChargeGift = "vipChargeGift"
+	EventTurnTable     = "turnTable"
+	EventSafeChange    = "SafeChange"
 
 	StatusInit int8 = 0
 )

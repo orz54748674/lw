@@ -11,16 +11,16 @@ type RobotMsg struct {
 }
 
 type Player struct {
-	UserID   string
-	Golds    int64
-	Head     string
-	Nickname string
-	TotalBet int64
-	Score    int64
-	BetInfo  []int64
-	robotMsg RobotMsg
-	IsOnline bool
-	UserType int8
+	UserID       string
+	Golds        int64
+	Head         string
+	Nickname     string
+	TotalBet     int64
+	Score        int64
+	BetInfo      []int64
+	robotMsg     RobotMsg
+	IsOnline     bool
+	UserType     int8
 	LastChatTime int64
 }
 

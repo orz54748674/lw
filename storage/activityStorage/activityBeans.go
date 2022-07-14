@@ -27,10 +27,10 @@ var (
 	DayCharge     ActivityType = "DayCharge"     //每日任务充值类
 	DayGame       ActivityType = "DayGame"       //每日任务游戏类
 	DayInvite     ActivityType = "DayInvite"     //每日任务邀请类
-	Vip			  ActivityType = "Vip"     		 //VIP活动
-	VipWeek		  ActivityType = "VipWeek"       //VIP每周彩金
+	Vip           ActivityType = "Vip"           //VIP活动
+	VipWeek       ActivityType = "VipWeek"       //VIP每周彩金
 	VipChargeGet  ActivityType = "VipChargeGet"  //VIP充值优惠
-	TurnTable     ActivityType = "TurnTable"  //转盘
+	TurnTable     ActivityType = "TurnTable"     //转盘
 )
 
 var ActivityNormalList = []ActivityType{
@@ -47,10 +47,11 @@ var ActivityDayList = []ActivityType{
 var ActivityVipList = []ActivityType{
 	Vip,
 }
+
 type ActivityGetType string
 
 var (
-	Gold ActivityGetType = "Gold" //赠送金币
+	Gold   ActivityGetType = "Gold"   //赠送金币
 	Points ActivityGetType = "Points" //赠送积分
 )
 
@@ -80,7 +81,7 @@ type ActivityRecord struct {
 	Uid        string             `bson:"Uid",json:"Uid"`
 	Charge     int64              `bson:"Charge",json:"Charge"`
 	Get        int64              `bson:"Get",json:"Get"`
-	GetPoints  float64        `bson:"GetPoints",json:"GetPoints"`
+	GetPoints  float64            `bson:"GetPoints",json:"GetPoints"`
 	BetTimes   int64              `bson:"BetTimes",json:"BetTimes"`
 	UpdateAt   time.Time          `bson:"UpdateAt",json:"UpdateAt"`
 	CreateAt   time.Time          `bson:"CreateAt",json:"CreateAt" gorm:"index"`

@@ -99,7 +99,7 @@ func GetStrFromObj(obj interface{}) string {
 var defaultLetters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
 // RandomString returns a random string with a fixed length
-func RandomString(n int,r *rand.Rand, allowedChars ...[]rune) string {
+func RandomString(n int, r *rand.Rand, allowedChars ...[]rune) string {
 	var letters []rune
 	if len(allowedChars) == 0 {
 		letters = defaultLetters
@@ -288,10 +288,10 @@ func ConvertInt(any interface{}) (int64, error) {
 	}
 }
 
-func RandomNum(len int,rd *rand.Rand) int64 {
+func RandomNum(len int, rd *rand.Rand) int64 {
 	res := ""
 	for i := 0; i < len; i++ {
-		in := getNum(i,rd)
+		in := getNum(i, rd)
 		res = fmt.Sprintf("%s%d", res, in)
 	}
 	r, err := strconv.ParseInt(res, 0, 64)
@@ -300,16 +300,16 @@ func RandomNum(len int,rd *rand.Rand) int64 {
 	}
 	return r
 }
-func getNum(i int,r *rand.Rand) int {
+func getNum(i int, r *rand.Rand) int {
 	//n, _ := crand.Int(crand.Reader, big.NewInt(10))
 	in := r.Intn(10)
 	if in == 0 && i == 0 {
-		return getNum(i,r)
+		return getNum(i, r)
 	}
 	return in
 }
 
-func RandInt64(min, max int64,r *rand.Rand) int64 {
+func RandInt64(min, max int64, r *rand.Rand) int64 {
 	if min >= max || min == 0 || max == 0 {
 		return max
 	}
@@ -617,13 +617,14 @@ func ConvertThousandsSeparate(in int64) string { //千位分隔符
 	p := message.NewPrinter(language.Chinese)
 	return p.Sprintf("%d", in)
 }
+
 /**
 获取本周周几的时间
 */
 func GetMondayTimeOfThisWeek(weekDay time.Weekday) (weekMonday time.Time) {
 	now := time.Now()
 
-	offset := int(weekDay- now.Weekday())
+	offset := int(weekDay - now.Weekday())
 	if offset > 0 {
 		offset = -6
 	}

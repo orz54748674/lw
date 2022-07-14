@@ -10,11 +10,11 @@ import (
 )
 
 type Jackpot struct {
-	ID         uint64        `bson:"-" json:"-"`
+	ID         uint64             `bson:"-" json:"-"`
 	Oid        primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
-	Amount     int64         `bson:"Amount"`
-	RealAmount int64         `bson:"RealAmount"`
-	UpdateAt   time.Time     `bson:"UpdateAt"`
+	Amount     int64              `bson:"Amount"`
+	RealAmount int64              `bson:"RealAmount"`
+	UpdateAt   time.Time          `bson:"UpdateAt"`
 }
 
 func (Jackpot) TableName() string {
@@ -60,7 +60,7 @@ func (DxJackpotDetails) TableName() string {
 	return "dx_jackpot_details"
 }
 
-func NewJackpotLog(gameId int64, uid string,nickName string, amount int64,
+func NewJackpotLog(gameId int64, uid string, nickName string, amount int64,
 	userType string, result int) *DxJackpotDetails {
 	return &DxJackpotDetails{
 		GameId:   gameId,
@@ -68,24 +68,24 @@ func NewJackpotLog(gameId int64, uid string,nickName string, amount int64,
 		NickName: nickName,
 		Amount:   amount,
 		UserType: userType,
-		Result: result,
+		Result:   result,
 		CreateAt: utils.Now(),
 	}
 }
 func InsertJackpotLog(dxJackpotDetails *DxJackpotDetails) {
 	//save := *dxJackpotDetails
 	c := common.GetMongoDB().C(cJackpotDetails)
-	find := bson.M{"GameId" : dxJackpotDetails.GameId,
-			"Uid":dxJackpotDetails.Uid,
-		}
+	find := bson.M{"GameId": dxJackpotDetails.GameId,
+		"Uid": dxJackpotDetails.Uid,
+	}
 	var query DxJackpotDetails
-	if err := c.Find(find).One(&query);err != nil{
-		if err := c.Insert(dxJackpotDetails);err != nil{
+	if err := c.Find(find).One(&query); err != nil {
+		if err := c.Insert(dxJackpotDetails); err != nil {
 			log.Error(err.Error())
 		}
-	}else{
-		update := bson.M{"$inc":bson.M{"Amount":dxJackpotDetails.Amount}}
-		if err := c.Update(find, update);err != nil{
+	} else {
+		update := bson.M{"$inc": bson.M{"Amount": dxJackpotDetails.Amount}}
+		if err := c.Update(find, update); err != nil {
 			log.Error(err.Error())
 		}
 	}
@@ -97,7 +97,7 @@ func InsertJackpotLog(dxJackpotDetails *DxJackpotDetails) {
 	//}
 	c2 := common.GetMongoDB().C(cJackpotGameId)
 	var jackpotGameId DxJackpotGameId
-	if err := c2.FindId(dxJackpotDetails.GameId).One(&jackpotGameId);err!=nil{
+	if err := c2.FindId(dxJackpotDetails.GameId).One(&jackpotGameId); err != nil {
 		insertJackpotGameId(dxJackpotDetails.GameId)
 	}
 }
@@ -116,18 +116,18 @@ func InsertJackpotLog(dxJackpotDetails *DxJackpotDetails) {
 //	}
 //	return res
 //}
-func QueryJackpotCount() (int,int) {
+func QueryJackpotCount() (int, int) {
 	c := common.GetMongoDB().C(cGameDx)
 	var dxs []Dx
-	_ = c.Find(bson.M{"notify.ResultJackpot":1}).Sort("-_id").Limit(100).
+	_ = c.Find(bson.M{"notify.ResultJackpot": 1}).Sort("-_id").Limit(100).
 		All(&dxs)
 	small := 0
 	big := 0
-	for _,dx := range dxs{
-		if dx.Result == ResultBig{
+	for _, dx := range dxs {
+		if dx.Result == ResultBig {
 			big++
-		}else{
-			small ++
+		} else {
+			small++
 		}
 	}
 	return small, big
@@ -135,13 +135,13 @@ func QueryJackpotCount() (int,int) {
 func QueryJackpotDetails(uid string, gameId int64) *DxJackpotDetails {
 	var details DxJackpotDetails
 	c := common.GetMongoDB().C(cJackpotDetails)
-	query := bson.M{"GameId":gameId,"Uid":uid}
-	if err := c.Find(query).One(&details);err != nil{
+	query := bson.M{"GameId": gameId, "Uid": uid}
+	if err := c.Find(query).One(&details); err != nil {
 		return nil
 	}
 	return &details
 }
-func QueryJackpotLog2(offset int,limit int) []JackpotData {
+func QueryJackpotLog2(offset int, limit int) []JackpotData {
 	c := common.GetMongoDB().C(cJackpotGameId)
 	var jackpotIds []DxJackpotGameId
 	if err := c.Find(bson.M{}).Sort("-_id").Skip(offset).Limit(limit).
@@ -149,7 +149,7 @@ func QueryJackpotLog2(offset int,limit int) []JackpotData {
 
 	}
 	log.Info("len %v", len(jackpotIds))
-    res := make([]JackpotData,0)
+	res := make([]JackpotData, 0)
 	for _, id := range jackpotIds {
 		c2 := common.GetMongoDB().C(cJackpotDetails)
 		var details []DxJackpotDetails
@@ -162,7 +162,7 @@ func QueryJackpotLog2(offset int,limit int) []JackpotData {
 		jackpotData.ResultAmount = dx.BetSmall
 		jackpotData.GameId = id.GameId
 		jackpotData.JackpotLog = details
-		count,_ := c2.Find(bson.M{"GameId": id.GameId}).Count()
+		count, _ := c2.Find(bson.M{"GameId": id.GameId}).Count()
 		jackpotData.LogCount = int(count)
 		res = append(res, jackpotData)
 	}

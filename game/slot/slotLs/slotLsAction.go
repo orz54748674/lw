@@ -12,16 +12,16 @@ import (
 	"vn/storage/userStorage"
 )
 
-func (this *MyTable) Enter(session gate.Session,msg map[string]interface{})  (err error) {
+func (this *MyTable) Enter(session gate.Session, msg map[string]interface{}) (err error) {
 	player := &room.BasePlayerImp{}
 	player.Bind(session)
 
 	player.OnRequest(session)
 	userID := session.GetUserID()
-	if !this.BroadCast{
+	if !this.BroadCast {
 		this.BroadCast = true
 	}
-	if userID == ""{
+	if userID == "" {
 		log.Info("your userid is empty")
 		return nil
 	}
@@ -29,39 +29,39 @@ func (this *MyTable) Enter(session gate.Session,msg map[string]interface{})  (er
 	this.Players[userID] = player
 	this.UserID = userID
 	user := userStorage.QueryUserId(utils.ConvertOID(userID))
-	if user.Type == userStorage.TypeNormal{
+	if user.Type == userStorage.TypeNormal {
 		this.Role = USER
 	}
 	this.Name = user.NickName
 
-	if modeType == NORMAL && this.ModeType != Free{
+	if modeType == NORMAL && this.ModeType != Free {
 		this.ModeType = NORMAL
 	}
-	if this.ModeType != Free && modeType != TRIALFREE{
+	if this.ModeType != Free && modeType != TRIALFREE {
 		this.JieSuanData = JieSuanData{}
 		this.JieSuanDataFree = JieSuanData{}
 		this.JieSuanDataTrial = JieSuanData{}
 		this.JieSuanDataTrialFree = JieSuanData{}
 	}
 	tableInfoRet := this.GetTableInfo()
-	_ = this.sendPack(session.GetSessionID(),game.Push,tableInfoRet,protocol.UpdateTableInfo,nil)
+	_ = this.sendPack(session.GetSessionID(), game.Push, tableInfoRet, protocol.UpdateTableInfo, nil)
 	//end := time.Now().UnixNano()
 	//log.Info("cost time = %d",time.Duration(end -start) / time.Millisecond)
 	return nil
 }
-func (this *MyTable) QuitTable(session gate.Session)  (err error)  {
+func (this *MyTable) QuitTable(session gate.Session) (err error) {
 	userID := session.GetUserID()
 	sb := vGate.QuerySessionBean(userID)
-	if this.IsInFreeGame(){
+	if this.IsInFreeGame() {
 		if sb != nil {
 			this.sendPack(session.GetSessionID(), game.Push, "", protocol.QuitTable, errCode.XiaZhuCantQuit)
 		}
 		return nil
 	}
-	ret := this.DealProtocolFormat("",protocol.QuitTable,nil)
+	ret := this.DealProtocolFormat("", protocol.QuitTable, nil)
 	this.onlinePush.SendCallBackMsgNR([]string{sb.SessionId}, game.Push, ret)
 	this.onlinePush.ExecuteCallBackMsg(this.Trace())
-	if !this.IsInCheckout{
+	if !this.IsInCheckout {
 		this.PutQueue(protocol.ClearTable)
 	}
 	return nil

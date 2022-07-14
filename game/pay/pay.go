@@ -33,7 +33,8 @@ func (self *Pay) Version() string {
 	//可以在监控时了解代码版本
 	return "1.0.0"
 }
-var(
+
+var (
 	actionPayInfo            = "HD_payInfo"
 	actionGiftCode           = "HD_giftCode"
 	actionCharge             = "HD_charge"
@@ -46,13 +47,14 @@ var(
 	actionAdminDouDou        = "HD_adminDouDou"
 	actionVGBankList         = "HD_vgBankList"
 	actionAgentIncome2wallet = "HD_agentIncome2wallet"
-	actionSafe2wallet = "HD_safe2wallet"
+	actionSafe2wallet        = "HD_safe2wallet"
 	actionBindBtCard         = "HD_BindBtCard"
 )
+
 func (s *Pay) OnInit(app module.App, settings *conf.ModuleSettings) {
 	s.BaseModule.OnInit(s, app, settings)
 	s.impl = &Impl{
-		App: app,
+		App:      app,
 		Settings: settings,
 	}
 	//self.GetServer().RegisterGO("/listener/onLogin", self.onLogin)
@@ -61,21 +63,21 @@ func (s *Pay) OnInit(app module.App, settings *conf.ModuleSettings) {
 	//common.AddListener(self.GetServerID(),common.EventDisconnect,"/listener/onDisconnect")
 
 	hook := game.NewHook(s.GetType())
-	hook.RegisterAndCheckLogin(s.GetServer(),actionPayInfo,s.impl.payInfo)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionCharge,s.impl.charge)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionGiftCode,s.giftCode)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionChargeLog,s.impl.chargeLog)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionDouDou,s.impl.douDou)
-	hook.RegisterAndCheckLogin(s.GetServer(), actionDouDouLog,s.impl.doudouLog)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionVGBankList,s.impl.getVGBankList)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionAgentIncome2wallet,s.impl.agentIncome2wallet)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionSafe2wallet,s.impl.safe2wallet)
-	hook.RegisterAndCheckLogin(s.GetServer(), actionBindBtCard,s.impl.bindBtCard)
-	hook.RegisterAndCheckLogin(s.GetServer(), actionDouDouBtList,s.impl.douDouBtList)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionPayInfo, s.impl.payInfo)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionCharge, s.impl.charge)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionGiftCode, s.giftCode)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionChargeLog, s.impl.chargeLog)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionDouDou, s.impl.douDou)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionDouDouLog, s.impl.doudouLog)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionVGBankList, s.impl.getVGBankList)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionAgentIncome2wallet, s.impl.agentIncome2wallet)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionSafe2wallet, s.impl.safe2wallet)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionBindBtCard, s.impl.bindBtCard)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionDouDouBtList, s.impl.douDouBtList)
 
-	hook.RegisterAdminInterface(s.GetServer(),actionAdminOrder,s.impl.adminOrder)
-	hook.RegisterAdminInterface(s.GetServer(),actionAdminAddOrder,s.impl.adminAddOrder)
-	hook.RegisterAdminInterface(s.GetServer(), actionAdminDouDou,s.impl.adminDouDou)
+	hook.RegisterAdminInterface(s.GetServer(), actionAdminOrder, s.impl.adminOrder)
+	hook.RegisterAdminInterface(s.GetServer(), actionAdminAddOrder, s.impl.adminAddOrder)
+	hook.RegisterAdminInterface(s.GetServer(), actionAdminDouDou, s.impl.adminDouDou)
 
 	s.push = &gate2.OnlinePush{
 		TraceSpan: log.CreateRootTrace(),
@@ -84,7 +86,7 @@ func (s *Pay) OnInit(app module.App, settings *conf.ModuleSettings) {
 	s.push.OnlinePushInit(nil, 128)
 
 	incDataExpireDay := time.Duration(
-		app.GetSettings().Settings["mongoIncDataExpireDay"].(float64))*24*time.Hour
+		app.GetSettings().Settings["mongoIncDataExpireDay"].(float64)) * 24 * time.Hour
 
 	payStorage.InitPay(incDataExpireDay)
 	payStorage.InitVGPay()
@@ -117,17 +119,18 @@ func (s *Pay) OnZeroRefreshData() {
 	}
 }
 func (self *Pay) Run(closeSig chan bool) {
-	log.Info("%v模块运行中...",self.GetType())
+	log.Info("%v模块运行中...", self.GetType())
 	self.push.Run(100 * time.Millisecond)
 	<-closeSig
-	log.Info("%v模块已停止...",self.GetType())
+	log.Info("%v模块已停止...", self.GetType())
 }
 
 func (self *Pay) OnDestroy() {
 	//一定别忘了继承
 	self.BaseModule.OnDestroy()
-	log.Info("%v模块已回收...",self.GetType())
+	log.Info("%v模块已回收...", self.GetType())
 }
+
 //func (s *Pay)onLogin(uid string)(interface{}, error)  {
 //	return nil, nil
 //}

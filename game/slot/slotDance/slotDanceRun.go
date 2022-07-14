@@ -10,14 +10,14 @@ import (
 )
 
 func (this *MyTable) ClearTable() { //
-	if !this.IsInCheckout{
+	if !this.IsInCheckout {
 		slotDanceStorage.RemoveTableInfo(this.tableID)
 
 		myRoom := (this.module).(*Room)
 		myRoom.DestroyTable(this.tableID)
 	}
 }
-func (this *MyTable) TableInit(module module.RPCModule,app module.App,tableID string){
+func (this *MyTable) TableInit(module module.RPCModule, app module.App, tableID string) {
 	this.Players = map[string]room.BasePlayer{}
 	this.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 	this.GameConf = slotDanceStorage.GetRoomConf()
@@ -33,17 +33,17 @@ func (this *MyTable) TableInit(module module.RPCModule,app module.App,tableID st
 	}
 	this.onlinePush.OnlinePushInit(this, 512)
 
-	this.ReelsList = ReelsList87      //ReelsNormalList
+	this.ReelsList = ReelsList87 //ReelsNormalList
 	this.ReelsListTrial = ReelsList110
 	this.JieSuanData = JieSuanData{}
 	this.JieSuanData.FreeData = FreeData{}
-	this.JieSuanData.FreeData.FreeStepTimes = make([]int64,0)
+	this.JieSuanData.FreeData.FreeStepTimes = make([]int64, 0)
 
 	this.CoinValue = CoinValue[0]
 	this.CoinNum = CoinNum[0]
 	this.XiaZhuV = this.CoinValue * this.CoinNum
 	this.TrialModeConf = TrialModeConf{
-		VndBalance:    200000000,
+		VndBalance: 200000000,
 	}
 
 	this.onlinePush = &vGate.OnlinePush{

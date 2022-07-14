@@ -9,16 +9,16 @@ import (
 )
 
 var (
-	cBjlRecord = "bjlRecord"
+	cBjlRecord   = "bjlRecord"
 	cBjlGameConf = "bjlGameConf"
 )
 
 func InitBjlStorage() {
 	c := common.GetMongoDB().C(cBjlRecord)
-	key := bsonx.Doc{{Key: "createTime",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key,options.Index().
-		SetExpireAfterSeconds(30*24*3600));err != nil{
-		log.Error("create cBjlRecord Index: %s",err)
+	key := bsonx.Doc{{Key: "createTime", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key, options.Index().
+		SetExpireAfterSeconds(30*24*3600)); err != nil {
+		log.Error("create cBjlRecord Index: %s", err)
 	}
 }
 
@@ -33,7 +33,7 @@ func GetUserRecord(uid string, offset, limit int) []UserGameRecord {
 func InsertRecord(records []UserGameRecord) {
 	c := common.GetMongoDB().C(cBjlRecord)
 	for _, v := range records {
-		if error := c.Insert(&v); error != nil{
+		if error := c.Insert(&v); error != nil {
 			log.Info("Insert mail error: %s", error)
 		}
 	}

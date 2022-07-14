@@ -34,11 +34,11 @@ type UserOverview struct {
 	UserLogin        int       `bson:"UserLogin"`        //用户登录数
 	ChargeAmount     int64     `bson:"ChargeAmount"`     //充值金额
 	AddChargeUsers   int       `bson:"AddChargeUsers"`   //新增充值人数
-	AddChargeAmount   int       `bson:"AddChargeAmount"`   //新增充值金额
+	AddChargeAmount  int       `bson:"AddChargeAmount"`  //新增充值金额
 	FirstChargeUsers int       `bson:"FirstChargeUsers"` //首次充值人数
 	ChargeUsers      int       `bson:"ChargeUsers"`      //充值人数
 	DouDouAmount     int64     `bson:"DouDouAmount"`     //换豆豆金额
-	DouDouUsers      int       `bson:"DouDouUsers"`    //换豆豆人数
+	DouDouUsers      int       `bson:"DouDouUsers"`      //换豆豆人数
 	UserTotal        int       `bson:"UserTotal"`        //注册总数
 	VndBalance       int64     `bson:"VndBalance"`       //账户余额
 	AgentBalance     int64     `bson:"AgentBalance"`     //佣金余额
@@ -170,8 +170,8 @@ func QueryChargeData(uidHexs []primitive.ObjectID, newUidsHex []primitive.Object
 
 	pipe = mongo.Pipeline{
 		{{"$match", bson.M{"UpdateAt": bson.M{"$gte": time},
-			"UserId": bson.M{"$in": newUidsHex},
-			"Status": payStorage.StatusSuccess,
+			"UserId":   bson.M{"$in": newUidsHex},
+			"Status":   payStorage.StatusSuccess,
 			"MethodId": bson.M{"$ne": payConf.Oid},
 		}},
 		},
@@ -197,13 +197,12 @@ func QueryChargeData(uidHexs []primitive.ObjectID, newUidsHex []primitive.Object
 
 	pipe = mongo.Pipeline{
 		{{"$match", bson.M{"UpdateAt": bson.M{"$lt": time},
-			"UserId": bson.M{"$in": chargeUids},
-			"Status": payStorage.StatusSuccess,
+			"UserId":   bson.M{"$in": chargeUids},
+			"Status":   payStorage.StatusSuccess,
 			"MethodId": bson.M{"$ne": payConf.Oid},
 		}},
 		},
-		{{"$group", bson.M{"_id": "$UserId"},
-		}},
+		{{"$group", bson.M{"_id": "$UserId"}}},
 	}
 	res = append(res[:0], res[len(res):]...)
 	if err := c.Pipe(pipe).All(&res); err != nil {
@@ -260,7 +259,7 @@ func QueryActivityAmount(uids []string, time time.Time) int64 {
 		{{"$match", bson.M{"UpdateAt": bson.M{"$gte": time},
 			"Uid": bson.M{"$in": uids},
 			//"$or": []bson.M{{"Event": walletStorage.EventBindPhone}, {"Event": walletStorage.EventActivityAward}, {"Event": walletStorage.EventGiftCode}},
-			"$or": []bson.M{{"Event": bson.M{"$in":walletStorage.ActivityEvent}}},
+			"$or": []bson.M{{"Event": bson.M{"$in": walletStorage.ActivityEvent}}},
 		},
 		}},
 		{{"$group", bson.M{"_id": "$Uid",

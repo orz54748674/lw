@@ -20,13 +20,15 @@ var Module = func() module.Module {
 	this := new(Room)
 	return this
 }
+
 type Room struct {
 	basemodule.BaseModule
-	room *room.Room
-	app module.App
-	tablesID sync.Map
+	room       *room.Room
+	app        module.App
+	tablesID   sync.Map
 	curTableID string
 }
+
 func (self *Room) GetType() string {
 	//很关键,需要与配置文件中的Module配置对应
 	return string(game.SlotDance)
@@ -45,37 +47,36 @@ func (self *Room) OnInit(app module.App, settings *conf.ModuleSettings) {
 	//self.GetServer().RegisterGO("/slotLs/onLogin", self.onLogin)
 	//common.AddListener(self.GetServerID(),common.EventLogin,"/slotLs/onLogin")
 	self.GetServer().RegisterGO("/slotDance/onDisconnect", self.onDisconnect)
-	common.AddListener(self.GetServerID(),common.EventDisconnect,"/slotDance/onDisconnect")
+	common.AddListener(self.GetServerID(), common.EventDisconnect, "/slotDance/onDisconnect")
 
 	hook := game.NewHook(self.GetType())
 
 	//需要队列
 	//hook.RegisterAndCheckLogin(self.GetServer(),protocol.XiaZhu,self.TableQueue)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.Enter,self.Enter)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.Spin,self.Spin)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.QuitTable,self.QuitTable)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.Enter, self.Enter)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.Spin, self.Spin)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.QuitTable, self.QuitTable)
 	//直接request
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.Info,self.Info)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.SwitchMode,self.SwitchMode)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.CheckPlayerInGame,self.CheckPlayerInGame)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.Info, self.Info)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.SwitchMode, self.SwitchMode)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.CheckPlayerInGame, self.CheckPlayerInGame)
 }
 
 func (self *Room) Run(closeSig chan bool) {
-	gameStorage.UpsertGameReboot(game.SlotDance,"false")
+	gameStorage.UpsertGameReboot(game.SlotDance, "false")
 	log.Info("%v模块运行中...", self.GetType())
 	gameConf := slotDanceStorage.GetRoomConf()
-	if gameConf == nil{
+	if gameConf == nil {
 		gameConf = &slotDanceStorage.Conf{
 			BotProfitPerThousand: 20,
-			FreeGameMinTimes: 20,
+			FreeGameMinTimes:     20,
 		}
 		slotDanceStorage.InsertRoomConf(gameConf)
 	}
 
 	roomData := slotDanceStorage.GetRoomData()
-	if roomData == nil{
-		roomData := slotDanceStorage.RoomData{
-		}
+	if roomData == nil {
+		roomData := slotDanceStorage.RoomData{}
 		slotDanceStorage.InsertRoomData(&roomData)
 	}
 	<-closeSig

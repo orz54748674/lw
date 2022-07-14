@@ -145,7 +145,7 @@ func (l logger) Trace(ctx context.Context, begin time.Time, fc func() (string, i
 			if rows == -1 {
 				l.Printf(l.traceErrStr, utils.FileWithLineNum(), err, float64(elapsed.Nanoseconds())/1e6, "-", sql)
 			} else {
-				if err.Error() != "record not found"{
+				if err.Error() != "record not found" {
 					l.Printf(l.traceErrStr, utils.FileWithLineNum(), err, float64(elapsed.Nanoseconds())/1e6, rows, sql)
 				}
 			}

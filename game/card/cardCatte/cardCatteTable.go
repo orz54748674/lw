@@ -17,50 +17,50 @@ import (
 
 type MyTable struct {
 	room.QTable
-	module  module.RPCModule
-	app module.App
+	module module.RPCModule
+	app    module.App
 
-
-	onlinePush *vGate.OnlinePush
-	tableID string
+	onlinePush  *vGate.OnlinePush
+	tableID     string
 	tableIDTail string //
-	Players map[string] room.BasePlayer
-	BroadCast bool  //广播标志
+	Players     map[string]room.BasePlayer
+	BroadCast   bool //广播标志
 
 	SeqExecFlag bool //顺序执行标记
 	OnlyExecOne bool //执行一次标志
-	GameConf *cardCatteStorage.Conf
-	CountDown int  //倒计时
+	GameConf    *cardCatteStorage.Conf
+	CountDown   int //倒计时
 
 	Rand *rand.Rand
 
-	EventID         string
-	BaseScore        int64
-	TotalPlayerNum   int //总人数
-	PlayerList 		[]PlayerList `bson:"PlayerList" json:"PlayerList"`
+	EventID        string
+	BaseScore      int64
+	TotalPlayerNum int          //总人数
+	PlayerList     []PlayerList `bson:"PlayerList" json:"PlayerList"`
 
-	Master           string  //房主
-	RoomState		 Room_v
+	Master    string //房主
+	RoomState Room_v
 
-	RobotNum         int //机器人数量
-	AutoCreate       bool //自動創建
+	RobotNum   int  //机器人数量
+	AutoCreate bool //自動創建
 
-	WaitingList     sync.Map
+	WaitingList sync.Map
 
-	FirstPutIdx     int
-	PutOverRecord   []PutOverRecord //出完牌
-	PlayingNum      int
-	CurRoundList    map[int]bool//本圈玩家列表
-	MinEnterTable   int64
-	RoundNum		int //第几圈
-	MaxIdx			int //
-	MaxPoker        int//
-	WinIdx			int
+	FirstPutIdx   int
+	PutOverRecord []PutOverRecord //出完牌
+	PlayingNum    int
+	CurRoundList  map[int]bool //本圈玩家列表
+	MinEnterTable int64
+	RoundNum      int //第几圈
+	MaxIdx        int //
+	MaxPoker      int //
+	WinIdx        int
 
 	StraightScoreData StraightScoreData
-	JieSuanData 	JiesuanData
-	RefreshTime int
+	JieSuanData       JiesuanData
+	RefreshTime       int
 }
+
 func (this *MyTable) GetSeats() map[string]room.BasePlayer {
 	return this.Players
 }
@@ -74,7 +74,6 @@ func (this *MyTable) OnCreate() {
 	//可以加载数据
 	log.Info("cardCatte Table OnCreate")
 	//一定要调用QTable.OnCreate()
-
 
 	this.QTable.OnCreate()
 }
@@ -93,11 +92,11 @@ func (this *MyTable) Update(ds time.Duration) {
 	}()
 }
 
-func NewTable(module module.RPCModule,app module.App,tableID string,opts ...room.Option) *MyTable {
+func NewTable(module module.RPCModule, app module.App, tableID string, opts ...room.Option) *MyTable {
 	this := &MyTable{
 		module:  module,
-		app: app,
-		tableID:tableID,
+		app:     app,
+		tableID: tableID,
 	}
 	opts = append(opts, room.TimeOut(0))
 	opts = append(opts, room.Update(this.Update))
@@ -113,27 +112,24 @@ func NewTable(module module.RPCModule,app module.App,tableID string,opts ...room
 	}))
 	this.OnInit(this, opts...)
 	//this.OnCreate()
-	this.TableInit(module,app,tableID)
-	this.Register(protocol.Enter, this.Enter)             //进入房间
-	this.Register(protocol.InviteEnter, this.InviteEnter)             //进入房间
-	this.Register(protocol.GetEnterData, this.GetEnterData)             //
-	this.Register(protocol.Ready, this.Ready)             //
+	this.TableInit(module, app, tableID)
+	this.Register(protocol.Enter, this.Enter)               //进入房间
+	this.Register(protocol.InviteEnter, this.InviteEnter)   //进入房间
+	this.Register(protocol.GetEnterData, this.GetEnterData) //
+	this.Register(protocol.Ready, this.Ready)               //
 	this.Register(protocol.RobotReady, this.RobotReady)
 	this.Register(protocol.AutoReady, this.AutoReady)
 	this.Register(protocol.MasterStartGame, this.MasterStartGame)
-	this.Register(protocol.QuitTable, this.QuitTable)             //退出房间
-	this.Register(protocol.RobotEnter, this.RobotEnter)             //
-	this.Register(protocol.RobotQuitTable, this.RobotQuitTable)             //
+	this.Register(protocol.QuitTable, this.QuitTable)           //退出房间
+	this.Register(protocol.RobotEnter, this.RobotEnter)         //
+	this.Register(protocol.RobotQuitTable, this.RobotQuitTable) //
 	this.Register(protocol.StartGame, this.StartGame)
 	this.Register(protocol.ReadyGame, this.ReadyGame)
 	this.Register(protocol.JieSuan, this.JieSuan)
-	this.Register(protocol.ClearTable, this.ClearTable)             //
-	this.Register(protocol.PutPoker, this.PutPoker)             //
-	this.Register(protocol.CheckPoker, this.CheckPoker)             //
+	this.Register(protocol.ClearTable, this.ClearTable) //
+	this.Register(protocol.PutPoker, this.PutPoker)     //
+	this.Register(protocol.CheckPoker, this.CheckPoker) //
 	this.Register(protocol.ShowPoker, this.ShowPoker)
 	this.Register(protocol.SortPoker, this.SortPoker)
 	return this
 }
-
-
-

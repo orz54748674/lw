@@ -36,35 +36,36 @@ func (s *Activity) Version() string {
 }
 
 const (
-	actionJoinFirstCharge           = "HD_JoinFirstCharge"
+	actionJoinFirstCharge = "HD_JoinFirstCharge"
 
-	actionGetActivityConf           = "HD_GetActivityConf"
-	actionGetTotalChargeActivity          = "HD_GetTotalChargeActivity"
-	actionReceiveTotalChargeActivity          = "HD_ReceiveTotalChargeActivity"
+	actionGetActivityConf            = "HD_GetActivityConf"
+	actionGetTotalChargeActivity     = "HD_GetTotalChargeActivity"
+	actionReceiveTotalChargeActivity = "HD_ReceiveTotalChargeActivity"
 	actionGetSignInActivity          = "HD_GetSignInActivity"
-	actionReceiveSignInActivity          = "HD_ReceiveSignInActivity"
-	actionTodayEncourageFinish          = "HD_TodayEncourageFinish"
-	actionGetEncouragementConf         = "HD_GetEncouragementConf"
-	actionEncouragementChargeHint         = "HD_EncouragementChargeHint"
-	actionEncouragementReceiveHint         = "HD_EncouragementReceiveHint"
+	actionReceiveSignInActivity      = "HD_ReceiveSignInActivity"
+	actionTodayEncourageFinish       = "HD_TodayEncourageFinish"
+	actionGetEncouragementConf       = "HD_GetEncouragementConf"
+	actionEncouragementChargeHint    = "HD_EncouragementChargeHint"
+	actionEncouragementReceiveHint   = "HD_EncouragementReceiveHint"
 	//每日任务
-	actionGetDayActivity          = "HD_GetDayActivity"
-	actionReceiveDayActivity          = "HD_ReceiveDayActivity"
+	actionGetDayActivity     = "HD_GetDayActivity"
+	actionReceiveDayActivity = "HD_ReceiveDayActivity"
 	//VIP
-	actionGetVipActivityConf         = "HD_GetVipActivityConf"
-	actionUpGradeSuccess         = "HD_UpGradeSuccess"
-	actionGetVipActivity         = "HD_GetVipActivity"
+	actionGetVipActivityConf = "HD_GetVipActivityConf"
+	actionUpGradeSuccess     = "HD_UpGradeSuccess"
+	actionGetVipActivity     = "HD_GetVipActivity"
 	actionGetVipGift         = "HD_GetVipGift"
-	actionReceiveVipGift         = "HD_ReceiveVipGift"
-	actionReceiveVipGiftAll         = "HD_ReceiveVipGiftAll"
-	actionReceiveVipWeekGift         = "HD_ReceiveVipWeekGift"
-	actionUpdateVipLevel        = "HD_UpdateVipLevel"
+	actionReceiveVipGift     = "HD_ReceiveVipGift"
+	actionReceiveVipGiftAll  = "HD_ReceiveVipGiftAll"
+	actionReceiveVipWeekGift = "HD_ReceiveVipWeekGift"
+	actionUpdateVipLevel     = "HD_UpdateVipLevel"
 	//转盘
-	actionGetTurnTableConf         = "HD_GetTurnTableConf"
-	actionStartTurnTable         = "HD_StartTurnTable"
-	actionTurnTableRankList         = "HD_TurnTableRankList"
-	actionTurnTableRecord        = "HD_TurnTableRecord"
+	actionGetTurnTableConf  = "HD_GetTurnTableConf"
+	actionStartTurnTable    = "HD_StartTurnTable"
+	actionTurnTableRankList = "HD_TurnTableRankList"
+	actionTurnTableRecord   = "HD_TurnTableRecord"
 )
+
 func (s *Activity) OnInit(app module.App, settings *conf.ModuleSettings) {
 	s.BaseModule.OnInit(s, app, settings)
 
@@ -90,7 +91,7 @@ func (s *Activity) OnInit(app module.App, settings *conf.ModuleSettings) {
 	hook.RegisterAndCheckLogin(s.GetServer(), actionTurnTableRankList, s.impl.TurnTableRankList)
 	hook.RegisterAndCheckLogin(s.GetServer(), actionTurnTableRecord, s.impl.TurnTableRecord)
 
-	hook.RegisterAdminInterface(s.GetServer(),actionUpdateVipLevel, s.impl.updateVipLevel)
+	hook.RegisterAdminInterface(s.GetServer(), actionUpdateVipLevel, s.impl.updateVipLevel)
 	s.push = &gate2.OnlinePush{
 		TraceSpan: log.CreateRootTrace(),
 		App:       app,
@@ -158,36 +159,36 @@ func (s *Activity) OnDestroy() {
 }
 func (s *Activity) ReceiveTotalChargeActivity(session gate.Session, msg map[string]interface{}) (r map[string]interface{}, err error) {
 	log.Info("params: %s,ip: %s")
-	if msg["ActivityID"] == nil{
+	if msg["ActivityID"] == nil {
 		return errCode.ServerError.GetI18nMap(), nil
 	}
 	activityID := msg["ActivityID"].(string)
-	return s.impl.ReceiveTotalChargeActivity(session,activityID)
+	return s.impl.ReceiveTotalChargeActivity(session, activityID)
 }
 func (s *Activity) ReceiveSignInActivity(session gate.Session, msg map[string]interface{}) (r map[string]interface{}, err error) {
 	log.Info("params: %s,ip: %s")
-	if msg["ActivityID"] == nil{
+	if msg["ActivityID"] == nil {
 		return errCode.ServerError.GetI18nMap(), nil
 	}
 	activityID := msg["ActivityID"].(string)
-	return s.impl.ReceiveSignInActivity(session,activityID)
+	return s.impl.ReceiveSignInActivity(session, activityID)
 }
 func (s *Activity) ReceiveDayActivity(session gate.Session, msg map[string]interface{}) (r map[string]interface{}, err error) {
 	log.Info("params: %s,ip: %s")
-	if msg["ActivityID"] == nil || msg["ActivityType"] == nil{
+	if msg["ActivityID"] == nil || msg["ActivityType"] == nil {
 		return errCode.ServerError.GetI18nMap(), nil
 	}
 	activityID := msg["ActivityID"].(string)
 	activityType := activityStorage.ActivityType(msg["ActivityType"].(string))
-	return s.impl.ReceiveDayActivity(session,activityID,activityType)
+	return s.impl.ReceiveDayActivity(session, activityID, activityType)
 }
 func (s *Activity) ReceiveVipGift(session gate.Session, msg map[string]interface{}) (r map[string]interface{}, err error) {
 	log.Info("params: %s,ip: %s")
-	if msg["Level"] == nil{
+	if msg["Level"] == nil {
 		return errCode.ServerError.GetI18nMap(), nil
 	}
-	level,_ := utils.ConvertInt(msg["Level"])
-	return s.impl.ReceiveVipGift(session,int(level))
+	level, _ := utils.ConvertInt(msg["Level"])
+	return s.impl.ReceiveVipGift(session, int(level))
 }
 func (s *Activity) ReceiveVipGiftAll(session gate.Session, msg map[string]interface{}) (r map[string]interface{}, err error) {
 	log.Info("params: %s,ip: %s")
@@ -195,9 +196,9 @@ func (s *Activity) ReceiveVipGiftAll(session gate.Session, msg map[string]interf
 }
 func (s *Activity) ReceiveVipWeekGift(session gate.Session, msg map[string]interface{}) (r map[string]interface{}, err error) {
 	log.Info("params: %s,ip: %s")
-	if msg["level"] == nil{
+	if msg["level"] == nil {
 		return errCode.ServerError.GetI18nMap(), nil
 	}
-	level,_ := utils.ConvertInt(msg["level"])
-	return s.impl.ReceiveVipWeekGift(session,int(level))
+	level, _ := utils.ConvertInt(msg["level"])
+	return s.impl.ReceiveVipWeekGift(session, int(level))
 }

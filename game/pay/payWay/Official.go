@@ -21,23 +21,26 @@ import (
 
 type Official struct {
 }
+
 var appID = "1395677221686874114"
+
 type AutoCreate struct { //request params
-	BizOrderId  string 	`json:"bizOrderId"`//业务单号
-	PayMethod string 	`json:"payMethod"` //支付方式
-	Amount     int64	`json:"amount"`//金额
-	AppId     string	`json:"appId"`
-	ProductBankId   string	`json:"productBankId"`//银行账号id
-	BankId	  string	`json:"bankId"`//收款银行id
-	BankName	  string	`json:"bankName"`//收款银行名称
-	BankNo	  string	`json:"bankNo"`//收款银行账号
-	BankUserName	  string	`json:"bankUserName"`//收款银行账户
-	BankUserMobile	  string	`json:"bankUserMobile"`//收款银行手机号
-	ExtendValidCode	  string	`json:"extendValidCode"`//扩展校验码
-	ValidCode string	`json:"validCode"`//
-	CreateUserId	  string	`json:"createUserId"`//接入系统的会员ID
-	CreateUserName	  string	`json:"createUserName"`//接入系统的会员名称
+	BizOrderId      string `json:"bizOrderId"` //业务单号
+	PayMethod       string `json:"payMethod"`  //支付方式
+	Amount          int64  `json:"amount"`     //金额
+	AppId           string `json:"appId"`
+	ProductBankId   string `json:"productBankId"`   //银行账号id
+	BankId          string `json:"bankId"`          //收款银行id
+	BankName        string `json:"bankName"`        //收款银行名称
+	BankNo          string `json:"bankNo"`          //收款银行账号
+	BankUserName    string `json:"bankUserName"`    //收款银行账户
+	BankUserMobile  string `json:"bankUserMobile"`  //收款银行手机号
+	ExtendValidCode string `json:"extendValidCode"` //扩展校验码
+	ValidCode       string `json:"validCode"`       //
+	CreateUserId    string `json:"createUserId"`    //接入系统的会员ID
+	CreateUserName  string `json:"createUserName"`  //接入系统的会员名称
 }
+
 func (s *Official) Charge(order *payStorage.Order, payConf *payStorage.PayConf,
 	params map[string]interface{}) *common.Err {
 	if check, ok := utils.CheckParams2(params,
@@ -47,12 +50,12 @@ func (s *Official) Charge(order *payStorage.Order, payConf *payStorage.PayConf,
 	receiveId := params["receiveId"].(string)
 	rId := utils.ConvertOID(receiveId)
 	receive := payStorage.QueryCompanyBank(rId)
-	if receive == nil{
+	if receive == nil {
 		return errCode.ErrParams.SetKey("receiveId")
 	}
-	if receive.IsAuto == 0{
+	if receive.IsAuto == 0 {
 		return s.ChargeOfficial(order, payConf, params)
-	}else{
+	} else {
 		return s.ChargeOfficialAuto(order, payConf, params)
 	}
 }
@@ -62,11 +65,11 @@ func (s *Official) ChargeOfficial(order *payStorage.Order, payConf *payStorage.P
 	accountName := params["accountName"].(string)
 	receiveId := params["receiveId"].(string)
 	rId := utils.ConvertOID(receiveId)
-	if receive := payStorage.QueryCompanyBank(rId);receive == nil{
+	if receive := payStorage.QueryCompanyBank(rId); receive == nil {
 		return errCode.ErrParams.SetKey("receiveId")
 	}
 	user := userStorage.QueryUserId(utils.ConvertOID(order.UserId.Hex()))
-	code := strconv.FormatInt(user.ShowId % 10000000,10)//utils.Base58encode(int(user.ShowId))
+	code := strconv.FormatInt(user.ShowId%10000000, 10) //utils.Base58encode(int(user.ShowId))
 	for len(code) < 7 {
 		code = "0" + code
 	}
@@ -90,11 +93,11 @@ func (s *Official) ChargeOfficialAuto(order *payStorage.Order, payConf *payStora
 	receiveId := params["receiveId"].(string)
 	rId := utils.ConvertOID(receiveId)
 	receive := payStorage.QueryCompanyBank(rId)
-	if receive == nil{
+	if receive == nil {
 		return errCode.ErrParams.SetKey("receiveId")
 	}
 	user := userStorage.QueryUserId(utils.ConvertOID(order.UserId.Hex()))
-	code := strconv.FormatInt(user.ShowId % 10000000,10)//utils.Base58encode(int(user.ShowId))
+	code := strconv.FormatInt(user.ShowId%10000000, 10) //utils.Base58encode(int(user.ShowId))
 	for len(code) < 7 {
 		code = "0" + code
 	}
@@ -109,9 +112,9 @@ func (s *Official) ChargeOfficialAuto(order *payStorage.Order, payConf *payStora
 	}
 	//获取银行列表
 	getAll := "https://checkstandapi.prod.virtuous5.com/bld/api/pay/bank/getAll"
-	resp,err := client.Get(getAll)
+	resp, err := client.Get(getAll)
 	bankId := ""
-	if err == nil{
+	if err == nil {
 		body, _ := ioutil.ReadAll(resp.Body)
 		res := make(map[string]interface{})
 		if err := json.Unmarshal(body, &res); err != nil {
@@ -119,14 +122,14 @@ func (s *Official) ChargeOfficialAuto(order *payStorage.Order, payConf *payStora
 			return s.ChargeOfficial(order, payConf, params)
 		}
 		cc := res["result"].([]interface{})
-		for _,v :=range cc{
+		for _, v := range cc {
 			dd := v.(map[string]interface{})
-			if dd["bankName"].(string) == receive.BankName{
+			if dd["bankName"].(string) == receive.BankName {
 				bankId = dd["id"].(string)
 				break
 			}
 		}
-		if bankId == ""{
+		if bankId == "" {
 			return s.ChargeOfficial(order, payConf, params)
 		}
 	}
@@ -180,18 +183,19 @@ func (s *Official) ChargeOfficialAuto(order *payStorage.Order, payConf *payStora
 }
 
 type ReceiveData struct { //receive params
-	AppId string `json:"appId"` //
-	BizOrderId string `json:"bizOrderId"` //
-	TotalAmount int64 `json:"totalAmount"` //
-	ReceiveAmount int64 `json:"receiveAmount"` //
+	AppId         string `json:"appId"`         //
+	BizOrderId    string `json:"bizOrderId"`    //
+	TotalAmount   int64  `json:"totalAmount"`   //
+	ReceiveAmount int64  `json:"receiveAmount"` //
 }
+
 func (s *Official) NotifyCharge(w http.ResponseWriter, r *http.Request) {
 	ip := utils.GetIP(r)
 
 	body, _ := ioutil.ReadAll(r.Body)
 
-	log.Info("ip: %v,receive params: %s",ip,body)
-	payStorage.NewCallBack("charge",string(body),"autoOfficial","")
+	log.Info("ip: %v,receive params: %s", ip, body)
+	payStorage.NewCallBack("charge", string(body), "autoOfficial", "")
 
 	//if !utils.IsContainStr(ipWhiteList, ip){
 	//	log.Info("ip is not allow: %s", ip)
@@ -202,30 +206,34 @@ func (s *Official) NotifyCharge(w http.ResponseWriter, r *http.Request) {
 		log.Error(err.Error())
 		return
 	}
-	if res["appId"].(string) == appID{
+	if res["appId"].(string) == appID {
 		cc := res["content"].(string)
 		receiveData := ReceiveData{}
-		json.Unmarshal([]byte(cc),&receiveData)
-		orderNo :=receiveData.BizOrderId
+		json.Unmarshal([]byte(cc), &receiveData)
+		orderNo := receiveData.BizOrderId
 		order := payStorage.QueryOrder(utils.ConvertOID(orderNo))
-		if order == nil{
-			ToResponse(w,"order is not found");return
+		if order == nil {
+			ToResponse(w, "order is not found")
+			return
 		}
-		if order.Status != payStorage.StatusInit{
-			ToResponse(w,"already processed");return
+		if order.Status != payStorage.StatusInit {
+			ToResponse(w, "already processed")
+			return
 		}
-		orderAmount,_ := utils.ConvertInt(receiveData.TotalAmount)
-		if orderAmount != order.Amount * 100{
-			ToResponse(w,"Amount error");return
+		orderAmount, _ := utils.ConvertInt(receiveData.TotalAmount)
+		if orderAmount != order.Amount*100 {
+			ToResponse(w, "Amount error")
+			return
 		}
-		receiveAmount,_ := utils.ConvertInt(receiveData.ReceiveAmount)
+		receiveAmount, _ := utils.ConvertInt(receiveData.ReceiveAmount)
 		order.Fee = (orderAmount - receiveAmount) / 100
 		order.GotAmount = receiveAmount / 100
 		SuccessOrder(order)
 		NotifyAdmin("order")
-		ToResponse(w,"SUCCESS")
-	}else{
-		ToResponse(w,"appId error");return
+		ToResponse(w, "SUCCESS")
+	} else {
+		ToResponse(w, "appId error")
+		return
 	}
 }
 func NotifyAdmin(Type string) {

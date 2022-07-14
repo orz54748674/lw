@@ -21,8 +21,8 @@ func NotifyNormalActivityNum(uid string) {
 	data := make(map[string]interface{})
 	num := GetNormalActivityNum(utils.ConvertOID(uid))
 	data["normalActivityNum"] = num
-	ret := protocol.DealProtocolFormat(data,game.Lobby,"HD_info",nil)
-	protocol.SendPack(uid,game.Push,ret)
+	ret := protocol.DealProtocolFormat(data, game.Lobby, "HD_info", nil)
+	protocol.SendPack(uid, game.Push, ret)
 
 	lobbyStorage.UpsertLobbyBubble(lobbyStorage.LobbyBubble{
 		Uid:        uid,
@@ -40,8 +40,8 @@ func NotifyDayActivityNum(uid string) {
 	data := make(map[string]interface{})
 	num := GetDayActivityNum(utils.ConvertOID(uid))
 	data["dayActivityNum"] = num
-	ret := protocol.DealProtocolFormat(data,game.Lobby,"HD_info",nil)
-	protocol.SendPack(uid,game.Push,ret)
+	ret := protocol.DealProtocolFormat(data, game.Lobby, "HD_info", nil)
+	protocol.SendPack(uid, game.Push, ret)
 	lobbyStorage.UpsertLobbyBubble(lobbyStorage.LobbyBubble{
 		Uid:        uid,
 		BubbleType: lobbyStorage.DayActivity,
@@ -61,14 +61,14 @@ func NotifyVipActivityNum(uid string) {
 		UpdateAt:   utils.Now(),
 	})
 	data["vipActivityNum"] = num
-	ret := protocol.DealProtocolFormat(data,game.Lobby,"HD_info",nil)
-	protocol.SendPack(uid,game.Push,ret)
+	ret := protocol.DealProtocolFormat(data, game.Lobby, "HD_info", nil)
+	protocol.SendPack(uid, game.Push, ret)
 }
 func notifyFirstChargeStatus(uid string) {
 	data := make(map[string]interface{})
 	data["firstChargeStatus"] = QueryHaveFirstCharge(utils.ConvertOID(uid))
-	ret := protocol.DealProtocolFormat(data,game.Lobby,"HD_info",nil)
-	protocol.SendPack(uid,game.Push,ret)
+	ret := protocol.DealProtocolFormat(data, game.Lobby, "HD_info", nil)
+	protocol.SendPack(uid, game.Push, ret)
 }
 func notifyWallet(uid string) {
 	sb := gate2.QuerySessionBean(uid)
@@ -80,7 +80,7 @@ func notifyWallet(uid string) {
 	msg["Wallet"] = wallet
 	msg["Action"] = "wallet"
 	msg["GameType"] = game.All
-	protocol.SendPack(uid,game.Push,msg)
+	protocol.SendPack(uid, game.Push, msg)
 }
 func NotifyDealChargeActivity(order *payStorage.Order) {
 	dealFirstChargeActivity(order)
@@ -93,11 +93,11 @@ func NotifyDealChargeActivity(order *payStorage.Order) {
 
 	dealTurnTableChargeActivity(order)
 }
-func NotifyBetActivity(uid string, gameType game.Type,bets int64) {
+func NotifyBetActivity(uid string, gameType game.Type, bets int64) {
 	dealDayGameActivity(uid, gameType)
 	dealDayInviteActivity(uid)
-	dealVipActivityWeekBets(uid,bets)
-	dealTurnTableBetsActivity(uid,bets)
+	dealVipActivityWeekBets(uid, bets)
+	dealTurnTableBetsActivity(uid, bets)
 }
 func upsertUserInfoActivity(order *payStorage.Order) {
 	if activityStorage.QueryActivityIsOpen(activityStorage.Encouragement) { //开启该活动
@@ -105,10 +105,10 @@ func upsertUserInfoActivity(order *payStorage.Order) {
 	}
 	if activityStorage.QueryActivityIsOpen(activityStorage.Vip) { //开启该活动
 		activityStorage.IncActivityUserCharge(order.UserId.Hex(), activityStorage.Vip, order.GotAmount)
-		dealVipUpGradeByUid(order.UserId.Hex())//升级VIP
-		activityStorage.IncActivityUserCharge(order.UserId.Hex(),activityStorage.VipWeek,order.GotAmount)
-		dealVipWeekByUid(order.UserId.Hex())//处理每周彩金
-		dealVipChargeGiftByUid(order)//Vip充值优惠赠送
+		dealVipUpGradeByUid(order.UserId.Hex()) //升级VIP
+		activityStorage.IncActivityUserCharge(order.UserId.Hex(), activityStorage.VipWeek, order.GotAmount)
+		dealVipWeekByUid(order.UserId.Hex()) //处理每周彩金
+		dealVipChargeGiftByUid(order)        //Vip充值优惠赠送
 	}
 }
 
@@ -126,7 +126,6 @@ func QueryHaveFirstCharge(uid primitive.ObjectID) activityStorage.ActivityStatus
 	}
 	return activityStorage.Undo
 }
-
 
 func convertOid2Str(ids []primitive.ObjectID) []string {
 	strArray := make([]string, 0)
@@ -186,7 +185,7 @@ func QueryHaveReceiveActivity(uid string, activityType activityStorage.ActivityT
 		if user.Phone == 0 {
 			num++
 		}
-	}else if activityType == activityStorage.Vip {
+	} else if activityType == activityStorage.Vip {
 		userInfo := userStorage.QueryUserInfo(utils.ConvertOID(uid))
 		curLevel := userInfo.VipLevel
 		vipRecord := activityStorage.QueryVipWeekByLevel(uid, curLevel)

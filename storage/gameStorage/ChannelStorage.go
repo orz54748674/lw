@@ -8,15 +8,17 @@ import (
 )
 
 type Channel struct {
-	ID       uint64      `bson:"-" json:"-"`
+	ID       uint64             `bson:"-" json:"-"`
 	Oid      primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
-	Name  	 string 	 `bson:"Name"`
-	Channel  string      `bson:"Channel"`
-	UpdateAt time.Time   `bson:"UpdateAt"`
+	Name     string             `bson:"Name"`
+	Channel  string             `bson:"Channel"`
+	UpdateAt time.Time          `bson:"UpdateAt"`
 }
+
 var (
 	cChannelManager = "ChannelManager"
 )
+
 func InitChannel() {
 	//c := common.GetMgo().C(cChannelManager)
 	//index := mgo.Index{
@@ -38,7 +40,7 @@ func QueryChannels() []Channel {
 	if err != nil {
 		return []Channel{}
 	}
-	if channel == nil{
+	if channel == nil {
 		return []Channel{}
 	}
 	return channel

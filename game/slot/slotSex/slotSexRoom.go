@@ -21,13 +21,15 @@ var Module = func() module.Module {
 	this := new(Room)
 	return this
 }
+
 type Room struct {
 	basemodule.BaseModule
-	room *room.Room
-	app module.App
-	tablesID sync.Map
+	room       *room.Room
+	app        module.App
+	tablesID   sync.Map
 	curTableID string
 }
+
 func (self *Room) GetType() string {
 	//很关键,需要与配置文件中的Module配置对应
 	return string(game.SlotSex)
@@ -44,48 +46,47 @@ func (self *Room) OnInit(app module.App, settings *conf.ModuleSettings) {
 	self.room = room.NewRoom(app)
 	self.app = app
 	self.GetServer().RegisterGO("/slotCs/onDisconnect", self.onDisconnect)
-	common.AddListener(self.GetServerID(),common.EventDisconnect,"/slotCs/onDisconnect")
+	common.AddListener(self.GetServerID(), common.EventDisconnect, "/slotCs/onDisconnect")
 
 	hook := game.NewHook(self.GetType())
 
 	//需要队列
 	//hook.RegisterAndCheckLogin(self.GetServer(),protocol.XiaZhu,self.TableQueue)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.Enter,self.Enter)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.Spin,self.Spin)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.SelectBonusSymbol,self.SelectBonusSymbol)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.EnterBonusGame,self.EnterBonusGame)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.SelectMiniSymbol,self.SelectMiniSymbol)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.EnterMiniGame,self.EnterMiniGame)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.Enter, self.Enter)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.Spin, self.Spin)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.SelectBonusSymbol, self.SelectBonusSymbol)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.EnterBonusGame, self.EnterBonusGame)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.SelectMiniSymbol, self.SelectMiniSymbol)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.EnterMiniGame, self.EnterMiniGame)
 
-
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.QuitTable,self.QuitTable)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.QuitTable, self.QuitTable)
 	//直接request
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GetJackpot,self.GetJackpot)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.Info,self.Info)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.SwitchMode,self.SwitchMode)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.CheckPlayerInGame,self.CheckPlayerInGame)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GetJackpotRecord,self.GetJackpotRecord)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GetJackpot, self.GetJackpot)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.Info, self.Info)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.SwitchMode, self.SwitchMode)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.CheckPlayerInGame, self.CheckPlayerInGame)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GetJackpotRecord, self.GetJackpotRecord)
 }
 
 func (self *Room) Run(closeSig chan bool) {
-	gameStorage.UpsertGameReboot(game.SlotSex,"false")
+	gameStorage.UpsertGameReboot(game.SlotSex, "false")
 	log.Info("%v模块运行中...", self.GetType())
 	gameConf := slotSexStorage.GetRoomConf()
-	if gameConf == nil{
+	if gameConf == nil {
 		gameConf = &slotSexStorage.Conf{
-			InitJackpot:   InitJackpot,
-			PoolScaleThousand: InitPoolScaleThousand,
-			BonusTimeOut: 12,
-			ProfitPerThousand:20,
+			InitJackpot:          InitJackpot,
+			PoolScaleThousand:    InitPoolScaleThousand,
+			BonusTimeOut:         12,
+			ProfitPerThousand:    20,
 			BotProfitPerThousand: 20,
-			FreeGameMinTimes: []int{10,20,30},
-			BonusGameMinTimes: []int{10,20,30},
+			FreeGameMinTimes:     []int{10, 20, 30},
+			BonusGameMinTimes:    []int{10, 20, 30},
 		}
 		slotSexStorage.InsertRoomConf(gameConf)
 	}
 
 	roomData := slotSexStorage.GetRoomData()
-	if roomData == nil{
+	if roomData == nil {
 		roomData := slotSexStorage.RoomData{
 			Jackpot: gameConf.InitJackpot,
 		}
@@ -97,7 +98,7 @@ func (self *Room) Run(closeSig chan bool) {
 		//c.Start()
 
 		c1 := cron.New()
-		c1.AddFunc("*/5 * * * * ?",self.OnTimer10)
+		c1.AddFunc("*/5 * * * * ?", self.OnTimer10)
 		c1.Start()
 	}()
 	<-closeSig

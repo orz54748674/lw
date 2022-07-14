@@ -11,14 +11,14 @@ import (
 )
 
 var (
-	cApiUser         = "apiUser"
-	cApiCmdUserToken = "apiCmdUserToken"
-	cApiCmdUpdateMsg = "apiCmdUpdateMsg"
-	cApiCmdConf      = "apiCmdConf"
-	cApiCmdReference = "apiCmdReferenceRecord"
-	cApiCmdCashOutRecord = "apiCmdCashOutRecord"
-	cApiCmdParlayRecord = "apiCmdParlayRecord"
-	cApiCmdBetRecord = "apiCmdBetRecord"
+	cApiUser              = "apiUser"
+	cApiCmdUserToken      = "apiCmdUserToken"
+	cApiCmdUpdateMsg      = "apiCmdUpdateMsg"
+	cApiCmdConf           = "apiCmdConf"
+	cApiCmdReference      = "apiCmdReferenceRecord"
+	cApiCmdCashOutRecord  = "apiCmdCashOutRecord"
+	cApiCmdParlayRecord   = "apiCmdParlayRecord"
+	cApiCmdBetRecord      = "apiCmdBetRecord"
 	cApiCmdTeamLeagueInfo = "apiCmdTeamLeagueInfo"
 )
 
@@ -29,17 +29,17 @@ var (
 
 func InitCmdStorage() {
 	c := common.GetMongoDB().C(cApiCmdReference)
-	key1 := bsonx.Doc{{Key: "CreateAt",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key1,options.Index().
-		SetExpireAfterSeconds(30*24*3600));err != nil{
-		log.Error("create cApiCmdReferenceRecord Index: %s",err)
+	key1 := bsonx.Doc{{Key: "CreateAt", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key1, options.Index().
+		SetExpireAfterSeconds(30*24*3600)); err != nil {
+		log.Error("create cApiCmdReferenceRecord Index: %s", err)
 	}
 
 	c = common.GetMongoDB().C(cApiCmdUserToken)
-	key2 := bsonx.Doc{{Key: "updateAt",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key2,options.Index().
-		SetExpireAfterSeconds(60));err != nil{
-		log.Error("create cApiCmdUserToken Index: %s",err)
+	key2 := bsonx.Doc{{Key: "updateAt", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key2, options.Index().
+		SetExpireAfterSeconds(60)); err != nil {
+		log.Error("create cApiCmdUserToken Index: %s", err)
 	}
 }
 
@@ -113,8 +113,7 @@ func GetApiCmdConf() (ApiCmdConf, error) {
 func UpdateApiCmdConf(versionID int) error {
 	c := common.GetMongoDB().C(cApiCmdConf)
 	update := bson.M{
-		"$set": bson.M{"versionID": versionID,
-		},
+		"$set": bson.M{"versionID": versionID},
 	}
 	if _, err := c.Upsert(nil, update); err != nil {
 		log.Error("UpdateApiCmdConf err:", err.Error())
@@ -125,8 +124,8 @@ func UpdateApiCmdConf(versionID int) error {
 
 func UpsertApiCmdBetRecord(data map[string]interface{}) {
 	c := common.GetMongoDB().C(cApiCmdBetRecord)
-	query := bson.M{"ReferenceNo":data["ReferenceNo"].(string)}
-	update := bson.M{"$set":data}
+	query := bson.M{"ReferenceNo": data["ReferenceNo"].(string)}
+	update := bson.M{"$set": data}
 	if _, err := c.Upsert(query, update); err != nil {
 		log.Error("UpsertApiCmdBetRecord err:", err.Error())
 	}
@@ -134,7 +133,7 @@ func UpsertApiCmdBetRecord(data map[string]interface{}) {
 
 func GetSelectBetRecordId(referenceNo string) int {
 	c := common.GetMongoDB().C(cApiCmdBetRecord)
-	query := bson.M{"ReferenceNo":referenceNo}
+	query := bson.M{"ReferenceNo": referenceNo}
 	data := make(map[string]interface{})
 	if err := c.Find(query).One(&data); err != nil {
 		return 0
@@ -154,9 +153,9 @@ func InsertReferenceRecord(uid, referenceNo string, betAmount int64) {
 	}
 }
 
-func GetReferenceBetAmount(uid, referenceNo string) int64{
+func GetReferenceBetAmount(uid, referenceNo string) int64 {
 	c := common.GetMongoDB().C(cApiCmdReference)
-	query := bson.M{"Uid":uid, "ReferenceNo":referenceNo}
+	query := bson.M{"Uid": uid, "ReferenceNo": referenceNo}
 	var tmp ReferenceMsg
 	if err := c.Find(query).One(&tmp); err != nil {
 		return 0
@@ -166,14 +165,13 @@ func GetReferenceBetAmount(uid, referenceNo string) int64{
 
 func GetCmdTeamLeagueInfo(infoType, infoID int) (CmdTeamLeagueInfo, error) {
 	c := common.GetMongoDB().C(cApiCmdTeamLeagueInfo)
-	query := bson.M{"InfoType":infoType, "InfoID":infoID}
+	query := bson.M{"InfoType": infoType, "InfoID": infoID}
 	var tmp CmdTeamLeagueInfo
 	if err := c.Find(query).One(&tmp); err != nil {
 		return tmp, err
 	}
 	return tmp, nil
 }
-
 
 func InsertCmdTeamLeagueInfo(infoType, infoID int, infoName string) error {
 	c := common.GetMongoDB().C(cApiCmdTeamLeagueInfo)

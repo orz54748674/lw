@@ -38,23 +38,23 @@ func (RunGameOnline) Start() {
 		}},
 	}
 	var onlineCount []gameCount
-	if err := c.Pipe(pipe).All(&onlineCount);err != nil{
+	if err := c.Pipe(pipe).All(&onlineCount); err != nil {
 		log.Error(err.Error())
 	}
-	for _,online := range onlineCount{
+	for _, online := range onlineCount {
 		onlineLog := GameOnlineLog{
-			Game: online.GameType,
+			Game:         online.GameType,
 			OnlinePeople: online.Count,
-			CreateAt: utils.Now(),
+			CreateAt:     utils.Now(),
 		}
 		common.GetMysql().Create(&onlineLog)
 	}
-	count,_ := c.Find(bson.M{}).Count()
-	if count != 0{
+	count, _ := c.Find(bson.M{}).Count()
+	if count != 0 {
 		onlineLog := GameOnlineLog{
-			Game: "all",
+			Game:         "all",
 			OnlinePeople: count,
-			CreateAt: utils.Now(),
+			CreateAt:     utils.Now(),
 		}
 		common.GetMysql().Create(&onlineLog)
 	}

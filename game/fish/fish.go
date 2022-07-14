@@ -28,17 +28,17 @@ type fishRoom struct {
 	tableIdArr  []string
 	roomConf    fishStorage.GameConf
 	uid2TableID map[string]string
-	CurDate string
+	CurDate     string
 }
 
 const (
-	actionEnterRoom    = "HD_enterRoom"
-	actionPlayerFire   = "HD_playerFire"
-	actionKillFish     = "HD_killFish"
-	actionChangeCannon = "HD_changeCannon"
-	actionPlayerLeave  = "HD_playerLeave"
+	actionEnterRoom       = "HD_enterRoom"
+	actionPlayerFire      = "HD_playerFire"
+	actionKillFish        = "HD_killFish"
+	actionChangeCannon    = "HD_changeCannon"
+	actionPlayerLeave     = "HD_playerLeave"
 	actionSpecialKillFish = "HD_specialKillFish"
-	actionChangeSeat = "HD_changeSeat"
+	actionChangeSeat      = "HD_changeSeat"
 )
 
 func (s *fishRoom) GetType() string {
@@ -58,13 +58,13 @@ func (s *fishRoom) OnInit(app module.App, settings *conf.ModuleSettings) {
 	s.room = room.NewRoom(s.App)
 
 	hook := game.NewHook(s.GetType())
-	hook.RegisterAndCheckLogin(s.GetServer(),actionEnterRoom, s.enterRoom)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionPlayerFire, s.TableQueue)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionKillFish, s.TableQueue)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionChangeCannon, s.TableQueue)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionPlayerLeave, s.TableQueue)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionSpecialKillFish, s.TableQueue)
-	hook.RegisterAndCheckLogin(s.GetServer(),actionChangeSeat, s.TableQueue)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionEnterRoom, s.enterRoom)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionPlayerFire, s.TableQueue)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionKillFish, s.TableQueue)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionChangeCannon, s.TableQueue)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionPlayerLeave, s.TableQueue)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionSpecialKillFish, s.TableQueue)
+	hook.RegisterAndCheckLogin(s.GetServer(), actionChangeSeat, s.TableQueue)
 
 	s.GetServer().RegisterGO("/fish/onDisconnect", s.onDisconnect)
 	common.AddListener(s.GetServerID(), common.EventDisconnect, "/fish/onDisconnect")

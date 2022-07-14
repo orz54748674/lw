@@ -177,7 +177,7 @@ func (s *roshambo) BetAndOpen(session gate.Session, msg map[string]interface{}) 
 		if pos == 2 && winPos == 2 {
 			mingProfit = coin * 3 * mingPercent / 1000
 			anProfit = coin * 3 * anPercent / 1000
-			score = coin * 3 - mingProfit
+			score = coin*3 - mingProfit
 		} else if winPos == 2 {
 			score = 0
 		} else if winPos == pos {
@@ -189,7 +189,7 @@ func (s *roshambo) BetAndOpen(session gate.Session, msg map[string]interface{}) 
 			score = -coin
 		}
 
-		if botBalance - score > 0 {
+		if botBalance-score > 0 {
 			break
 		}
 	}
@@ -213,7 +213,7 @@ func (s *roshambo) BetAndOpen(session gate.Session, msg map[string]interface{}) 
 	walletStorage.OperateVndBalance(bill)
 	wallet = walletStorage.QueryWallet(utils.ConvertOID(uid))
 
-	gameStorage.IncProfit(uid, game.Roshambo, mingProfit, -(score+anProfit), anProfit)
+	gameStorage.IncProfit(uid, game.Roshambo, mingProfit, -(score + anProfit), anProfit)
 
 	go func() {
 		time.Sleep(5 * time.Second)
@@ -221,20 +221,20 @@ func (s *roshambo) BetAndOpen(session gate.Session, msg map[string]interface{}) 
 	}()
 
 	betInfo := struct {
-		Pos string
+		Pos  string
 		Coin int64
 	}{
-		Pos: posStr[pos],
+		Pos:  posStr[pos],
 		Coin: coin,
 	}
 	betDetail, _ := json.Marshal(betInfo)
 	betDetailStr := string(betDetail)
 
 	gameRes := struct {
-		Red string
+		Red  string
 		Blue string
 	}{
-		Red: resStr[redRes],
+		Red:  resStr[redRes],
 		Blue: resStr[blueRes],
 	}
 	gameResByte, _ := json.Marshal(gameRes)

@@ -75,7 +75,6 @@ func GetGameCode() {
 	return
 }
 
-
 //func GetBetRecordTiming() {
 //	for {
 //		url := "/gameboy/order/view"

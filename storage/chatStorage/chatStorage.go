@@ -19,13 +19,13 @@ import (
 )
 
 type Message struct {
-	Oid         primitive.ObjectID    `bson:"_id,omitempty" json:"Oid"`
-	MsgId    string           `bson:"MsgId"`
-	GroupId  string           `bson:"GroupId"`
-	Content  string           `bson:"Content"`
-	FromUid  string           `bson:"FromUid"`
-	FromUser userStorage.User `bson:"FromUser"`
-	CreateAt time.Time        `bson:"CreateAt"`
+	Oid      primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
+	MsgId    string             `bson:"MsgId"`
+	GroupId  string             `bson:"GroupId"`
+	Content  string             `bson:"Content"`
+	FromUid  string             `bson:"FromUid"`
+	FromUser userStorage.User   `bson:"FromUser"`
+	CreateAt time.Time          `bson:"CreateAt"`
 }
 
 type Group struct {
@@ -34,12 +34,13 @@ type Group struct {
 }
 type ChatBotMsgList struct {
 	Oid      primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
-	GameType game.Type           `bson:"GameType"`
-	Msg      string              `bson:"Msg"`
+	GameType game.Type          `bson:"GameType"`
+	Msg      string             `bson:"Msg"`
 }
+
 var (
-	cChatGroup = "chatGroup"
-	cChatMsg   = "chatMsg"
+	cChatGroup      = "chatGroup"
+	cChatMsg        = "chatMsg"
 	cChatBotMsgList = "chatBotMsgList"
 )
 
@@ -58,7 +59,7 @@ func QueryGroup(groupId string) []string {
 	if err := c.Find(query).All(&groups); err != nil {
 		log.Error(err.Error())
 	}
-	res := make([]string,0)
+	res := make([]string, 0)
 	for _, g := range groups {
 		res = append(res, g.Uid)
 	}
@@ -104,14 +105,14 @@ func Init(incDataExpireDay time.Duration) {
 	_, _ = c.RemoveAll(bson.M{})
 
 	c2 := common.GetMongoDB().C(cChatMsg)
-	key := bsonx.Doc{{Key: "CreateAt",Value: bsonx.Int32(1)}}
-	if err := c2.CreateIndex(key,options.Index().
-		SetExpireAfterSeconds(int32(incDataExpireDay/time.Second)));err != nil{
-		log.Error("create ChatMsg Index: %s",err)
+	key := bsonx.Doc{{Key: "CreateAt", Value: bsonx.Int32(1)}}
+	if err := c2.CreateIndex(key, options.Index().
+		SetExpireAfterSeconds(int32(incDataExpireDay/time.Second))); err != nil {
+		log.Error("create ChatMsg Index: %s", err)
 	}
-	key = bsonx.Doc{{Key: "GroupId",Value: bsonx.Int32(1)}}
-	if err := c2.CreateIndex(key,options.Index());err != nil{
-		log.Error("create ChatMsg Index: %s",err)
+	key = bsonx.Doc{{Key: "GroupId", Value: bsonx.Int32(1)}}
+	if err := c2.CreateIndex(key, options.Index()); err != nil {
+		log.Error("create ChatMsg Index: %s", err)
 	}
 }
 func InitChatBotMsgList() {
@@ -125,24 +126,24 @@ func InitChatBotMsgList() {
 func readConf2Db() {
 	c := common.GetMongoDB().C(cChatBotMsgList)
 	path := utils.GetProjectAbsPath()
-	for _,v := range game.ChatBotGame{
-		f, err := ioutil.ReadFile(filepath.Join(path, fmt.Sprintf("bin/chat/%s.txt",v)))
+	for _, v := range game.ChatBotGame {
+		f, err := ioutil.ReadFile(filepath.Join(path, fmt.Sprintf("bin/chat/%s.txt", v)))
 		if err != nil {
 			log.Error("read fail: %v", err)
-		}else{
+		} else {
 			msg := string(f)
 			res := strings.Split(msg, "\n")
 			var data1 []ChatBotMsgList
 			for _, msg := range res {
-				if msg != ""{
-					data1 = append(data1,ChatBotMsgList{
+				if msg != "" {
+					data1 = append(data1, ChatBotMsgList{
 						GameType: v,
-						Msg: msg,
+						Msg:      msg,
 					})
 				}
 			}
-			var data2 = make([]interface{},len(data1))
-			for k1,v1 := range data1{
+			var data2 = make([]interface{}, len(data1))
+			for k1, v1 := range data1 {
 				data2[k1] = v1
 			}
 			if err := c.InsertMany(data2); err != nil {
@@ -152,7 +153,7 @@ func readConf2Db() {
 		}
 	}
 }
-func RandomBotChatN(gameType game.Type,n int) []ChatBotMsgList {
+func RandomBotChatN(gameType game.Type, n int) []ChatBotMsgList {
 	c := common.GetMongoDB().C(cChatBotMsgList)
 	pipe := c.Pipe(mongo.Pipeline{
 		{{"$sample", bson.M{"size": n}}},

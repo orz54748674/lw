@@ -109,7 +109,7 @@ func (m *Settle) open(data map[string]interface{}) (r string, err error) {
 				bRecord.SProfit = -bRecord.TotalAmount
 				log.Debug("lottery open %v  bRecord.TotalAmount:%v", bRecord.SProfit, bRecord.TotalAmount)
 				changeSettleStatus(bRecord, settleSuccess)
-				gameStorage.UpdateLotteryBetRecord(bRecord.Uid, bRecord.Oid.Hex(), bRecord.Number, string(gameRes), game.Lottery, income, bRecord.TotalAmount, wallet.VndBalance + wallet.SafeBalance, 0, 0)
+				gameStorage.UpdateLotteryBetRecord(bRecord.Uid, bRecord.Oid.Hex(), bRecord.Number, string(gameRes), game.Lottery, income, bRecord.TotalAmount, wallet.VndBalance+wallet.SafeBalance, 0, 0)
 				activityStorage.UpsertGameDataInBet(bRecord.Uid, game.Lottery, -1)
 				activity.CalcEncouragementFunc(bRecord.Uid)
 				continue
@@ -128,7 +128,7 @@ func (m *Settle) open(data map[string]interface{}) (r string, err error) {
 			}
 			activityStorage.UpsertGameDataInBet(bRecord.Uid, game.Lottery, -1)
 			activity.CalcEncouragementFunc(bRecord.Uid)
-			gameStorage.UpdateLotteryBetRecord(bRecord.Uid, bRecord.Oid.Hex(), bRecord.Number, string(gameRes), game.Lottery, income, bRecord.TotalAmount, wallet.VndBalance + wallet.SafeBalance, 0, 0)
+			gameStorage.UpdateLotteryBetRecord(bRecord.Uid, bRecord.Oid.Hex(), bRecord.Number, string(gameRes), game.Lottery, income, bRecord.TotalAmount, wallet.VndBalance+wallet.SafeBalance, 0, 0)
 			userPayMap[bRecord.Uid] += sProfit
 		}
 		if len(betRecords) < limit {

@@ -306,7 +306,9 @@ func asBytes(buf []byte, rv reflect.Value) (b []byte, ok bool) {
 type Value interface{}
 
 type boolType struct{}
+
 var Bool boolType
+
 func (boolType) String() string { return "Bool" }
 func (boolType) ConvertValue(src interface{}) (Value, error) {
 	switch s := src.(type) {

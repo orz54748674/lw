@@ -6,8 +6,9 @@ import (
 )
 
 var userQueue = newMapRWMutex()
+
 type userSyncExec struct {
-	queue *queue.EsQueue
+	queue   *queue.EsQueue
 	running bool
 }
 
@@ -15,24 +16,24 @@ func getQueue(sessionId string) *userSyncExec {
 	q := userQueue.Get(sessionId)
 	if q != nil {
 		return q.(*userSyncExec)
-	}else{
+	} else {
 		exec := &userSyncExec{
 			queue: queue.NewQueue(64),
 		}
-		userQueue.Set(sessionId,exec)
+		userQueue.Set(sessionId, exec)
 		return exec
 	}
 }
 
-func (s *userSyncExec) execQueue()  {
-	if s.running{
+func (s *userSyncExec) execQueue() {
+	if s.running {
 		return
 	}
 	s.running = true
 	ok := true
-	for ok{
-		val,_ok,_ := s.queue.Get()
-		if _ok{
+	for ok {
+		val, _ok, _ := s.queue.Get()
+		if _ok {
 			f := val.(func())
 			f()
 		}
@@ -52,13 +53,13 @@ func newMapRWMutex() *mapRWMutex {
 	m.Lock = new(sync.RWMutex)
 	return m
 }
-func (d mapRWMutex) Get(k string) interface{}{
+func (d mapRWMutex) Get(k string) interface{} {
 	d.Lock.RLock()
 	defer d.Lock.RUnlock()
 	return d.Data[k]
 }
 
-func (d mapRWMutex) Set(k string,v interface{}) {
+func (d mapRWMutex) Set(k string, v interface{}) {
 	d.Lock.Lock()
 	defer d.Lock.Unlock()
 	d.Data[k] = v
@@ -67,7 +68,7 @@ func (d mapRWMutex) Set(k string,v interface{}) {
 func (d mapRWMutex) Remove(k string) {
 	d.Lock.Lock()
 	defer d.Lock.Unlock()
-	delete(d.Data,k)
+	delete(d.Data, k)
 }
 func (d mapRWMutex) size() int {
 	return len(d.Data)

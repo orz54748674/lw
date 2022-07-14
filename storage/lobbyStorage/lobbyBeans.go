@@ -43,9 +43,10 @@ func NewSumGrade(id primitive.ObjectID, gameType game.Type) *SumGrade {
 	}
 	return sumGrade
 }
+
 type Notice struct {
 	Oid        primitive.ObjectID `bson:"_id,omitempty" json:"-"`
-	AdminId    int64             `bson:"AdminId"`
+	AdminId    int64              `bson:"AdminId"`
 	Title      string             `bson:"Title"`
 	Content    string             `bson:"Content"`
 	CreateTime time.Time          `bson:"CreateAt"`
@@ -53,34 +54,36 @@ type Notice struct {
 
 type GameType string //
 const (
-	Normal	GameType = "normal" //本地常规
-	Slot	GameType = "slot" //老虎机
-	Card	GameType = "card" //牌类
-	Lottery	GameType = "lottery" //彩票
-	Mini	GameType = "mini" //Mini
-	Api		GameType = "Api" //Api
+	Normal  GameType = "normal"  //本地常规
+	Slot    GameType = "slot"    //老虎机
+	Card    GameType = "card"    //牌类
+	Lottery GameType = "lottery" //彩票
+	Mini    GameType = "mini"    //Mini
+	Api     GameType = "Api"     //Api
 )
+
 type LobbyGameLayout struct {
-	Oid        primitive.ObjectID `bson:"_id,omitempty" json:"-"`
-	GameName   game.Type             `bson:"GameName"`
-	GameType   GameType             `bson:"GameType"` //normal常规 slot lottery card mini Api
-	SortType   int   			  `bson:"SortType"`
-	LobbyPos   int   			  `bson:"LobbyPos"`
-	IsHot	   int				  `bson:"IsHot"`   //1热门 0
-	Status	   int                `bson:"Status"` //1 开启 0关闭
-	IsNotAllowPlay int 			  `bson:"IsNotAllowPlay"` //是否不允许陪玩号玩 1 不允许 0 允许
-	UpdateTime time.Time          `bson:"UpdateTime"`
+	Oid            primitive.ObjectID `bson:"_id,omitempty" json:"-"`
+	GameName       game.Type          `bson:"GameName"`
+	GameType       GameType           `bson:"GameType"` //normal常规 slot lottery card mini Api
+	SortType       int                `bson:"SortType"`
+	LobbyPos       int                `bson:"LobbyPos"`
+	IsHot          int                `bson:"IsHot"`          //1热门 0
+	Status         int                `bson:"Status"`         //1 开启 0关闭
+	IsNotAllowPlay int                `bson:"IsNotAllowPlay"` //是否不允许陪玩号玩 1 不允许 0 允许
+	UpdateTime     time.Time          `bson:"UpdateTime"`
 }
 type BubbleType string //
 const (
-	NormalActivity	BubbleType = "NormalActivity" //普通活动
-	DayActivity	BubbleType = "DayActivity" //每日任务
-	Mail	BubbleType = "Mail" //邮件
-	VipActivity		BubbleType = "VipActivity" //
+	NormalActivity BubbleType = "NormalActivity" //普通活动
+	DayActivity    BubbleType = "DayActivity"    //每日任务
+	Mail           BubbleType = "Mail"           //邮件
+	VipActivity    BubbleType = "VipActivity"    //
 )
+
 type LobbyBubble struct {
-	Uid 	   string 			  `bson:"Uid",json:"Uid"`
-	BubbleType BubbleType 		  `bson:"BubbleType",json:"BubbleType"`
-	Num 	   int 		  		  `bson:"Num",json:"Num"`//数量
-	UpdateAt   time.Time          `bson:"UpdateAt",json:"UpdateAt"`
+	Uid        string     `bson:"Uid",json:"Uid"`
+	BubbleType BubbleType `bson:"BubbleType",json:"BubbleType"`
+	Num        int        `bson:"Num",json:"Num"` //数量
+	UpdateAt   time.Time  `bson:"UpdateAt",json:"UpdateAt"`
 }

@@ -67,7 +67,7 @@ func LoginAccount(app module.App, account string, password string,
 		return errCode.AccountNotExist.SetKey()
 	}
 	login := userStorage.QueryLogin(user.Oid)
-	if login == nil{
+	if login == nil {
 		return errCode.Forbidden.SetKey()
 	}
 	if password != login.Password {
@@ -117,7 +117,7 @@ func getUserShowId(lastUid int64) int64 {
 func generateId(lastUid int64) int64 {
 	l := len(strconv.Itoa(int(lastUid)))
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return utils.RandomNum(l + 5,r)
+	return utils.RandomNum(l+5, r)
 }
 func getTcpInfo(app module.App) *TcpInfo {
 	//tcpPort := int(s.App.GetSettings().Settings["tcpPort"].(float64))

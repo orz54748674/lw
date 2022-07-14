@@ -23,8 +23,8 @@ var Module = func() module.Module {
 
 type Chat struct {
 	basemodule.BaseModule
-	impl *Impl
-	push *gate2.OnlinePush
+	impl     *Impl
+	push     *gate2.OnlinePush
 	botsChat map[game.Type][]chatStorage.ChatBotMsgList
 }
 
@@ -67,7 +67,7 @@ func (self *Chat) OnInit(app module.App, settings *conf.ModuleSettings) {
 	self.InitBotsChat()
 	go func() {
 		c := cron.New()
-		c.AddFunc("*/1 * * * * ?",self.OnTimer)
+		c.AddFunc("*/1 * * * * ?", self.OnTimer)
 		c.Start()
 	}()
 

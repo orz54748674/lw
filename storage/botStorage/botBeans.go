@@ -16,9 +16,9 @@ import (
 
 type Bot struct {
 	Oid      primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
-	ShowId   int64         `bson:"ShowId"`
-	NickName string        `bson:"NickName"`
-	Avatar   string        `bson:"Avatar"`
+	ShowId   int64              `bson:"ShowId"`
+	NickName string             `bson:"NickName"`
+	Avatar   string             `bson:"Avatar"`
 }
 
 var (
@@ -43,7 +43,7 @@ func newBot(name string) Bot {
 }
 func getBotUid() int64 {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	uid := utils.RandomNum(5,r)
+	uid := utils.RandomNum(5, r)
 	c := common.GetMongoDB().C(cBot)
 	var bot Bot
 	if err := c.Find(bson.M{"ShowId": uid}).One(&bot); err != nil {
@@ -59,8 +59,8 @@ func insertBot(bot *Bot) {
 }
 func insertAllBot(bot []Bot) {
 	c := common.GetMongoDB().C(cBot)
-	var data = make([]interface{},len(bot))
-	for i,v := range bot{
+	var data = make([]interface{}, len(bot))
+	for i, v := range bot {
 		data[i] = v
 	}
 	if err := c.InsertMany(data); err != nil {
@@ -78,13 +78,14 @@ func readConf2Db() {
 	res := strings.Split(names, "\n")
 	var data []Bot
 	for _, name := range res {
-		if name != ""{
-			data = append(data,newBot(name))
+		if name != "" {
+			data = append(data, newBot(name))
 		}
 	}
 	insertAllBot(data)
 	log.Info("init bot name count: %v", len(res))
 }
+
 //func RandomN(n int) []Bot {
 //	c := common.GetMongoDB().C(cBot)
 //	pipe := c.Pipe(mongo.Pipeline{
@@ -121,13 +122,13 @@ func Query(uid int64) *Bot {
 }
 func QueryBotByUid(uids []int64) map[int64]Bot {
 	c := common.GetMongoDB().C(cBot)
-	query := bson.M{"ShowId": bson.M{"$in":uids}}
+	query := bson.M{"ShowId": bson.M{"$in": uids}}
 	var bots []Bot
 	if err := c.Find(query).All(&bots); err != nil {
 		log.Error(err.Error())
 	}
-	res := make(map[int64]Bot,len(bots))
-	for _,b := range bots{
+	res := make(map[int64]Bot, len(bots))
+	for _, b := range bots {
 		res[b.ShowId] = b
 	}
 	return res

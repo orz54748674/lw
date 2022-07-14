@@ -3,10 +3,10 @@ package server
 
 import (
 	"context"
+	"github.com/pborman/uuid"
 	"vn/framework/mqant/conf"
 	"vn/framework/mqant/module"
 	"vn/framework/mqant/rpc"
-	"github.com/pborman/uuid"
 )
 
 // Server Server

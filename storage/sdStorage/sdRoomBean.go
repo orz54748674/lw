@@ -47,7 +47,7 @@ type TableInfo struct {
 	TableID  string `bson:"TableID" json:"TableID"`
 	ServerID string `bson:"ServerID" json:"ServerID"`
 
-	PlayerNum int `bson:"PlayerNum" json:"PlayerNum"`
+	PlayerNum      int   `bson:"PlayerNum" json:"PlayerNum"`
 	BaseScore      int64 `bson:"BaseScore" json:"BaseScore"`           //底分
 	MinEnterTable  int64 `bson:"MinEnterTable" json:"MinEnterTable"`   //进入桌子最低分
 	TotalPlayerNum int   `bson:"TotalPlayerNum" json:"TotalPlayerNum"` //总人数
@@ -93,9 +93,9 @@ type RobotRange struct {
 	Min int `bson:"Min" json:"Min"` //最小值
 }
 type RobotConf struct { //机器人
-	TableID    string `bson:"TableID" json:"TableID"`       //房间号
-	StartHour  int `bson:"StartHour" json:"StartHour"` //分4个时间段 0就是 0-6点
-	BaseNum  int `bson:"BaseNum" json:"BaseNum"` //数量
-	MaxOffset int `bson:"MaxOffset" json:"MaxOffset"` //最大偏移量
-	StepNum int `bson:"StepNum" json:"StepNum"` //每局增加量
+	TableID   string `bson:"TableID" json:"TableID"`     //房间号
+	StartHour int    `bson:"StartHour" json:"StartHour"` //分4个时间段 0就是 0-6点
+	BaseNum   int    `bson:"BaseNum" json:"BaseNum"`     //数量
+	MaxOffset int    `bson:"MaxOffset" json:"MaxOffset"` //最大偏移量
+	StepNum   int    `bson:"StepNum" json:"StepNum"`     //每局增加量
 }

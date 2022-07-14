@@ -11,31 +11,31 @@ type RobotMsg struct {
 }
 
 type RoundMsg struct {
-	IsAdd bool
+	IsAdd  bool
 	CurBet int64
-	Flg bool
+	Flg    bool
 }
 
 type Player struct {
-	UserID   string
-	Golds    int64
-	Head     string
-	Nickname string
-	TotalBet int64
-	Score    int64
-	robotMsg RobotMsg
-	IsOnline bool
-	UserType int8
-	LastChatTime int64
-	IsReady bool
+	UserID         string
+	Golds          int64
+	Head           string
+	Nickname       string
+	TotalBet       int64
+	Score          int64
+	robotMsg       RobotMsg
+	IsOnline       bool
+	UserType       int8
+	LastChatTime   int64
+	IsReady        bool
 	SelectShowCard int
-	Seat int
-	IsUp bool
-	RoundMsg RoundMsg
-	IsAllIn bool
-	AllInRound int
-	RoundBet []int64
-	HandCards []int
+	Seat           int
+	IsUp           bool
+	RoundMsg       RoundMsg
+	IsAllIn        bool
+	AllInRound     int
+	RoundBet       []int64
+	HandCards      []int
 }
 
 func NewPlayer(info map[string]interface{}) *Player {

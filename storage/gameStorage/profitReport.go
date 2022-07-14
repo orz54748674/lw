@@ -14,54 +14,55 @@ import (
 )
 
 type GameProfit struct {
-	ID       uint64      `bson:"-" json:"-"`
+	ID         uint64    `bson:"-" json:"-"`
 	GameType   game.Type `bson:"GameType"`
-	Profit     int64     `bson:"Profit"` //SystemProfit 系统抽水， 平台明面上的抽水
-	BotBalance int64     `bson:"BotBalance"`//系统余额  该余额不够赔付时，要控盘
-	BotProfit  int64     `bson:"BotProfit"`//暗抽金额
+	Profit     int64     `bson:"Profit"`     //SystemProfit 系统抽水， 平台明面上的抽水
+	BotBalance int64     `bson:"BotBalance"` //系统余额  该余额不够赔付时，要控盘
+	BotProfit  int64     `bson:"BotProfit"`  //暗抽金额
 }
 type GameProfitLog struct {
-	ID       int64      `bson:"-" json:"-"`
-	Oid      primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
-	AdminID  string 	 `bson:"AdminID"`
-	GameType   game.Type `bson:"GameType"`
-	BotBalance 	int64     `bson:"BotBalance"`
-	CreateAt time.Time `bson:"CreateAt"`
+	ID         int64              `bson:"-" json:"-"`
+	Oid        primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
+	AdminID    string             `bson:"AdminID"`
+	GameType   game.Type          `bson:"GameType"`
+	BotBalance int64              `bson:"BotBalance"`
+	CreateAt   time.Time          `bson:"CreateAt"`
 }
+
 func (GameProfit) TableName() string {
 	return "game_profit"
 }
 
 var (
-	cProfit = "gameProfit"
+	cProfit    = "gameProfit"
 	cProfitLog = "gameProfitLog"
 )
 
 func InitGameProfit() {
 	c := common.GetMongoDB().C(cProfit)
-	key := bsonx.Doc{{Key: "GameType",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key,options.Index().SetUnique(true));err != nil{
-		log.Error("create GameProfit Index: %s",err)
+	key := bsonx.Doc{{Key: "GameType", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key, options.Index().SetUnique(true)); err != nil {
+		log.Error("create GameProfit Index: %s", err)
 	}
 	log.Info("init GameProfit of mongo db")
 	//_ = common.GetMysql().AutoMigrate(&GameProfit{})
 }
-func IncProfit(uid string,gameType game.Type, amount int64, botAmount int64, botProfit int64) {
-	if uid != ""{ //uid为空，表示外面已经把陪玩号去掉了,可以用来在外面计算出总和，一次性存进去
+func IncProfit(uid string, gameType game.Type, amount int64, botAmount int64, botProfit int64) {
+	if uid != "" { //uid为空，表示外面已经把陪玩号去掉了,可以用来在外面计算出总和，一次性存进去
 		user := userStorage.QueryUserId(utils.ConvertOID(uid))
-		if user.Type != userStorage.TypeNormal{ //陪玩号不计算
+		if user.Type != userStorage.TypeNormal { //陪玩号不计算
 			return
 		}
 	}
 	gameProfit := QueryProfit(gameType)
 	betGame := false
-	for _,v := range game.BetGame{
-		if gameType == v{
+	for _, v := range game.BetGame {
+		if gameType == v {
 			betGame = true
 			break
 		}
 	}
-	if gameProfit.BotBalance < -botAmount && botAmount < 0 && betGame{//防止机器人余额为负
+	if gameProfit.BotBalance < -botAmount && botAmount < 0 && betGame { //防止机器人余额为负
 		botAmount = 0
 		botProfit = 0
 	}
@@ -70,7 +71,7 @@ func IncProfit(uid string,gameType game.Type, amount int64, botAmount int64, bot
 	update := bson.M{
 		"$inc": bson.M{"Profit": amount,
 			"BotBalance": botAmount,
-			"BotProfit": botProfit,
+			"BotProfit":  botProfit,
 		},
 	}
 	if _, err := c.Upsert(query, update); err != nil {
@@ -83,6 +84,7 @@ func IncProfit(uid string,gameType game.Type, amount int64, botAmount int64, bot
 	//q.ID = gameProfit.ID
 	//common.GetMysql().Save(&q)
 }
+
 //func UpsertProfit(gameType game.Type, gameProfit *GameProfit) {
 //	c := common.GetMongoDB().C(cProfit)
 //	query := bson.M{"GameType": gameType}
@@ -110,7 +112,7 @@ func InitGameProfitLog(incDataExpireDay time.Duration) {
 	//log.Info("init GameProfitLog of mongo db")
 	_ = common.GetMysql().AutoMigrate(&GameProfitLog{})
 }
-func InsertProfitLog(profitLog GameProfitLog){
+func InsertProfitLog(profitLog GameProfitLog) {
 	//c := common.GetMongoDB().C(cProfitLog)
 	//if err := c.Insert(&profitLog); err != nil {
 	//	log.Error(err.Error())

@@ -11,11 +11,11 @@ import (
 )
 
 type Rep struct {
-	SerialKey string `json:"SerialKey"`
-	Timestamp int64 `json:"Timestamp"`
-	Code int `json:"Code"`
-	Message string `json:"Message"`
-	Data   interface{} `json:"data"`
+	SerialKey string      `json:"SerialKey"`
+	Timestamp int64       `json:"Timestamp"`
+	Code      int         `json:"Code"`
+	Message   string      `json:"Message"`
+	Data      interface{} `json:"data"`
 }
 
 type RepStatus struct {
@@ -56,7 +56,7 @@ func Login(msg map[string]interface{}, deviceType int, lang string) (url string,
 	tmpToken := res["token"].(string)
 	tmpList := res["list"].([]interface{})
 
-	return tmpList[deviceType].(string) + tmpToken + "&language=" + lang   , nil
+	return tmpList[deviceType].(string) + tmpToken + "&language=" + lang, nil
 }
 
 func GetReport(param map[string]interface{}) (map[string]interface{}, error) {

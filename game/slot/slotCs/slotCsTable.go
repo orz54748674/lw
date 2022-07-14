@@ -16,43 +16,43 @@ import (
 
 type MyTable struct {
 	room.QTable
-	module  module.RPCModule
-	app module.App
-
+	module module.RPCModule
+	app    module.App
 
 	onlinePush *vGate.OnlinePush
-	tableID string
-	Players map[string] room.BasePlayer
-	BroadCast bool  //广播标志
+	tableID    string
+	Players    map[string]room.BasePlayer
+	BroadCast  bool //广播标志
 
 	GameConf *slotCsStorage.Conf
 
 	Rand *rand.Rand
 
-	CoinValue int64
-	CoinNum int64
-	XiaZhuV int64
-	ReelsList [][]slotCsStorage.Symbol
+	CoinValue      int64
+	CoinNum        int64
+	XiaZhuV        int64
+	ReelsList      [][]slotCsStorage.Symbol
 	ReelsListTrial [][]slotCsStorage.Symbol
 
 	UserID string
-	Role Role
+	Role   Role
 
-	JieSuanData     JieSuanData
-	EventID         string
-	ResultsPool     int64  //奖池中奖金额
-	Name            string
-	IsInCheckout    bool
+	JieSuanData  JieSuanData
+	EventID      string
+	ResultsPool  int64 //奖池中奖金额
+	Name         string
+	IsInCheckout bool
 
 	TrialModeConf TrialModeConf
-	ModeType	ModeType
+	ModeType      ModeType
 
 	BonusSymbolList []BonusSymbol
-	BonusGameData    BonusGameData
-	MiniGameData	MiniGameData
+	BonusGameData   BonusGameData
+	MiniGameData    MiniGameData
 
-	CountDown	int
+	CountDown int
 }
+
 func (this *MyTable) GetSeats() map[string]room.BasePlayer {
 	return this.Players
 }
@@ -66,7 +66,6 @@ func (this *MyTable) OnCreate() {
 	//可以加载数据
 	log.Info("slotCs Table OnCreate")
 	//一定要调用QTable.OnCreate()
-
 
 	this.QTable.OnCreate()
 }
@@ -85,11 +84,11 @@ func (this *MyTable) Update(ds time.Duration) {
 	}()
 }
 
-func NewTable(module module.RPCModule,app module.App,tableID string,opts ...room.Option) *MyTable {
+func NewTable(module module.RPCModule, app module.App, tableID string, opts ...room.Option) *MyTable {
 	this := &MyTable{
 		module:  module,
-		app: app,
-		tableID:tableID,
+		app:     app,
+		tableID: tableID,
 	}
 	opts = append(opts, room.TimeOut(0))
 	opts = append(opts, room.Update(this.Update))
@@ -105,18 +104,15 @@ func NewTable(module module.RPCModule,app module.App,tableID string,opts ...room
 	}))
 	this.OnInit(this, opts...)
 	//this.OnCreate()
-	this.TableInit(module,app,tableID)
-	this.Register(protocol.Enter, this.Enter)             //进入房间
-	this.Register(protocol.QuitTable, this.QuitTable)             //退出房间
-	this.Register(protocol.Spin, this.Spin)             //
+	this.TableInit(module, app, tableID)
+	this.Register(protocol.Enter, this.Enter)         //进入房间
+	this.Register(protocol.QuitTable, this.QuitTable) //退出房间
+	this.Register(protocol.Spin, this.Spin)           //
 	this.Register(protocol.GetResults, this.GetResults)
-	this.Register(protocol.SelectBonusSymbol, this.SelectBonusSymbol)             //
-	this.Register(protocol.SelectBonusTimes, this.SelectBonusTimes)             //
-	this.Register(protocol.SelectMiniSymbol, this.SelectMiniSymbol)             //
+	this.Register(protocol.SelectBonusSymbol, this.SelectBonusSymbol) //
+	this.Register(protocol.SelectBonusTimes, this.SelectBonusTimes)   //
+	this.Register(protocol.SelectMiniSymbol, this.SelectMiniSymbol)   //
 	//this.Register(protocol.BonusTimeOut, this.BonusTimeOut)             //
 	this.Register(protocol.ClearTable, this.ClearTable)
 	return this
 }
-
-
-

@@ -190,6 +190,6 @@ type ReferenceMsg struct {
 
 type CmdTeamLeagueInfo struct {
 	InfoType int
-	InfoID int
+	InfoID   int
 	InfoName string
 }

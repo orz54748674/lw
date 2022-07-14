@@ -238,7 +238,7 @@ func (s *VgPay) NotifyCharge(w http.ResponseWriter, r *http.Request) {
 			ToResponse(w, "order is not found")
 			return
 		}
-		if order.Status == payStorage.StatusSuccess  {
+		if order.Status == payStorage.StatusSuccess {
 			ToResponse(w, "already processed")
 			return
 		}
@@ -255,7 +255,7 @@ func (s *VgPay) NotifyCharge(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func AutoCheck()  {
+func AutoCheck() {
 	go func() {
 		defer func() {
 			if r := recover(); r != nil {
@@ -265,24 +265,25 @@ func AutoCheck()  {
 			}
 		}()
 		log.Info("StartCheckVgPayOrder")
-		for true{
+		for true {
 			StartCheckVgPayOrder()
 			time.Sleep(5 * time.Minute)
 		}
 	}()
 }
-func StartCheckVgPayOrder()  {
+func StartCheckVgPayOrder() {
 	orders := payStorage.QueryAllVGPayWaitOrder()
 	now := time.Now()
-	for _,order := range orders{
+	for _, order := range orders {
 		diff := now.Sub(order.CreateAt)
-		if diff > 10 * time.Minute{
+		if diff > 10*time.Minute {
 			order.Status = payStorage.StatusFailed
 			order.UpdateAt = utils.Now()
 			payStorage.UpdateOrder(&order)
 		}
 	}
 }
+
 //func parseSign(p url.Values) string {
 //	params := make(map[string]interface{},len(p))
 //	for k,v := range p{

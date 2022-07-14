@@ -17,8 +17,8 @@ package mqrpc
 
 import (
 	"context"
-	"vn/framework/mqant/rpc/pb"
 	"reflect"
+	"vn/framework/mqant/rpc/pb"
 )
 
 // FunctionInfo handler接口信息

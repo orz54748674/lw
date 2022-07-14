@@ -47,11 +47,11 @@ type Table struct {
 	IsInGame         bool
 
 	//配置信息
-	gameChip []int64
-	allCards []int
-	poolVal  map[int64]int64
+	gameChip    []int64
+	allCards    []int
+	poolVal     map[int64]int64
 	mingPercent map[int64]int64
-	anPercent map[int64]int64
+	anPercent   map[int64]int64
 }
 
 func (s *Table) GetModule() module.RPCModule {
@@ -238,7 +238,6 @@ func (s *Table) Start(session gate.Session, msg map[string]interface{}) error {
 	walletStorage.OperateVndBalanceV1(bill)
 	activityStorage.UpsertGameDataInBet(uid, game.GuessBigSmall, 1)
 
-
 	err := s.sendPack(session.GetSessionID(), game.Push, s.GameState, actionStart, nil)
 	if err != nil {
 		log.Info("start err:", err.Error())
@@ -273,11 +272,11 @@ func (s *Table) AutoCheckout(uid string) {
 
 func (s *Table) handleGetCard(strSelect string) int {
 	cardsLen := len(s.allCards)
-	for i := 1; i<=10000; i++ {
+	for i := 1; i <= 10000; i++ {
 		tmpIdx := rand.Intn(cardsLen)
 		newCard := s.allCards[tmpIdx]
 		score := int64(0)
-		if s.getCardValue(newCard) == 14 && len(s.GameState.AList) + 1 == 3 {
+		if s.getCardValue(newCard) == 14 && len(s.GameState.AList)+1 == 3 {
 			score = score + s.poolVal[s.GameState.SelectChip]
 		}
 		if strSelect == "big" && s.getCardValue(newCard) > s.getCardValue(s.GameState.CurCard) {
@@ -394,7 +393,7 @@ func (s *Table) PoolReward(uid string) {
 	record.Nickname = user.NickName
 	record.Reward = reward
 	gbsStorage.InsertPoolRewardRecord(record)
-	updatePoolVal := -reward + 20 * record.SelectChip
+	updatePoolVal := -reward + 20*record.SelectChip
 	gbsStorage.UpsertPoolVal(s.GameState.SelectChip, updatePoolVal)
 	s.module.InvokeNR(string(game.GuessBigSmall), "UpdatePoolVal", s.GameState.SelectChip, updatePoolVal)
 }
@@ -453,11 +452,11 @@ func (s *Table) checkout(uid string) {
 		score = s.GameState.CurGolds * 98 / 100
 		bill := walletStorage.NewBill(uid, billType, walletStorage.EventGameGuessBs, s.eventID, score)
 		walletStorage.OperateVndBalanceV1(bill)
-		mingProfit = s.GameState.CurGolds * s.mingPercent[s.GameState.SelectChip] /1000
-		anProfit = s.GameState.CurGolds * s.anPercent[s.GameState.SelectChip] /1000
+		mingProfit = s.GameState.CurGolds * s.mingPercent[s.GameState.SelectChip] / 1000
+		anProfit = s.GameState.CurGolds * s.anPercent[s.GameState.SelectChip] / 1000
 	} else {
 		mingProfit = 0
-		anProfit = s.GameState.SelectChip * s.anPercent[s.GameState.SelectChip] /1000
+		anProfit = s.GameState.SelectChip * s.anPercent[s.GameState.SelectChip] / 1000
 		gbsStorage.UpsertPoolVal(s.GameState.SelectChip, s.GameState.SelectChip/1000*3)
 		s.module.InvokeNR(string(game.GuessBigSmall), "UpdatePoolVal", s.GameState.SelectChip, s.GameState.SelectChip/1000*3)
 	}

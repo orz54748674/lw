@@ -15,13 +15,14 @@ import (
 
 type AgentScript struct {
 }
-func (s *AgentScript)UpdateUser(user userStorage.User) {
+
+func (s *AgentScript) UpdateUser(user userStorage.User) {
 	c := common.GetMongoDB().C("user")
-	query := bson.M{"_id":user.Oid}
-	if err := c.Update(query, &user);err !=nil{
+	query := bson.M{"_id": user.Oid}
+	if err := c.Update(query, &user); err != nil {
 		log.Error(err.Error())
 	}
-	common.GetMysql().Where("oid=?",user.Oid.Hex()).Updates(&user)
+	common.GetMysql().Where("oid=?", user.Oid.Hex()).Updates(&user)
 }
 func (s *AgentScript) start() {
 	start := time.Now()
@@ -46,7 +47,7 @@ func (s *AgentScript) start() {
 				UpdateAt: utils.Now(),
 			}
 			agentStorage.InsertAgent(agent)
-		}else{
+		} else {
 			agentStorage.UpsertAgent(inviteData.Oid, 1, count)
 		}
 	}
@@ -62,7 +63,7 @@ func convertOid2Str(ids []primitive.ObjectID) []string {
 	return strArray
 }
 
-func (AgentScript) parseMyVipData()  {
+func (AgentScript) parseMyVipData() {
 	//now := time.Now()
 	//todayStr := utils.GetDateStr(now)
 	//allAgent := agentStorage.

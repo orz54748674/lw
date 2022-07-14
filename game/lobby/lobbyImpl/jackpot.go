@@ -16,54 +16,55 @@ type MaxJackpot struct {
 	GameType game.Type
 	Jackpot  int64
 }
+
 func GetMaxJackpotAll() interface{} {
-	res := make([]MaxJackpot,0)
+	res := make([]MaxJackpot, 0)
 	//大小
-	jackpot,_ := utils.ConvertInt(getDxInfo().(map[string]interface{})["Jackpot"])
-	res = append(res,MaxJackpot{
+	jackpot, _ := utils.ConvertInt(getDxInfo().(map[string]interface{})["Jackpot"])
+	res = append(res, MaxJackpot{
 		GameType: game.BiDaXiao,
-		Jackpot: jackpot,
+		Jackpot:  jackpot,
 	})
 	//鱼虾蟹
 	yxx := yxxStorage.GetTableInfo("000000")
 	jackpot = yxx.PrizePool
-	res = append(res,MaxJackpot{
+	res = append(res, MaxJackpot{
 		GameType: game.YuXiaXie,
-		Jackpot: jackpot,
+		Jackpot:  jackpot,
 	})
 	//龙神
-	goldJackpot,_:= slotLsStorage.GetJackpot()
-	jackpot = goldJackpot[len(goldJackpot) - 1]
-	res = append(res,MaxJackpot{
+	goldJackpot, _ := slotLsStorage.GetJackpot()
+	jackpot = goldJackpot[len(goldJackpot)-1]
+	res = append(res, MaxJackpot{
 		GameType: game.SlotLs,
-		Jackpot: jackpot,
+		Jackpot:  jackpot,
 	})
 	//财神
 	cs := slotCsStorage.GetJackpot()
-	jackpot = cs[len(cs) - 1]
-	res = append(res,MaxJackpot{
+	jackpot = cs[len(cs)-1]
+	res = append(res, MaxJackpot{
 		GameType: game.SlotCs,
-		Jackpot: jackpot,
+		Jackpot:  jackpot,
 	})
 	//性感
 	sex := slotSexStorage.GetJackpot()
-	jackpot = sex[len(sex) - 1]
-	res = append(res,MaxJackpot{
+	jackpot = sex[len(sex)-1]
+	res = append(res, MaxJackpot{
 		GameType: game.SlotSex,
-		Jackpot: jackpot,
+		Jackpot:  jackpot,
 	})
 	//Mini Poker
 	jackpot = pk.GetPrizePool()[500000]
-	res = append(res,MaxJackpot{
+	res = append(res, MaxJackpot{
 		GameType: game.MiniPoker,
-		Jackpot: jackpot,
+		Jackpot:  jackpot,
 	})
 	//猜大小
 	gbs := gbsStorage.GetGameConf()
-	jackpot = gbs[len(gbs) - 1].PoolVal
-	res = append(res,MaxJackpot{
+	jackpot = gbs[len(gbs)-1].PoolVal
+	res = append(res, MaxJackpot{
 		GameType: game.GuessBigSmall,
-		Jackpot: jackpot,
+		Jackpot:  jackpot,
 	})
 	sort.Slice(res, func(i, j int) bool {
 		return res[i].Jackpot > res[j].Jackpot

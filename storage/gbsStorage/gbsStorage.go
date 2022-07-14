@@ -10,17 +10,17 @@ import (
 )
 
 var (
-	cGuessBigSmallConf = "guessBigSmallConf"
-	cGbsRecord         = "guessBigSmallRecord"
+	cGuessBigSmallConf   = "guessBigSmallConf"
+	cGbsRecord           = "guessBigSmallRecord"
 	cGbsPoolRewardRecord = "guessPoolRewardRecord"
 )
 
 func InitGbsStorage() {
 	c := common.GetMongoDB().C(cGbsRecord)
-	key := bsonx.Doc{{Key: "createTime",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key,options.Index().
-		SetExpireAfterSeconds(30*24*3600));err != nil{
-		log.Error("create cGbsRecord Index: %s",err)
+	key := bsonx.Doc{{Key: "createTime", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key, options.Index().
+		SetExpireAfterSeconds(30*24*3600)); err != nil {
+		log.Error("create cGbsRecord Index: %s", err)
 	}
 }
 
@@ -50,8 +50,7 @@ func UpsertPoolVal(chip, val int64) {
 	c := common.GetMongoDB().C(cGuessBigSmallConf)
 	query := bson.M{"chip": chip}
 	update := bson.M{
-		"$inc": bson.M{"poolVal": val,
-		},
+		"$inc": bson.M{"poolVal": val},
 	}
 
 	if _, err := c.Upsert(query, update); err != nil {

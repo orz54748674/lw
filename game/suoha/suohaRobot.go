@@ -12,7 +12,7 @@ func (s *Table) CreateRobot(num int) {
 	for {
 		if num > 0 {
 			r := rand.New(rand.NewSource(time.Now().UnixNano()))
-			robot := common2.RandBotN(num,r)
+			robot := common2.RandBotN(num, r)
 			for _, v := range robot {
 				find := false
 				s.Players.Range(func(k, val interface{}) bool {

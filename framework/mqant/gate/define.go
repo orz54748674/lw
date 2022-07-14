@@ -16,9 +16,9 @@
 package gate
 
 import (
+	"time"
 	"vn/framework/mqant/log"
 	"vn/framework/mqant/network"
-	"time"
 )
 
 // RPCParamSessionType gate.session 类型
@@ -34,15 +34,15 @@ var JudgeGuest func(session Session) bool
 type GateHandler interface {
 	GetAgent(Sessionid string) (Agent, error)
 	GetAgentNum() int
-	Bind(span log.TraceSpan, Sessionid string, Userid string) (result Session, err string)                 //Bind the session with the the Userid.
-	UnBind(span log.TraceSpan, Sessionid string) (result Session, err string)                              //UnBind the session with the the Userid.
-	Set(span log.TraceSpan, Sessionid string, key string, value string) (result Session, err string)       //Set values (one or many) for the session.
-	Remove(span log.TraceSpan, Sessionid string, key string) (result interface{}, err string)              //Remove value from the session.
-	Push(span log.TraceSpan, Sessionid string, Settings map[string]string) (result Session, err string)    //推送信息给Session
-	Send(span log.TraceSpan, Sessionid string, topic string, body []byte) (result interface{}, err string) //Send message
+	Bind(span log.TraceSpan, Sessionid string, Userid string) (result Session, err string)                        //Bind the session with the the Userid.
+	UnBind(span log.TraceSpan, Sessionid string) (result Session, err string)                                     //UnBind the session with the the Userid.
+	Set(span log.TraceSpan, Sessionid string, key string, value string) (result Session, err string)              //Set values (one or many) for the session.
+	Remove(span log.TraceSpan, Sessionid string, key string) (result interface{}, err string)                     //Remove value from the session.
+	Push(span log.TraceSpan, Sessionid string, Settings map[string]string) (result Session, err string)           //推送信息给Session
+	Send(span log.TraceSpan, Sessionid string, topic string, body []byte) (result interface{}, err string)        //Send message
 	SendByQueue(span log.TraceSpan, Sessionid string, topic string, body []byte) (result interface{}, err string) //Send message
-	SendBatch(span log.TraceSpan, Sessionids string, topic string, body []byte) (int64, string)            //批量发送
-	BroadCast(span log.TraceSpan, topic string, body []byte) (int64, string)                               //广播消息给网关所有在连客户端
+	SendBatch(span log.TraceSpan, Sessionids string, topic string, body []byte) (int64, string)                   //批量发送
+	BroadCast(span log.TraceSpan, topic string, body []byte) (int64, string)                                      //广播消息给网关所有在连客户端
 	//查询某一个userId是否连接中，这里只是查询这一个网关里面是否有userId客户端连接，如果有多个网关就需要遍历了
 	IsConnect(span log.TraceSpan, Sessionid string, Userid string) (result bool, err string)
 	Close(span log.TraceSpan, Sessionid string) (result interface{}, err string) //主动关闭连接

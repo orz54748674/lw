@@ -30,7 +30,7 @@ func GetOpenRes(uid string, limit int) []OpenRes {
 
 func InsertRecord(record RsbRecord) {
 	c := common.GetMongoDB().C(cRsbRecord)
-	if error := c.Insert(&record); error != nil{
+	if error := c.Insert(&record); error != nil {
 		log.Info("Insert mail error: %s", error)
 	}
 }
@@ -45,7 +45,7 @@ func GetRsbConf() (int64, int64, int64) {
 		if err = c.Insert(&rsbConf); err != nil {
 			log.Info("Insert rsbConf error: %s", err)
 		}
-		return  rsbConf.InitBalance, rsbConf.MingPercent, rsbConf.AnPercent
+		return rsbConf.InitBalance, rsbConf.MingPercent, rsbConf.AnPercent
 	}
 
 	gameProfit := gameStorage.QueryProfit(game.Roshambo)

@@ -127,7 +127,7 @@ func (h *CqHttp) Amends(w http.ResponseWriter, r *http.Request) {
 		//statusMap["message"] = "参数解析失败:" + err.Error()
 		//resMap["data"] = dataMap
 		//resMap["status"] = statusMap
-		h.response(w, h.GetRespData("1003", "参数解析失败:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析失败:"+err.Error(), dataMap, statusMap))
 		return
 	}
 
@@ -224,7 +224,7 @@ func (h *CqHttp) Cancel(w http.ResponseWriter, r *http.Request) {
 		//statusMap["message"] = "参数解析失败"
 		//resMap["data"] = dataMap
 		//resMap["status"] = statusMap
-		h.response(w, h.GetRespData("1003", "参数解析失败:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析失败:"+err.Error(), dataMap, statusMap))
 
 		return
 	}
@@ -378,7 +378,7 @@ func (h *CqHttp) Bet(w http.ResponseWriter, r *http.Request) {
 	var bet apiCqStorage.Bet
 	paramMap := make(map[string]interface{})
 	if err := h.parse(w, r, &paramMap, &bet); err != nil {
-		h.response(w, h.GetRespData("1003", "参数解析错误:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析错误:"+err.Error(), dataMap, statusMap))
 		return
 	}
 
@@ -405,7 +405,7 @@ func (h *CqHttp) Bet(w http.ResponseWriter, r *http.Request) {
 	} else {
 		wallet := walletStorage.QueryWallet(utils.ConvertOID(mApiUser.Uid))
 		tmpBalance := float64(wallet.VndBalance)
-			tmpBalance = tmpBalance - bet.Amount + float64(int64(bet.Amount))
+		tmpBalance = tmpBalance - bet.Amount + float64(int64(bet.Amount))
 		dataMap["balance"] = tmpBalance
 		dataMap["currency"] = "VND"
 		statusMap["code"] = "0"
@@ -428,7 +428,7 @@ func (h *CqHttp) EndRound(w http.ResponseWriter, r *http.Request) {
 	var endRound apiCqStorage.EndRound
 	paramMap := make(map[string]interface{})
 	if err := h.parse(w, r, &paramMap, &endRound); err != nil {
-		h.response(w, h.GetRespData("1003", "参数解析错误:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析错误:"+err.Error(), dataMap, statusMap))
 		return
 	}
 
@@ -487,7 +487,7 @@ func (h *CqHttp) Rollout(w http.ResponseWriter, r *http.Request) {
 	var rollout apiCqStorage.Rollout
 	paramMap := make(map[string]interface{})
 	if err := h.parse(w, r, &paramMap, &rollout); err != nil {
-		h.response(w, h.GetRespData("1003", "参数解析错误:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析错误:"+err.Error(), dataMap, statusMap))
 		return
 	}
 
@@ -533,7 +533,7 @@ func (h *CqHttp) Rollin(w http.ResponseWriter, r *http.Request) {
 
 	paramMap := make(map[string]interface{})
 	if err := h.parse(w, r, &paramMap, &map[string]interface{}{}); err != nil {
-		h.response(w, h.GetRespData("1003", "参数解析错误:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析错误:"+err.Error(), dataMap, statusMap))
 		return
 	}
 
@@ -585,7 +585,7 @@ func (h *CqHttp) Debit(w http.ResponseWriter, r *http.Request) {
 
 	paramMap := make(map[string]interface{})
 	if err := h.parse(w, r, &paramMap, &map[string]interface{}{}); err != nil {
-		h.response(w, h.GetRespData("1003", "参数解析错误:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析错误:"+err.Error(), dataMap, statusMap))
 		return
 	}
 
@@ -637,7 +637,7 @@ func (h *CqHttp) Credit(w http.ResponseWriter, r *http.Request) {
 
 	paramMap := make(map[string]interface{})
 	if err := h.parse(w, r, &paramMap, &map[string]interface{}{}); err != nil {
-		h.response(w, h.GetRespData("1003", "参数解析错误:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析错误:"+err.Error(), dataMap, statusMap))
 		return
 	}
 
@@ -689,7 +689,7 @@ func (h *CqHttp) Bonus(w http.ResponseWriter, r *http.Request) {
 
 	paramMap := make(map[string]interface{})
 	if err := h.parse(w, r, &paramMap, &map[string]interface{}{}); err != nil {
-		h.response(w, h.GetRespData("1003", "参数解析错误:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析错误:"+err.Error(), dataMap, statusMap))
 		return
 	}
 
@@ -741,7 +741,7 @@ func (h *CqHttp) Payoff(w http.ResponseWriter, r *http.Request) {
 
 	paramMap := make(map[string]interface{})
 	if err := h.parse(w, r, &paramMap, &map[string]interface{}{}); err != nil {
-		h.response(w, h.GetRespData("1003", "参数解析错误:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析错误:"+err.Error(), dataMap, statusMap))
 		return
 	}
 
@@ -792,7 +792,7 @@ func (h *CqHttp) Refund(w http.ResponseWriter, r *http.Request) {
 
 	paramMap := make(map[string]interface{})
 	if err := h.parse(w, r, &paramMap, &map[string]interface{}{}); err != nil {
-		h.response(w, h.GetRespData("1003", "参数解析错误:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析错误:"+err.Error(), dataMap, statusMap))
 		return
 	}
 
@@ -846,7 +846,7 @@ func (h *CqHttp) TakeAll(w http.ResponseWriter, r *http.Request) {
 	var takeall apiCqStorage.TakeAll
 	paramMap := make(map[string]interface{})
 	if err := h.parse(w, r, &paramMap, &takeall); err != nil {
-		h.response(w, h.GetRespData("1003", "参数解析错误:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析错误:"+err.Error(), dataMap, statusMap))
 		return
 	}
 
@@ -894,7 +894,7 @@ func (h *CqHttp) BatchBets(w http.ResponseWriter, r *http.Request) {
 	paramMap := make(map[string]interface{})
 	var bets apiCqStorage.Bets
 	if err := h.parse(w, r, &paramMap, &bets); err != nil {
-		h.response(w, h.GetRespData("1003", "参数解析错误:" + err.Error(), dataMap, statusMap))
+		h.response(w, h.GetRespData("1003", "参数解析错误:"+err.Error(), dataMap, statusMap))
 		return
 	}
 
@@ -941,7 +941,6 @@ func (h *CqHttp) BatchBets(w http.ResponseWriter, r *http.Request) {
 
 	h.response(w, resMap)
 }
-
 
 func (h *CqHttp) auth(r *http.Request) error {
 	contentType := r.Header.Get("Content-Type")

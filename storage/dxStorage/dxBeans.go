@@ -2,8 +2,8 @@ package dxStorage
 
 import (
 	"encoding/json"
-	"vn/framework/mongo-driver/bson/primitive"
 	"time"
+	"vn/framework/mongo-driver/bson/primitive"
 )
 
 type Notify struct {
@@ -61,21 +61,21 @@ var (
 
 type BetPositionType string
 type DxBetLog struct {
-	ID          uint64        `bson:"-" json:"-"`
+	ID          uint64             `bson:"-" json:"-"`
 	Oid         primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
-	Uid         string        `bson:"Uid"`
-	NickName    string        `bson:"NickName"`
-	GameId      int64         `bson:"GameId"`
-	Big         int64         `bson:"Big"`
-	Small       int64         `bson:"Small"`
-	CurBig      int64         `bson:"CurBig"`
-	CurSmall    int64         `bson:"CurSmall"`
-	UserType    string        `bson:"UserType"`
-	MoneyType   string        `bson:"MoneyType"`
-	Result      int64         `bson:"Result"`
-	Refund      int64         `bson:"Refund"`
-	HasCheckout int           `bson:"HasCheckout"` //0 未结算，1 已结算
-	CreateAt    time.Time     `bson:"CreateAt"`
+	Uid         string             `bson:"Uid"`
+	NickName    string             `bson:"NickName"`
+	GameId      int64              `bson:"GameId"`
+	Big         int64              `bson:"Big"`
+	Small       int64              `bson:"Small"`
+	CurBig      int64              `bson:"CurBig"`
+	CurSmall    int64              `bson:"CurSmall"`
+	UserType    string             `bson:"UserType"`
+	MoneyType   string             `bson:"MoneyType"`
+	Result      int64              `bson:"Result"`
+	Refund      int64              `bson:"Refund"`
+	HasCheckout int                `bson:"HasCheckout"` //0 未结算，1 已结算
+	CreateAt    time.Time          `bson:"CreateAt"`
 }
 
 func (DxBetLog) TableName() string {

@@ -36,7 +36,6 @@ var ReelsNormalList = [][]slotCsStorage.Symbol{
 		slotCsStorage.TEN,
 		slotCsStorage.K,
 		slotCsStorage.TREE,
-
 	},
 	{
 		slotCsStorage.BONUS,
@@ -69,7 +68,6 @@ var ReelsNormalList = [][]slotCsStorage.Symbol{
 		slotCsStorage.WALLET,
 		slotCsStorage.K,
 		slotCsStorage.WALLET,
-
 	},
 	{
 		slotCsStorage.WALLET,
@@ -102,7 +100,6 @@ var ReelsNormalList = [][]slotCsStorage.Symbol{
 		slotCsStorage.TREE,
 		slotCsStorage.TEN,
 		slotCsStorage.K,
-
 	},
 	{
 		slotCsStorage.TREE,
@@ -135,7 +132,6 @@ var ReelsNormalList = [][]slotCsStorage.Symbol{
 		slotCsStorage.WALLET,
 		slotCsStorage.TEN,
 		slotCsStorage.J,
-
 	},
 	{
 		slotCsStorage.BONUS,
@@ -168,7 +164,6 @@ var ReelsNormalList = [][]slotCsStorage.Symbol{
 		slotCsStorage.J,
 		slotCsStorage.Q,
 		slotCsStorage.A,
-
 	},
 }
 
@@ -300,7 +295,6 @@ var ReelsListTrial = [][]slotCsStorage.Symbol{
 		slotCsStorage.JACKPOT,
 		slotCsStorage.WALLET,
 		slotCsStorage.Q,
-
 	},
 	{
 		slotCsStorage.JACKPOT,
@@ -368,7 +362,6 @@ var ReelsListNormal2 = [][]slotCsStorage.Symbol{
 		slotCsStorage.TEN,
 		slotCsStorage.TREE,
 		slotCsStorage.A,
-
 	},
 	{
 		slotCsStorage.K,
@@ -402,7 +395,6 @@ var ReelsListNormal2 = [][]slotCsStorage.Symbol{
 		slotCsStorage.A,
 		slotCsStorage.JACKPOT,
 		slotCsStorage.TREE,
-
 	},
 	{
 		slotCsStorage.SCATTER,
@@ -436,8 +428,6 @@ var ReelsListNormal2 = [][]slotCsStorage.Symbol{
 		slotCsStorage.A,
 		slotCsStorage.BONUS,
 		slotCsStorage.WILD,
-
-
 	},
 	{
 		slotCsStorage.A,
@@ -471,8 +461,6 @@ var ReelsListNormal2 = [][]slotCsStorage.Symbol{
 		slotCsStorage.TREE,
 		slotCsStorage.TEN,
 		slotCsStorage.SCATTER,
-
-
 	},
 	{
 		slotCsStorage.JACKPOT,
@@ -506,23 +494,12 @@ var ReelsListNormal2 = [][]slotCsStorage.Symbol{
 		slotCsStorage.A,
 		slotCsStorage.TEN,
 		slotCsStorage.SCATTER,
-
 	},
 }
 var ReelsListBase = [][]slotCsStorage.Symbol{
-	{
-
-	},
-	{
-
-	},
-	{
-
-	},
-	{
-
-	},
-	{
-
-	},
+	{},
+	{},
+	{},
+	{},
+	{},
 }

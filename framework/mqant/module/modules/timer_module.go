@@ -4,10 +4,10 @@
 package modules
 
 import (
+	"time"
 	"vn/framework/mqant/conf"
 	"vn/framework/mqant/module"
 	"vn/framework/mqant/module/modules/timer"
-	"time"
 )
 
 var TimerModule = func() module.Module {

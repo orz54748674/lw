@@ -121,10 +121,10 @@ func (s *SessionStorage) Heartbeat(session gate.Session) {
 }
 func (s *SessionStorage) InitMongo(sessionExpireSecond time.Duration) {
 	c := common.GetMongoDB().C(cSession)
-	key := bsonx.Doc{{Key: "UpdateAt",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key,options.Index().
-		SetExpireAfterSeconds(int32(sessionExpireSecond/time.Second)));err != nil{
-		log.Error("create gateSession Index: %s",err)
+	key := bsonx.Doc{{Key: "UpdateAt", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key, options.Index().
+		SetExpireAfterSeconds(int32(sessionExpireSecond/time.Second))); err != nil {
+		log.Error("create gateSession Index: %s", err)
 	}
 	log.Info("init gateSession of mongo db")
 }
@@ -206,7 +206,7 @@ func UpdateSessionPage(uid primitive.ObjectID, page string) {
 }
 func QuerySessionByPage(page string) *[]SessionBean {
 	c := common.GetMongoDB().C(cSession)
-	query := bson.M{"PagePath": bson.M{"$regex":page}}
+	query := bson.M{"PagePath": bson.M{"$regex": page}}
 	var sessionBean []SessionBean
 	if err := c.Find(query).All(&sessionBean); err != nil {
 		log.Error(err.Error())

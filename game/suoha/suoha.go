@@ -31,28 +31,28 @@ var Module = func() module.Module {
 
 type suohaRoom struct {
 	basemodule.BaseModule
-	room *room.Room
+	room        *room.Room
 	uid2TableID map[string]string
-	gameConf suohaStorage.Conf
-	tableInfos []suohaStorage.TableInfo
+	gameConf    suohaStorage.Conf
+	tableInfos  []suohaStorage.TableInfo
 }
 
 const (
-	tableId           = "1"
-	actionEnterRoom   = "HD_enterRoom"
-	actionGetHistory  = "HD_getHistory"
-	actionBet         = "HD_bet"
-	actionPlayerLeave = "HD_playerLeave"
-	actionGetState    = "HD_getState"
-	actionGetRecord   = "HD_getRecord"
+	tableId                   = "1"
+	actionEnterRoom           = "HD_enterRoom"
+	actionGetHistory          = "HD_getHistory"
+	actionBet                 = "HD_bet"
+	actionPlayerLeave         = "HD_playerLeave"
+	actionGetState            = "HD_getState"
+	actionGetRecord           = "HD_getRecord"
 	actionGetBigRewardRanking = "HD_getBigRewardRank"
-	actionReady = "HD_ready"
-	actionPlayerAction = "HD_playerAction"
-	actionCreateTable = "HD_createTable"
-	actionEnterCreateTable = "HD_enterCreateTable"
-	actionQuickStart = "HD_quickStart"
-	actionGetTableInfos = "HD_getTableInfos"
-	actionJoinTable = "HD_joinTable"
+	actionReady               = "HD_ready"
+	actionPlayerAction        = "HD_playerAction"
+	actionCreateTable         = "HD_createTable"
+	actionEnterCreateTable    = "HD_enterCreateTable"
+	actionQuickStart          = "HD_quickStart"
+	actionGetTableInfos       = "HD_getTableInfos"
+	actionJoinTable           = "HD_joinTable"
 )
 
 func (s *suohaRoom) GetType() string {
@@ -86,7 +86,6 @@ func (s *suohaRoom) OnInit(app module.App, settings *conf.ModuleSettings) {
 	hook.RegisterAndCheckLogin(s.GetServer(), actionQuickStart, s.quickStart)
 	hook.RegisterAndCheckLogin(s.GetServer(), actionGetTableInfos, s.getTableInfos)
 	hook.RegisterAndCheckLogin(s.GetServer(), actionJoinTable, s.joinTable)
-
 
 	s.GetServer().RegisterGO("/suoha/onDisconnect", s.onDisconnect)
 	common.AddListener(s.GetServerID(), common.EventDisconnect, "/suoha/onDisconnect")
@@ -281,7 +280,9 @@ func (s *suohaRoom) getBaseAndCarryGolds(uid string) (int64, int64) {
 			}
 		}
 	}
-	if idx < 0 {idx = 0}
+	if idx < 0 {
+		idx = 0
+	}
 
 	carryGolds := s.gameConf.BaseConf[idx].MaxEnter
 	if carryGolds > wallet.VndBalance {
@@ -418,7 +419,7 @@ func (s *suohaRoom) enterCreateTable(session gate.Session, msg map[string]interf
 	wallet := walletStorage.QueryWallet(utils.ConvertOID(uid))
 	tableInfos := suohaStorage.GetSuoHaTableInfo()
 	for _, info := range tableInfos {
-		if info.IsCreateTable && tableNo == info.TableNo && password == info.Password  {
+		if info.IsCreateTable && tableNo == info.TableNo && password == info.Password {
 			if wallet.VndBalance < s.getMinEnter(info.BaseScore) {
 				return errCode.BalanceNotEnough.GetI18nMap(), nil
 			}

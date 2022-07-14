@@ -31,16 +31,16 @@ const (
 )
 
 type RoomData struct {
-	ID             int64                `bson:"-" json:"-"`
-	Oid            primitive.ObjectID   `bson:"_id,omitempty" json:"Oid"`
-	TablesInfo     map[string]TableInfo `bson:"TablesInfo" json:"TablesInfo"` //桌子信息
-	CurTableID     string               `bson:"CurTableID" json:"CurTableID"`
+	ID         int64                `bson:"-" json:"-"`
+	Oid        primitive.ObjectID   `bson:"_id,omitempty" json:"Oid"`
+	TablesInfo map[string]TableInfo `bson:"TablesInfo" json:"TablesInfo"` //桌子信息
+	CurTableID string               `bson:"CurTableID" json:"CurTableID"`
 }
 type TableInfo struct {
-	TableID  string `bson:"TableID" json:"TableID"`
-	PrizePool int64 `bson:"PrizePool" json:"PrizePool"` //奖池
-	PrizeSwitch bool `bson:"PrizeSwitch" json:"PrizeSwitch"` //当下次盈利大于奖池瓜分  必开大奖
-	ServerID string
+	TableID     string `bson:"TableID" json:"TableID"`
+	PrizePool   int64  `bson:"PrizePool" json:"PrizePool"`     //奖池
+	PrizeSwitch bool   `bson:"PrizeSwitch" json:"PrizeSwitch"` //当下次盈利大于奖池瓜分  必开大奖
+	ServerID    string
 }
 
 type RoomRecord struct {
@@ -61,7 +61,7 @@ type PrizeRecord struct {
 }
 type PrizeRecordList struct { //大奖记录
 	Cnt         int64        `bson:"Cnt" json:"Cnt"`                 //期数
-	CreateTime  time.Time    `bson:"CreateAt" json:"CreateAt"`   //创建时间
+	CreateTime  time.Time    `bson:"CreateAt" json:"CreateAt"`       //创建时间
 	Result      XiaZhuResult `bson:"Result" json:"Result"`           //出现图案
 	ResultsPool int64        `bson:"ResultsPool" json:"ResultsPool"` //奖池中奖金额
 	PrizeList   []PrizeList  `bson:"PrizeList" json:"PrizeList"`     //瓜分名单
@@ -97,9 +97,9 @@ type RobotRange struct {
 }
 
 type RobotConf struct { //机器人
-	TableID    string `bson:"TableID" json:"TableID"`       //房间号
-	StartHour  int `bson:"StartHour" json:"StartHour"` //分4个时间段 0就是 0-6点
-	BaseNum  int `bson:"BaseNum" json:"BaseNum"` //数量
-	MaxOffset int `bson:"MaxOffset" json:"MaxOffset"` //最大偏移量
-	StepNum int `bson:"StepNum" json:"StepNum"` //每局增加量
+	TableID   string `bson:"TableID" json:"TableID"`     //房间号
+	StartHour int    `bson:"StartHour" json:"StartHour"` //分4个时间段 0就是 0-6点
+	BaseNum   int    `bson:"BaseNum" json:"BaseNum"`     //数量
+	MaxOffset int    `bson:"MaxOffset" json:"MaxOffset"` //最大偏移量
+	StepNum   int    `bson:"StepNum" json:"StepNum"`     //每局增加量
 }

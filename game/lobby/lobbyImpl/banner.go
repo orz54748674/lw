@@ -90,9 +90,9 @@ func (s *Broadcast) notify(banners []lobbyStorage.LobbyBanner) {
 }
 
 func randomOneLobbyBanner() *lobbyStorage.LobbyBanner {
-	Again:
-		r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	gameRandom := utils.RandInt64(1, int64(len(gameTypes))+1,r)
+Again:
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	gameRandom := utils.RandInt64(1, int64(len(gameTypes))+1, r)
 	//x := float64(utils.RandInt64(1, 99,r))
 	//y := (-4*math.Pow(10, -6))*math.Pow(x, 4) + 0.0005*math.Pow(x, 3) - 0.0204*math.Pow(x, 2) + 0.0644*x + 99.167
 	//rewardRandom := 0
@@ -104,11 +104,11 @@ func randomOneLobbyBanner() *lobbyStorage.LobbyBanner {
 	lowestAmount, _ := utils.ConvertInt(storage.QueryConf(
 		storage.KLobbyBannerLowestAmount).(string))
 	tmp := lowestAmount / 100
-	amount := utils.RandInt64(tmp, tmp*10,r) * 100
-	bot := common2.RandBotN(1,r)
+	amount := utils.RandInt64(tmp, tmp*10, r) * 100
+	bot := common2.RandBotN(1, r)
 	gameType := string(gameTypes[gameRandom-1])
 	isOpen := lobbyStorage.QueryLobbyGameLayoutByName(gameTypes[gameRandom-1]).Status
-	if isOpen == 0{//游戏未打开
+	if isOpen == 0 { //游戏未打开
 		goto Again
 	}
 	banner := &lobbyStorage.LobbyBanner{

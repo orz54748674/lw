@@ -18,11 +18,11 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"vn/framework/mqant/conf"
-	"vn/framework/mqant/network"
 	"runtime"
 	"sync"
 	"time"
+	"vn/framework/mqant/conf"
+	"vn/framework/mqant/network"
 )
 
 // Tcp write queue

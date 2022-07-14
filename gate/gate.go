@@ -68,8 +68,8 @@ func (this *Gate) DisConnect(a gate.Session) {
 		return
 	} else {
 		sessionBean := QuerySessionBean(tokenObj.Oid.Hex())
-		if sessionBean != nil{
-			onlineSec := int64(utils.Now().Sub(sessionBean.CreateAt)/time.Second)
+		if sessionBean != nil {
+			onlineSec := int64(utils.Now().Sub(sessionBean.CreateAt) / time.Second)
 			userStorage.IncUserSumOnlineSec(tokenObj.Oid, onlineSec)
 		}
 		tokenObj.SessionId = ""

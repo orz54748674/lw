@@ -46,50 +46,50 @@ type Table struct {
 	module module.RPCModule
 	app    module.App
 
-	tableID          string
-	serverID         string
-	seatMax          int //房间最大座位数
-	stopped          bool
-	writelock        sync.Mutex
-	cannonTypes      []int64 //炮台种类
-	cannonGolds      []int64
-	baseGold         int
-	Players          map[string]*Player
-	AllFish          []fishStorage.Fish
-	playerFireAmount map[string]int64
-	TideInfo         fishStorage.TideInfo
-	GroupInfo        fishStorage.GroupInfo
-	GroupLastTime    []int64
-	maxFishCount     int
-	curFishCount     int
-	curFishID        int
-	botBalance       int64
-	tableType        int
-	fishConf         fishStorage.FishConf
-	playerNum        int8
-	seatArr          []int8
-	bInFishGroup     bool
-	fishLock         sync.Mutex
-	fishIDLock       sync.Mutex
-	longPathArr      []int
-	longWangPathArr  []int
-	sceneID          int
-	dayStr           string
-	blockRate        float64
+	tableID                string
+	serverID               string
+	seatMax                int //房间最大座位数
+	stopped                bool
+	writelock              sync.Mutex
+	cannonTypes            []int64 //炮台种类
+	cannonGolds            []int64
+	baseGold               int
+	Players                map[string]*Player
+	AllFish                []fishStorage.Fish
+	playerFireAmount       map[string]int64
+	TideInfo               fishStorage.TideInfo
+	GroupInfo              fishStorage.GroupInfo
+	GroupLastTime          []int64
+	maxFishCount           int
+	curFishCount           int
+	curFishID              int
+	botBalance             int64
+	tableType              int
+	fishConf               fishStorage.FishConf
+	playerNum              int8
+	seatArr                []int8
+	bInFishGroup           bool
+	fishLock               sync.Mutex
+	fishIDLock             sync.Mutex
+	longPathArr            []int
+	longWangPathArr        []int
+	sceneID                int
+	dayStr                 string
+	blockRate              float64
 	lastLongWangCreateTime int64
-	effectBet int64
+	effectBet              int64
 }
 
 var (
-	LongID     = 125
-	LeiSheID   = 201
-	DianZuanID = 202
-	ZhaDanID   = 203
-	LunZhouID  = 204
-	ShanDianID = 205
-	LeiTingID  = 206
-	LongWangID = 207
-	FuDaiID    = 208
+	LongID        = 125
+	LeiSheID      = 201
+	DianZuanID    = 202
+	ZhaDanID      = 203
+	LunZhouID     = 204
+	ShanDianID    = 205
+	LeiTingID     = 206
+	LongWangID    = 207
+	FuDaiID       = 208
 	FishCountBase = 30
 )
 

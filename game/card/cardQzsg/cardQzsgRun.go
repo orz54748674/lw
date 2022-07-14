@@ -26,20 +26,20 @@ func (this *MyTable) ClearTable() { //
 	myRoom := (this.module).(*Room)
 	myRoom.DestroyTable(this.tableID)
 }
-func (this *MyTable) TableInit(module module.RPCModule,app module.App,tableID string){
+func (this *MyTable) TableInit(module module.RPCModule, app module.App, tableID string) {
 	this.Players = map[string]room.BasePlayer{}
 	this.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 	this.GameConf = cardQzsgStorage.GetRoomConf()
 
-	this.tableIDTail = strings.Split(this.tableID,"_")[1] + "_" + strings.Split(this.tableID,"_")[2] + "_" + strings.Split(this.tableID,"_")[3]
+	this.tableIDTail = strings.Split(this.tableID, "_")[1] + "_" + strings.Split(this.tableID, "_")[2] + "_" + strings.Split(this.tableID, "_")[3]
 
-	this.BaseScore,_ = strconv.ParseInt(strings.Split(this.tableID,"_")[1], 10, 64)
-	botNum,_ := strconv.ParseInt(strings.Split(this.tableID,"_")[2], 10, 64)
+	this.BaseScore, _ = strconv.ParseInt(strings.Split(this.tableID, "_")[1], 10, 64)
+	botNum, _ := strconv.ParseInt(strings.Split(this.tableID, "_")[2], 10, 64)
 	this.RobotNum = int(botNum)
-	totalNum,_ := strconv.ParseInt(strings.Split(this.tableID,"_")[3], 10, 64)
+	totalNum, _ := strconv.ParseInt(strings.Split(this.tableID, "_")[3], 10, 64)
 	this.TotalPlayerNum = int(totalNum)
 	this.AutoCreate = true
-	this.MinEnterTable =this.BaseScore * int64(this.GameConf.MinEnterTableOdds)
+	this.MinEnterTable = this.BaseScore * int64(this.GameConf.MinEnterTableOdds)
 
 	tableInfo := cardQzsgStorage.GetTableInfo(tableID)
 	tableInfo.BaseScore = this.BaseScore
@@ -47,34 +47,34 @@ func (this *MyTable) TableInit(module module.RPCModule,app module.App,tableID st
 	tableInfo.TotalPlayerNum = this.TotalPlayerNum
 	tableInfo.TableID = tableID
 	tableInfo.ServerID = module.GetServerID()
-	cardQzsgStorage.UpsertTableInfo(tableInfo,tableID)
+	cardQzsgStorage.UpsertTableInfo(tableInfo, tableID)
 
 	this.onlinePush = &vGate.OnlinePush{
 		App:       app,
 		TraceSpan: this.Trace(),
 	}
-	this.MinEnterTable =this.BaseScore * int64(this.GameConf.MinEnterTableOdds)
+	this.MinEnterTable = this.BaseScore * int64(this.GameConf.MinEnterTableOdds)
 	this.onlinePush.OnlinePushInit(this, 512)
 	this.SeqExecFlag = true
 	this.RoomState = ROOM_WAITING_ENTER
 
 	this.RobotGenerate(this.RobotNum)
-	this.PlayerList = make([]PlayerList,this.TotalPlayerNum)
+	this.PlayerList = make([]PlayerList, this.TotalPlayerNum)
 	go func() {
 		c := cron.New()
-		c.AddFunc("*/1 * * * * ?",this.OnTimer)
+		c.AddFunc("*/1 * * * * ?", this.OnTimer)
 		c.Start()
 	}()
 
 }
 func (this *MyTable) OnTimer() { //定时任务
-	if !this.SeqExecFlag{
+	if !this.SeqExecFlag {
 		return
 	}
-	if this.RoomState == ROOM_END && this.SeqExecFlag{
+	if this.RoomState == ROOM_END && this.SeqExecFlag {
 		this.SeqExecFlag = false
-		for _,v := range this.PlayerList{
-			if v.IsHavePeople &&v.Role != ROBOT{
+		for _, v := range this.PlayerList {
+			if v.IsHavePeople && v.Role != ROBOT {
 				this.PutQueue(protocol.QuitTable, v.UserID)
 			}
 		}
@@ -82,54 +82,54 @@ func (this *MyTable) OnTimer() { //定时任务
 		return
 	}
 
-	if this.RoomState != ROOM_END{
+	if this.RoomState != ROOM_END {
 		robotNum := this.RobotNum - this.GetRobotNum()
-		rand := this.RandInt64(1,4)
-		if robotNum > 0 && rand == 1{
+		rand := this.RandInt64(1, 4)
+		if robotNum > 0 && rand == 1 {
 			this.RobotGenerate(robotNum)
 		}
-		if this.RobotNum == 1{
+		if this.RobotNum == 1 {
 			this.RefreshTime++
-		}else{
+		} else {
 			this.RefreshTime = 0
 		}
-		if this.RefreshTime >= 10{
-			this.RobotNum = int(this.RandInt64(1,int64(this.TotalPlayerNum)))
+		if this.RefreshTime >= 10 {
+			this.RobotNum = int(this.RandInt64(1, int64(this.TotalPlayerNum)))
 		}
 		playerNum := this.GetTablePlayerNum()
-		if playerNum < this.TotalPlayerNum && playerNum > 0{ //邀请玩家
-			if this.BaseScore < 10000{
-				rand = this.RandInt64(1,2000)
-			}else{
-				rand = this.RandInt64(1,this.BaseScore / 2)
+		if playerNum < this.TotalPlayerNum && playerNum > 0 { //邀请玩家
+			if this.BaseScore < 10000 {
+				rand = this.RandInt64(1, 2000)
+			} else {
+				rand = this.RandInt64(1, this.BaseScore/2)
 			}
-			if rand == 1 && this.PlayerList[0].Role != ""{
+			if rand == 1 && this.PlayerList[0].Role != "" {
 				record := gameStorage.GameInviteRecord{
-					GameType: game.CardQzsg,
-					GameName: common2.I18str(string(game.CardQzsg)),
+					GameType:        game.CardQzsg,
+					GameName:        common2.I18str(string(game.CardQzsg)),
 					InvitorNickName: this.PlayerList[0].Account,
-					RoomId: this.tableID,
-					BaseScore: this.BaseScore,
-					ServerId: this.module.GetServerID(),
-					UpdateAt: utils.Now(),
+					RoomId:          this.tableID,
+					BaseScore:       this.BaseScore,
+					ServerId:        this.module.GetServerID(),
+					UpdateAt:        utils.Now(),
 				}
 				myRoom := (this.module).(*Room)
 				myRoom.NotifyGameInviteToOnlineUsers(record)
 			}
 		}
 	}
-	if this.RoomState == ROOM_WAITING_READY && this.SeqExecFlag{
+	if this.RoomState == ROOM_WAITING_READY && this.SeqExecFlag {
 		this.SeqExecFlag = false
-		if this.GetTableRealPlayerNum() <= 0 && !this.AutoCreate{
+		if this.GetTableRealPlayerNum() <= 0 && !this.AutoCreate {
 			this.RoomState = ROOM_END
 			this.SeqExecFlag = true
 			return
 		}
-		for _,v := range this.PlayerList {
+		for _, v := range this.PlayerList {
 			if v.IsHavePeople {
-				if  v. Role == ROBOT && !v.Ready && v.UserID != this.Master {
-					rand := this.RandInt64(1,4)
-					if rand != 1{
+				if v.Role == ROBOT && !v.Ready && v.UserID != this.Master {
+					rand := this.RandInt64(1, 4)
+					if rand != 1 {
 						this.PutQueue(protocol.RobotReady, v.UserID)
 					}
 				}
@@ -142,41 +142,41 @@ func (this *MyTable) OnTimer() { //定时任务
 			this.GetReadyPlayerNum() == this.GetPlayerNum() {
 			this.CountDown = -1
 		}
-		if this.GetReadyPlayerNum() > 1 && this.CountDown < 0{ //有两人准备，直接进入游戏准备状态
+		if this.GetReadyPlayerNum() > 1 && this.CountDown < 0 { //有两人准备，直接进入游戏准备状态
 			this.RoomState = ROOM_WAITING_SHOWPOKER
 			this.PutQueue(protocol.ReadyGame)
-		}else{
+		} else {
 			this.SeqExecFlag = true
 		}
 	}
 
-	if this.RoomState == ROOM_WAITING_GRABDEALER && this.SeqExecFlag{
+	if this.RoomState == ROOM_WAITING_GRABDEALER && this.SeqExecFlag {
 		this.SeqExecFlag = false
-		if this.CountDown < 0{
-			for k,v := range this.PlayerList{
-				waitingList,_ := this.WaitingList.Load(k)
+		if this.CountDown < 0 {
+			for k, v := range this.PlayerList {
+				waitingList, _ := this.WaitingList.Load(k)
 				if v.Ready && !waitingList.(bool) {
 					res := make(map[string]interface{})
 					res["GrabDealer"] = -1
-					this.PutQueue(protocol.GrabDealer,v.UserID,res)
+					this.PutQueue(protocol.GrabDealer, v.UserID, res)
 					time.Sleep(100 * time.Millisecond)
 				}
 			}
 			this.OnlyExecOne = true
-		}else{
-			for k,v := range this.PlayerList{
-				waitingList,_ := this.WaitingList.Load(k)
+		} else {
+			for k, v := range this.PlayerList {
+				waitingList, _ := this.WaitingList.Load(k)
 				if v.Ready && !waitingList.(bool) && v.Role == ROBOT {
-					rand := this.RandInt64(1,3)
-					if rand == 1{
+					rand := this.RandInt64(1, 3)
+					if rand == 1 {
 						res := make(map[string]interface{})
 						res["GrabDealer"] = 1
-						this.PutQueue(protocol.GrabDealer,v.UserID,res)
+						this.PutQueue(protocol.GrabDealer, v.UserID, res)
 						break
-					}else{
+					} else {
 						res := make(map[string]interface{})
 						res["GrabDealer"] = -1
-						this.PutQueue(protocol.GrabDealer,v.UserID,res)
+						this.PutQueue(protocol.GrabDealer, v.UserID, res)
 						break
 					}
 				}
@@ -184,31 +184,31 @@ func (this *MyTable) OnTimer() { //定时任务
 			this.SeqExecFlag = true
 		}
 	}
-	if this.RoomState == ROOM_WAITING_XIAZHU && this.SeqExecFlag{
+	if this.RoomState == ROOM_WAITING_XIAZHU && this.SeqExecFlag {
 		this.SeqExecFlag = false
-		if this.CountDown < 0{
-			for k,v := range this.PlayerList{
-				waitingList,_ := this.WaitingList.Load(k)
+		if this.CountDown < 0 {
+			for k, v := range this.PlayerList {
+				waitingList, _ := this.WaitingList.Load(k)
 				if v.Ready && !waitingList.(bool) {
 					res := make(map[string]interface{})
 					res["betV"] = int(ChipsList[0] * this.BaseScore)
-					this.PutQueue(protocol.XiaZhu,v.UserID,res)
+					this.PutQueue(protocol.XiaZhu, v.UserID, res)
 					time.Sleep(100 * time.Millisecond)
 				}
 			}
 			this.OnlyExecOne = true
-		}else{
-			if this.CountDown < this.GameConf.XiaZhuTime - 2{
-				for k,v := range this.PlayerList{
-					waitingList,_ := this.WaitingList.Load(k)
+		} else {
+			if this.CountDown < this.GameConf.XiaZhuTime-2 {
+				for k, v := range this.PlayerList {
+					waitingList, _ := this.WaitingList.Load(k)
 					if v.Ready && !waitingList.(bool) && v.Role == ROBOT {
-						rand := this.RandInt64(1,5)
-						if rand == 1{
-							betRand := this.RandInt64(1,int64(len(ChipsList) + 1)) - 1
+						rand := this.RandInt64(1, 5)
+						if rand == 1 {
+							betRand := this.RandInt64(1, int64(len(ChipsList)+1)) - 1
 							betV := ChipsList[betRand] * this.BaseScore
 							res := make(map[string]interface{})
 							res["betV"] = int(betV)
-							this.PutQueue(protocol.XiaZhu,v.UserID,res)
+							this.PutQueue(protocol.XiaZhu, v.UserID, res)
 							break
 						}
 					}
@@ -217,9 +217,9 @@ func (this *MyTable) OnTimer() { //定时任务
 			this.SeqExecFlag = true
 		}
 	}
-	if this.RoomState == ROOM_WAITING_JIESUAN && this.SeqExecFlag{
+	if this.RoomState == ROOM_WAITING_JIESUAN && this.SeqExecFlag {
 		this.SeqExecFlag = false
-		if this.OnlyExecOne{
+		if this.OnlyExecOne {
 			this.OnlyExecOne = false
 		}
 
@@ -227,23 +227,23 @@ func (this *MyTable) OnTimer() { //定时任务
 			this.CountDown = this.GameConf.ReadyTime
 			this.RoomState = ROOM_WAITING_READY
 			this.SwitchRoomState()
-			for k,v := range this.PlayerList{
+			for k, v := range this.PlayerList {
 				if v.IsHavePeople {
 					if v.UserID != this.Master {
 						this.PlayerList[k].Ready = false
 					}
 					sb := vGate.QuerySessionBean(v.UserID)
-					if v.Role != ROBOT{
+					if v.Role != ROBOT {
 						wallet := walletStorage.QueryWallet(utils.ConvertOID(v.UserID))
 						v.Yxb = wallet.VndBalance
 					}
-					if v.Role != ROBOT && (sb == nil || v.NotReadyCnt >= 3 || v.Yxb < this.MinEnterTable || v.Hosting || v.QuitRoom){
+					if v.Role != ROBOT && (sb == nil || v.NotReadyCnt >= 3 || v.Yxb < this.MinEnterTable || v.Hosting || v.QuitRoom) {
 						this.PutQueue(protocol.QuitTable, v.UserID)
 						continue
 					}
-					rand := this.RandInt64(1,6)
+					rand := this.RandInt64(1, 6)
 					if v.Role == ROBOT {
-						if rand == 1 || v.Yxb < this.MinEnterTable{
+						if rand == 1 || v.Yxb < this.MinEnterTable {
 							this.PutQueue(protocol.RobotQuitTable, v.UserID)
 							continue
 						}
@@ -260,11 +260,11 @@ func (this *MyTable) OnTimer() { //定时任务
 			}
 			this.OnlyExecOne = true
 			this.SeqExecFlag = true
-		}else{
+		} else {
 			this.SeqExecFlag = true
 		}
 	}
-	if this.RoomState == ROOM_WAITING_ENTER && this.SeqExecFlag{
+	if this.RoomState == ROOM_WAITING_ENTER && this.SeqExecFlag {
 		this.SeqExecFlag = false
 		this.RoomState = ROOM_WAITING_READY
 		this.SwitchRoomState()
@@ -278,7 +278,7 @@ func (this *MyTable) OnTimer() { //定时任务
 	this.CountDown--
 }
 func (this *MyTable) ReadyGame() {
-	if this.GetReadyPlayerNum() <= 1{
+	if this.GetReadyPlayerNum() <= 1 {
 		this.RoomState = ROOM_WAITING_READY
 		this.SwitchRoomState()
 		this.SeqExecFlag = true
@@ -288,12 +288,12 @@ func (this *MyTable) ReadyGame() {
 
 	this.JieSuanData = JiesuanData{}
 	this.JieSuanData.PlayerInfo = map[int]PlayerInfo{}
-	this.EventID = string(game.CardQzsg) + this.tableID + "_" + strconv.FormatInt(time.Now().Unix(),10)
+	this.EventID = string(game.CardQzsg) + this.tableID + "_" + strconv.FormatInt(time.Now().Unix(), 10)
 	this.PlayingNum = 0
 	this.GrabDealerList = []int{}
 	this.DealerIdx = -1
-	for k,v := range this.PlayerList{
-		this.WaitingList.Store(k,false)
+	for k, v := range this.PlayerList {
+		this.WaitingList.Store(k, false)
 		this.PlayerList[k].TotalBackYxb = 0
 
 		this.PlayerList[k].PokerType = PokerType(0)
@@ -303,20 +303,20 @@ func (this *MyTable) ReadyGame() {
 		this.PlayerList[k].BetVal = 0
 		this.PlayerList[k].HandPoker = []int{}
 
-		if v.Ready{
+		if v.Ready {
 			this.PlayingNum++
 		}
 	}
 	this.PutQueue(protocol.StartGame)
 }
 func (this *MyTable) StartGame() { //开始游戏
-	if this.GetReadyPlayerNum() <= 1{
+	if this.GetReadyPlayerNum() <= 1 {
 		this.RoomState = ROOM_WAITING_READY
 		this.SwitchRoomState()
 		this.SeqExecFlag = true
 		return
 	}
-	this.RobotNum = int(this.RandInt64(1,int64(this.TotalPlayerNum)))
+	this.RobotNum = int(this.RandInt64(1, int64(this.TotalPlayerNum)))
 	this.RoomState = ROOM_WAITING_GRABDEALER
 	this.CountDown = this.GameConf.QiangZhuangTime
 	this.SwitchRoomState()
@@ -324,13 +324,13 @@ func (this *MyTable) StartGame() { //开始游戏
 	//info := make(map[string]interface{})
 	//info["MasterIdx"] = this.GetPlayerIdx(this.Master)
 
-	for k,v := range this.PlayerList {
-		if v.IsHavePeople && v.Ready{
+	for k, v := range this.PlayerList {
+		if v.IsHavePeople && v.Ready {
 			playerInfo := this.GetPlayerInfo(v.UserID)
 			sb := vGate.QuerySessionBean(v.UserID)
-			if sb != nil{
-				s,_ := basegate.NewSession(this.app, sb.Session)
-				_ = this.sendPack(s.GetSessionID(),game.Push,playerInfo,protocol.UpdatePlayerInfo,nil)
+			if sb != nil {
+				s, _ := basegate.NewSession(this.app, sb.Session)
+				_ = this.sendPack(s.GetSessionID(), game.Push, playerInfo, protocol.UpdatePlayerInfo, nil)
 			}
 			this.PlayerList[k].NotReadyCnt = 0
 			if v.Role != ROBOT {

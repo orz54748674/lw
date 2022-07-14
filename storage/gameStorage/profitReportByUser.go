@@ -14,48 +14,49 @@ import (
 )
 
 type GameProfitByUser struct {
-	ID          uint64             `bson:"-" json:"-"`
-	Oid         primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
-	Uid         string             `bson:"Uid" json:"Uid"`
-	Profit     int64     `bson:"Profit"` //SystemProfit 系统抽水， 平台明面上的抽水
-	BotBalance int64     `bson:"BotBalance"`//系统余额  该余额不够赔付时，要控盘
-	BotProfit  int64     `bson:"BotProfit"`//暗抽金额
-	WinLose    int64     `bson:"WinLose"`//输赢
+	ID         uint64             `bson:"-" json:"-"`
+	Oid        primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
+	Uid        string             `bson:"Uid" json:"Uid"`
+	Profit     int64              `bson:"Profit"`     //SystemProfit 系统抽水， 平台明面上的抽水
+	BotBalance int64              `bson:"BotBalance"` //系统余额  该余额不够赔付时，要控盘
+	BotProfit  int64              `bson:"BotProfit"`  //暗抽金额
+	WinLose    int64              `bson:"WinLose"`    //输赢
 }
 type GameProfitLogByUser struct {
-	ID       int64      `bson:"-" json:"-"`
-	Oid      primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
-	AdminID  string 	 `bson:"AdminID"`
-	GameType   game.Type `bson:"GameType"`
-	BotBalance 	int64     `bson:"BotBalance"`
-	CreateAt time.Time `bson:"CreateAt"`
+	ID         int64              `bson:"-" json:"-"`
+	Oid        primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
+	AdminID    string             `bson:"AdminID"`
+	GameType   game.Type          `bson:"GameType"`
+	BotBalance int64              `bson:"BotBalance"`
+	CreateAt   time.Time          `bson:"CreateAt"`
 }
+
 func (GameProfitByUser) TableName() string {
 	return "game_profit_by_User"
 }
 
 var (
-	cProfitByUser = "gameProfitByUser"
+	cProfitByUser    = "gameProfitByUser"
 	cProfitLogByUser = "gameProfitLogByUser"
 )
 
 func InitGameProfitByUser() {
 	c := common.GetMongoDB().C(cProfitByUser)
-	key := bsonx.Doc{{Key: "Uid",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key,options.Index().SetUnique(true));err != nil{
-		log.Error("create GameProfitByUser Index: %s",err)
+	key := bsonx.Doc{{Key: "Uid", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key, options.Index().SetUnique(true)); err != nil {
+		log.Error("create GameProfitByUser Index: %s", err)
 	}
 	log.Info("init GameProfitByUser of mongo db")
 	//_ = common.GetMysql().AutoMigrate(&GameProfit{})
 }
-func IncProfitByUser(uid string, amount int64, botAmount int64, botProfit int64,winLose int64) {
+func IncProfitByUser(uid string, amount int64, botAmount int64, botProfit int64, winLose int64) {
 	c := common.GetMongoDB().C(cProfitByUser)
 	query := bson.M{"Uid": uid}
 	update := bson.M{
 		"$inc": bson.M{"Profit": amount,
 			"BotBalance": botAmount,
-			"BotProfit": botProfit,
-			"WinLose":winLose,
+			"BotProfit":  botProfit,
+			"WinLose":    winLose,
 		},
 	}
 	if _, err := c.Upsert(query, update); err != nil {
@@ -68,6 +69,7 @@ func IncProfitByUser(uid string, amount int64, botAmount int64, botProfit int64,
 	//q.ID = gameProfit.ID
 	//common.GetMysql().Save(&q)
 }
+
 //func UpsertProfit(gameType game.Type, gameProfit *GameProfit) {
 //	c := common.GetMongoDB().C(cProfit)
 //	query := bson.M{"GameType": gameType}
@@ -95,7 +97,7 @@ func InitGameProfitLogByUser(incDataExpireDay time.Duration) {
 	//log.Info("init GameProfitLog of mongo db")
 	_ = common.GetMysql().AutoMigrate(&GameProfitLogByUser{})
 }
-func InsertProfitLogByUser(profitLogByUser GameProfitLogByUser){
+func InsertProfitLogByUser(profitLogByUser GameProfitLogByUser) {
 	//c := common.GetMongoDB().C(cProfitLog)
 	//if err := c.Insert(&profitLog); err != nil {
 	//	log.Error(err.Error())
@@ -106,15 +108,16 @@ func InsertProfitLogByUser(profitLogByUser GameProfitLogByUser){
 	//}
 	common.GetMysql().Create(&profitLogByUser)
 }
-func ChargeCalcProfitByUser(uid string,amount int64){
+func ChargeCalcProfitByUser(uid string, amount int64) {
 	gameProfit := QueryProfitByUser(uid)
-	chargeIncProfitUserPer,_ := utils.ConvertInt(storage.QueryConf(storage.KChargeIncProfitUserPer))
+	chargeIncProfitUserPer, _ := utils.ConvertInt(storage.QueryConf(storage.KChargeIncProfitUserPer))
 	botAmount := amount * chargeIncProfitUserPer / 100
-	if gameProfit.BotBalance >= botAmount || gameProfit.BotProfit + gameProfit.WinLose > 0{
+	if gameProfit.BotBalance >= botAmount || gameProfit.BotProfit+gameProfit.WinLose > 0 {
 		return
 	}
-	IncProfitByUser(uid,0,botAmount,-botAmount,0)
+	IncProfitByUser(uid, 0, botAmount, -botAmount, 0)
 }
+
 //func DouDouCalcProfitByUser(uid string,amount int64){
 //	gameProfit := QueryProfitByUser(uid)
 //	botAmount := int64(0)

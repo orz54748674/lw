@@ -271,6 +271,7 @@ func (self *dxRoom) CurRoundBet(session gate.Session, msg map[string]interface{}
 	res := myTable.GetCurRoundBet()
 	return errCode.Success(res).GetMap(), nil
 }
+
 var userQueue = common.NewMapRWMutex()
 
 type userSyncExec struct {

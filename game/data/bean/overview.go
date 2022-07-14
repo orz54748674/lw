@@ -20,8 +20,8 @@ type Overview struct {
 	Charge               int64 //充值金额
 	ChargePeople         int64 //充值人数
 	FirstDayChargePeople int64 //首次充值人数
-	NewCharge int64 //新增充值金额
-	NewChargePeople int64 //新增充值人数
+	NewCharge            int64 //新增充值金额
+	NewChargePeople      int64 //新增充值人数
 	DouDou               int64
 	DouDouPeople         int64
 	ActivityGive         int64 //奖励金额

@@ -121,22 +121,22 @@ var (
 func (s *DxTable) Bet(session gate.Session, params map[string]interface{}) error {
 	if check, ok := utils.CheckParams2(params,
 		[]string{"big", "small"}); ok != nil {
-		s.sendResponse(session,errCode.ErrParams.SetKey(check).GetMap())
+		s.sendResponse(session, errCode.ErrParams.SetKey(check).GetMap())
 		return nil
 	}
 	uid := session.GetUserID()
-	big,_ := utils.ConvertInt(params["big"])
-	small,_ := utils.ConvertInt(params["small"])
+	big, _ := utils.ConvertInt(params["big"])
+	small, _ := utils.ConvertInt(params["small"])
 	res := s.dxRun.Bet(uid, big, small)
 	res["Action"] = actionBet
-	s.sendResponse(session,res)
+	s.sendResponse(session, res)
 	return nil
 }
 
-func (s *DxTable) sendResponse(session gate.Session,res map[string]interface{}){
+func (s *DxTable) sendResponse(session gate.Session, res map[string]interface{}) {
 	res["GameType"] = game.BiDaXiao
-	b,_ := json.Marshal(res)
-	session.SendNR(game.Push,b)
+	b, _ := json.Marshal(res)
+	session.SendNR(game.Push, b)
 	//_ = s.onlinePush.SendCallBackMsgNR([]string{session.GetSessionID()}, game.Push,b)
 }
 func (s *DxTable) close(session gate.Session, msg map[string]interface{}) error {
@@ -147,18 +147,19 @@ func (s *DxTable) chat(session gate.Session, msg map[string]interface{}) error {
 
 	return nil
 }
-func (s *DxTable) GetCurRoundBet() []CurRoundBet{
+func (s *DxTable) GetCurRoundBet() []CurRoundBet {
 	sort.Slice(s.dxRun.curRoundBet, func(i, j int) bool {
 		return s.dxRun.curRoundBet[i].Bets > s.dxRun.curRoundBet[j].Bets
 	})
 	var res []CurRoundBet
-	if len(s.dxRun.curRoundBet) > curRoundBetMax{
-		res = append(s.dxRun.curRoundBet[:0],s.dxRun.curRoundBet[:curRoundBetMax]...)
-	}else{
+	if len(s.dxRun.curRoundBet) > curRoundBetMax {
+		res = append(s.dxRun.curRoundBet[:0], s.dxRun.curRoundBet[:curRoundBetMax]...)
+	} else {
 		res = s.dxRun.curRoundBet
 	}
 	return res
 }
+
 //func (s *DxTable)toResult(session gate.Session,action string,errCode *common.Err){
 //	res := errCode.GetMap()
 //	res["Action"] = action

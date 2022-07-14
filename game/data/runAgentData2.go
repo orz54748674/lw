@@ -70,19 +70,19 @@ func (s *RunAgentData2) ParserOneDay() {
 		}
 	}
 	dbUser1 := common.GetMysql().Model(&agentStorage.AgentIncome{})
-	dbUser1.Where("create_at BETWEEN ? AND ? AND level=? AND agent_uid=?", s.dayStart, s.dayEnd, 1,s.uid)
+	dbUser1.Where("create_at BETWEEN ? AND ? AND level=? AND agent_uid=?", s.dayStart, s.dayEnd, 1, s.uid)
 	var uid []uidStruct
 	dbUser1.Select("DISTINCT vip_uid,agent_uid AS uid").Find(&uid)
 	data.Sub1Users = len(uid)
 
 	dbUser2 := common.GetMysql().Model(&agentStorage.AgentIncome{})
-	dbUser2.Where("create_at BETWEEN ? AND ? AND level=? AND agent_uid=?", s.dayStart, s.dayEnd, 2,s.uid)
+	dbUser2.Where("create_at BETWEEN ? AND ? AND level=? AND agent_uid=?", s.dayStart, s.dayEnd, 2, s.uid)
 	var uid2 []uidStruct
 	dbUser2.Select("DISTINCT vip_uid,agent_uid AS uid").Find(&uid2)
 	data.Sub2Users = len(uid2)
 
 	dbUser3 := common.GetMysql().Model(&agentStorage.AgentIncome{})
-	dbUser3.Where("create_at BETWEEN ? AND ? AND level=? AND agent_uid=?", s.dayStart, s.dayEnd, 3,s.uid)
+	dbUser3.Where("create_at BETWEEN ? AND ? AND level=? AND agent_uid=?", s.dayStart, s.dayEnd, 3, s.uid)
 	var uid3 []uidStruct
 	dbUser3.Select("DISTINCT vip_uid,agent_uid AS uid").Find(&uid3)
 	data.Sub3Users = len(uid3)

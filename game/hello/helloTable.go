@@ -17,9 +17,9 @@ import (
 
 type TestTable struct {
 	room.QTable
-	app        module.App
-	module     module.RPCModule
-	players    map[string]room.BasePlayer
+	app     module.App
+	module  module.RPCModule
+	players map[string]room.BasePlayer
 }
 
 func (this *TestTable) GetSeats() map[string]room.BasePlayer {
@@ -93,12 +93,12 @@ func (this *TestTable) empty(session gate.Session, msg map[string]interface{}) (
 }
 
 var (
-	actionBet = "Bet"
+	actionBet  = "Bet"
 	actionTest = "Test"
 )
 
 func (s *TestTable) Test(session gate.Session, params map[string]interface{}) error {
-	log.Info("test: %v" , params)
+	log.Info("test: %v", params)
 	return nil
 }
 func (s *TestTable) Bet(session gate.Session, params map[string]interface{}) error {
@@ -109,24 +109,24 @@ func (s *TestTable) Bet(session gate.Session, params map[string]interface{}) err
 	player.OnRequest(session)
 	s.players[uid] = player
 	var r []map[string]interface{}
-	for i :=0 ;i<100 ;i++{
+	for i := 0; i < 100; i++ {
 		res := map[string]interface{}{
-			fmt.Sprintf("%d",i):utils.RandomString(int(utils.RandInt64(1,999999))),
+			fmt.Sprintf("%d", i): utils.RandomString(int(utils.RandInt64(1, 999999))),
 		}
-		r = append(r,res)
+		r = append(r, res)
 	}
 	//for _,res := range r{
-		//body,_ := json.Marshal(res)
-		//_ = s.SendCallBackMsgByQueue([]string{session.GetSessionID()},game.Push,body)
-		//_ = s.SendCallBackMsgNR([]string{session.GetSessionID()},game.Push,body)
+	//body,_ := json.Marshal(res)
+	//_ = s.SendCallBackMsgByQueue([]string{session.GetSessionID()},game.Push,body)
+	//_ = s.SendCallBackMsgNR([]string{session.GetSessionID()},game.Push,body)
 	//}
 	return nil
 }
 
-func (s *TestTable) sendResponse(session gate.Session,res map[string]interface{}){
+func (s *TestTable) sendResponse(session gate.Session, res map[string]interface{}) {
 	res["GameType"] = game.BiDaXiao
-	b,_ := json.Marshal(res)
-	session.SendNR(game.Push,b)
+	b, _ := json.Marshal(res)
+	session.SendNR(game.Push, b)
 	//_ = s.onlinePush.SendCallBackMsgNR([]string{session.GetSessionID()}, game.Push,b)
 }
 func (s *TestTable) close(session gate.Session, msg map[string]interface{}) error {

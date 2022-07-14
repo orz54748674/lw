@@ -1,12 +1,12 @@
 package module
 
 import (
+	"github.com/nats-io/nats.go"
+	"time"
 	"vn/framework/mqant/registry"
 	"vn/framework/mqant/rpc"
 	"vn/framework/mqant/rpc/pb"
 	"vn/framework/mqant/selector"
-	"github.com/nats-io/nats.go"
-	"time"
 )
 
 // Option 配置项

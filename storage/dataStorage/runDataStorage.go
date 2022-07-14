@@ -15,9 +15,9 @@ func queryParent(uid string) string {
 func queryUserByIds(ids []string) map[string]userStorage.User {
 	db := common.GetMysql().Model(&userStorage.User{})
 	var users []userStorage.User
-	db.Where("oid in ?" ,ids).Find(&users)
+	db.Where("oid in ?", ids).Find(&users)
 	userMap := make(map[string]userStorage.User)
-	for _,u := range users{
+	for _, u := range users {
 		userMap[u.Oid.Hex()] = u
 	}
 	return userMap
@@ -26,15 +26,13 @@ func queryUserByIds(ids []string) map[string]userStorage.User {
 func getUserById(uid string) userStorage.User {
 	db := common.GetMysql().Model(&userStorage.User{})
 	var user userStorage.User
-	db.Where("oid = ?" ,uid).First(&user)
+	db.Where("oid = ?", uid).First(&user)
 	return user
 }
 
 func getInvite(oid string) agentStorage.Invite {
 	db := common.GetMysql().Model(&agentStorage.Invite{})
 	var invite agentStorage.Invite
-	db.Where("oid = ?" ,oid).First(&invite)
+	db.Where("oid = ?", oid).First(&invite)
 	return invite
 }
-
-

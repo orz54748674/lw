@@ -160,7 +160,6 @@ var ReelsList40 = [][]slotLsStorage.Symbol{
 		slotLsStorage.NINE,
 		slotLsStorage.TORTOISE,
 		slotLsStorage.NINE,
-
 	},
 	{
 		slotLsStorage.TEN,
@@ -315,7 +314,6 @@ var ReelsList70 = [][]slotLsStorage.Symbol{
 		slotLsStorage.J,
 		slotLsStorage.TEN,
 		slotLsStorage.J,
-
 	},
 	{
 		slotLsStorage.WILD,
@@ -348,7 +346,6 @@ var ReelsList70 = [][]slotLsStorage.Symbol{
 		slotLsStorage.A,
 		slotLsStorage.LION,
 		slotLsStorage.A,
-
 	},
 	{
 		slotLsStorage.PHOENIX,
@@ -381,7 +378,6 @@ var ReelsList70 = [][]slotLsStorage.Symbol{
 		slotLsStorage.PACKET,
 		slotLsStorage.TORTOISE,
 		slotLsStorage.NINE,
-
 	},
 	{
 		slotLsStorage.K,
@@ -414,7 +410,6 @@ var ReelsList70 = [][]slotLsStorage.Symbol{
 		slotLsStorage.A,
 		slotLsStorage.LION,
 		slotLsStorage.FISH,
-
 	},
 	{
 		slotLsStorage.NINE,
@@ -481,7 +476,6 @@ var ReelsListFree = [][]slotLsStorage.Symbol{
 		slotLsStorage.A,
 		slotLsStorage.J,
 		slotLsStorage.TORTOISE,
-
 	},
 	{
 		slotLsStorage.FISH,
@@ -514,7 +508,6 @@ var ReelsListFree = [][]slotLsStorage.Symbol{
 		slotLsStorage.A,
 		slotLsStorage.A,
 		slotLsStorage.TORTOISE,
-
 	},
 	{
 		slotLsStorage.K,
@@ -547,7 +540,6 @@ var ReelsListFree = [][]slotLsStorage.Symbol{
 		slotLsStorage.LION,
 		slotLsStorage.SCATTER,
 		slotLsStorage.NINE,
-
 	},
 	{
 		slotLsStorage.J,
@@ -580,7 +572,6 @@ var ReelsListFree = [][]slotLsStorage.Symbol{
 		slotLsStorage.TORTOISE,
 		slotLsStorage.K,
 		slotLsStorage.FISH,
-
 	},
 	{
 		slotLsStorage.FISH,
@@ -613,7 +604,6 @@ var ReelsListFree = [][]slotLsStorage.Symbol{
 		slotLsStorage.A,
 		slotLsStorage.A,
 		slotLsStorage.Q,
-
 	},
 }
 var ReelsListTrial = [][]slotLsStorage.Symbol{
@@ -656,7 +646,6 @@ var ReelsListTrial = [][]slotLsStorage.Symbol{
 		slotLsStorage.LION,
 		slotLsStorage.LION,
 		slotLsStorage.PACKET,
-
 	},
 	{
 		slotLsStorage.PHOENIX,
@@ -697,7 +686,6 @@ var ReelsListTrial = [][]slotLsStorage.Symbol{
 		slotLsStorage.J,
 		slotLsStorage.LION,
 		slotLsStorage.FISH,
-
 	},
 	{
 		slotLsStorage.FISH,
@@ -738,7 +726,6 @@ var ReelsListTrial = [][]slotLsStorage.Symbol{
 		slotLsStorage.PACKET,
 		slotLsStorage.NINE,
 		slotLsStorage.WILD,
-
 	},
 	{
 		slotLsStorage.LION,
@@ -779,7 +766,6 @@ var ReelsListTrial = [][]slotLsStorage.Symbol{
 		slotLsStorage.LION,
 		slotLsStorage.NINE,
 		slotLsStorage.PHOENIX,
-
 	},
 	{
 		slotLsStorage.LION,
@@ -820,7 +806,6 @@ var ReelsListTrial = [][]slotLsStorage.Symbol{
 		slotLsStorage.NINE,
 		slotLsStorage.TORTOISE,
 		slotLsStorage.FISH,
-
 	},
 }
 var ReelsListTrialFree = [][]slotLsStorage.Symbol{
@@ -863,7 +848,6 @@ var ReelsListTrialFree = [][]slotLsStorage.Symbol{
 		slotLsStorage.LION,
 		slotLsStorage.LION,
 		slotLsStorage.PACKET,
-
 	},
 	{
 		slotLsStorage.PHOENIX,
@@ -904,7 +888,6 @@ var ReelsListTrialFree = [][]slotLsStorage.Symbol{
 		slotLsStorage.J,
 		slotLsStorage.LION,
 		slotLsStorage.FISH,
-
 	},
 	{
 		slotLsStorage.FISH,
@@ -945,7 +928,6 @@ var ReelsListTrialFree = [][]slotLsStorage.Symbol{
 		slotLsStorage.PACKET,
 		slotLsStorage.NINE,
 		slotLsStorage.WILD,
-
 	},
 	{
 		slotLsStorage.LION,
@@ -986,7 +968,6 @@ var ReelsListTrialFree = [][]slotLsStorage.Symbol{
 		slotLsStorage.LION,
 		slotLsStorage.NINE,
 		slotLsStorage.PHOENIX,
-
 	},
 	{
 		slotLsStorage.LION,
@@ -1027,7 +1008,6 @@ var ReelsListTrialFree = [][]slotLsStorage.Symbol{
 		slotLsStorage.NINE,
 		slotLsStorage.TORTOISE,
 		slotLsStorage.FISH,
-
 	},
 }
 var ReelsListNormal2 = [][]slotLsStorage.Symbol{
@@ -1094,7 +1074,6 @@ var ReelsListNormal2 = [][]slotLsStorage.Symbol{
 		slotLsStorage.FISH,
 		slotLsStorage.Q,
 		slotLsStorage.PHOENIX,
-
 	},
 	{
 		slotLsStorage.TEN,
@@ -1127,7 +1106,6 @@ var ReelsListNormal2 = [][]slotLsStorage.Symbol{
 		slotLsStorage.Q,
 		slotLsStorage.A,
 		slotLsStorage.FISH,
-
 	},
 	{
 		slotLsStorage.J,
@@ -1160,7 +1138,6 @@ var ReelsListNormal2 = [][]slotLsStorage.Symbol{
 		slotLsStorage.FISH,
 		slotLsStorage.TORTOISE,
 		slotLsStorage.J,
-
 	},
 	{
 		slotLsStorage.TEN,
@@ -1193,7 +1170,6 @@ var ReelsListNormal2 = [][]slotLsStorage.Symbol{
 		slotLsStorage.PACKET,
 		slotLsStorage.A,
 		slotLsStorage.PHOENIX,
-
 	},
 }
 var ReelsListFree2 = [][]slotLsStorage.Symbol{
@@ -1228,7 +1204,6 @@ var ReelsListFree2 = [][]slotLsStorage.Symbol{
 		slotLsStorage.NINE,
 		slotLsStorage.NINE,
 		slotLsStorage.TORTOISE,
-
 	},
 	{
 		slotLsStorage.PHOENIX,
@@ -1261,7 +1236,6 @@ var ReelsListFree2 = [][]slotLsStorage.Symbol{
 		slotLsStorage.TORTOISE,
 		slotLsStorage.WILD,
 		slotLsStorage.Q,
-
 	},
 	{
 		slotLsStorage.Q,
@@ -1294,7 +1268,6 @@ var ReelsListFree2 = [][]slotLsStorage.Symbol{
 		slotLsStorage.Q,
 		slotLsStorage.A,
 		slotLsStorage.J,
-
 	},
 	{
 		slotLsStorage.K,
@@ -1327,7 +1300,6 @@ var ReelsListFree2 = [][]slotLsStorage.Symbol{
 		slotLsStorage.J,
 		slotLsStorage.FISH,
 		slotLsStorage.TORTOISE,
-
 	},
 	{
 		slotLsStorage.Q,
@@ -1360,23 +1332,12 @@ var ReelsListFree2 = [][]slotLsStorage.Symbol{
 		slotLsStorage.J,
 		slotLsStorage.A,
 		slotLsStorage.Q,
-
 	},
 }
 var ReelsListBase = [][]slotLsStorage.Symbol{
-	{
-
-	},
-	{
-
-	},
-	{
-
-	},
-	{
-
-	},
-	{
-
-	},
+	{},
+	{},
+	{},
+	{},
+	{},
 }

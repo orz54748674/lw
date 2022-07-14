@@ -11,14 +11,14 @@ import (
 )
 
 func (this *MyTable) ClearTable() { //
-	if !this.IsInCheckout{
+	if !this.IsInCheckout {
 		slotSexStorage.RemoveTableInfo(this.tableID)
 
 		myRoom := (this.module).(*Room)
 		myRoom.DestroyTable(this.tableID)
 	}
 }
-func (this *MyTable) TableInit(module module.RPCModule,app module.App,tableID string){
+func (this *MyTable) TableInit(module module.RPCModule, app module.App, tableID string) {
 	this.Players = map[string]room.BasePlayer{}
 	this.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 	this.GameConf = slotSexStorage.GetRoomConf()
@@ -44,7 +44,7 @@ func (this *MyTable) TableInit(module module.RPCModule,app module.App,tableID st
 	this.CoinNum = CoinNum[0]
 	this.XiaZhuV = this.CoinValue * this.CoinNum
 	this.TrialModeConf = TrialModeConf{
-		VndBalance:    200000000,
+		VndBalance: 200000000,
 	}
 
 	this.onlinePush = &vGate.OnlinePush{
@@ -60,14 +60,14 @@ func (this *MyTable) TableInit(module module.RPCModule,app module.App,tableID st
 	//}()
 }
 func (this *MyTable) OnTimer() { //定时任务
-	if this.JieSuanData.BonusGame{
-		if this.CountDown <= 0 && this.BonusGameData.State > 0{
-			this.PutQueue(protocol.BonusTimeOut,this.Players[this.UserID].Session())
+	if this.JieSuanData.BonusGame {
+		if this.CountDown <= 0 && this.BonusGameData.State > 0 {
+			this.PutQueue(protocol.BonusTimeOut, this.Players[this.UserID].Session())
 		}
 	}
-	if this.MiniGameData.State == 1{
+	if this.MiniGameData.State == 1 {
 		if this.CountDown <= 0 {
-			this.PutQueue(protocol.BonusTimeOut,this.Players[this.UserID].Session())
+			this.PutQueue(protocol.BonusTimeOut, this.Players[this.UserID].Session())
 		}
 	}
 	this.CountDown--

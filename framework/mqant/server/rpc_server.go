@@ -1,6 +1,9 @@
 package server
 
 import (
+	"strconv"
+	"strings"
+	"sync"
 	"vn/framework/mqant/conf"
 	"vn/framework/mqant/log"
 	"vn/framework/mqant/module"
@@ -8,9 +11,6 @@ import (
 	"vn/framework/mqant/rpc"
 	"vn/framework/mqant/rpc/base"
 	"vn/framework/mqant/utils/lib/addr"
-	"strconv"
-	"strings"
-	"sync"
 )
 
 type rpcServer struct {

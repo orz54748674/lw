@@ -40,7 +40,7 @@ var (
 	KLotteryCollectionInterval = "LotteryCollectionInterval"
 	KPhoneChargeNapTuDongMM1S  = "PhoneChargeNapTuDongMM1S"
 	KRegisterLimit             = "RegisterLimit"
-	KCombineHttpHost             = "CombineHttpHost"
+	KCombineHttpHost           = "CombineHttpHost"
 )
 
 func InitCustomerConf() {

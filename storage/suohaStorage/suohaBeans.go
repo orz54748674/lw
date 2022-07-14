@@ -23,9 +23,9 @@ type PlayerInfo struct {
 	Seat     int    `json:"seat"`
 	Golds    int64  `json:"golds"`
 	Score    int64  `json:"score"`
-	IsUp     bool   `json:"isUp"`   //是否弃牌
+	IsUp     bool   `json:"isUp"`    //是否弃牌
 	IsReady  bool   `json:"isReady"` //是否准备
-	IsAllIn  bool   `json:"isAllIn"`  //是否allin
+	IsAllIn  bool   `json:"isAllIn"` //是否allin
 }
 
 type BetInfo struct {
@@ -49,9 +49,9 @@ type GameState struct {
 	PlayerInfos   []PlayerInfo     `json:"playerInfos"`
 	ServerTime    int64            `json:"serverTime"`
 	RemainTime    int64            `json:"remainTime"`
-	Round         string           `json:"round"`  //当前轮次
-	CurUid        string           `json:"curUid"` //当前操作玩家
-	CurBet        int64            `json:"curBet"`  //当前下注金额
+	Round         string           `json:"round"`         //当前轮次
+	CurUid        string           `json:"curUid"`        //当前操作玩家
+	CurBet        int64            `json:"curBet"`        //当前下注金额
 	Uid2HandCards map[string][]int `json:"uid2HandCards"` //玩家手牌
 }
 

@@ -85,7 +85,7 @@ func GetGameDetails(gameId int64) *Details {
 			Refund:    bet["Refund"].(int64),
 		}
 		if bet["UserType"].(primitive.A)[0].(string) == UserTypeNormal {
-			uOid,_ := primitive.ObjectIDFromHex(oneBet.Uid)
+			uOid, _ := primitive.ObjectIDFromHex(oneBet.Uid)
 			user := userStorage.QueryUserId(uOid)
 			oneBet.Name = user.NickName
 			oneBet.Avatar = user.Avatar

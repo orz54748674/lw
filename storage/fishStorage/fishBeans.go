@@ -72,7 +72,7 @@ type FishPlayerConf struct {
 	ID         int64              `bson:"-" json:"-"`
 	Oid        primitive.ObjectID `bson:"_id,omitempty" json:"Oid"`
 	Uid        string             `bson:"uid" json:"uid"`
-	Account    string 			  `bson:"account" json:"account"`
+	Account    string             `bson:"account" json:"account"`
 	IsBlock    bool               `bson:"isblock" json:"isblock"`
 	UpdateTime time.Time          `bson:"updatetime" json:"updatetime"`
 }

@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	cCqMtcode    = "cqMtcode"
+	cCqMtcode = "cqMtcode"
 	cCqRecord = "cqRecord"
 )
 

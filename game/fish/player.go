@@ -11,7 +11,7 @@ import (
 
 type DrillCannon struct {
 	KillTime int
-	State bool
+	State    bool
 }
 
 type FuDaiMsg struct {
@@ -19,46 +19,46 @@ type FuDaiMsg struct {
 }
 
 type LeiTingMsg struct {
-	Status bool
+	Status      bool
 	BulletCount int
 	BulletGolds int64
-	LastSecond int
+	LastSecond  int
 }
 
 type DianZuanMsg struct {
-	Status bool
+	Status     bool
 	LastSecond int
 }
 
 type Player struct {
 	room.BasePlayerImp
-	UserID      string
-	Seat        int8
-	Golds       int64
-	Head        string
-	Name        string
-	CannonType  int
-	CannonGolds int64
-	FireAmount  int64
-	TotalBet    int64
-	Score       int64
-	Drill DrillCannon
-	LaserBulletCount int64
-	SpecialFishType int
+	UserID             string
+	Seat               int8
+	Golds              int64
+	Head               string
+	Name               string
+	CannonType         int
+	CannonGolds        int64
+	FireAmount         int64
+	TotalBet           int64
+	Score              int64
+	Drill              DrillCannon
+	LaserBulletCount   int64
+	SpecialFishType    int
 	SpecialCannonGolds int64
-	FuDai FuDaiMsg
-	LeiTing LeiTingMsg
-	DianZuan DianZuanMsg
-	bLeiShe bool
-	bZhaDan bool
-	bShanDian bool
-	bLunZhou bool
-	fireTimes int
-	isBlock bool
-	scoreWriteLock sync.Mutex
-	goldsWriteLock sync.Mutex
-	UserType int8
-	Account string
+	FuDai              FuDaiMsg
+	LeiTing            LeiTingMsg
+	DianZuan           DianZuanMsg
+	bLeiShe            bool
+	bZhaDan            bool
+	bShanDian          bool
+	bLunZhou           bool
+	fireTimes          int
+	isBlock            bool
+	scoreWriteLock     sync.Mutex
+	goldsWriteLock     sync.Mutex
+	UserType           int8
+	Account            string
 }
 
 func NewPlayer(info map[string]interface{}, tableType int) *Player {

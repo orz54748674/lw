@@ -134,7 +134,7 @@ func (s *guessBigSmall) robotReward() {
 		}
 
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
-		robotArr := common2.RandBotN(1,r)
+		robotArr := common2.RandBotN(1, r)
 		if len(robotArr) <= 0 {
 			continue
 		}

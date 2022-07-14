@@ -84,13 +84,13 @@ var (
 	ApiErr           = errCode(30102, "ApiErr")
 	ApiLoginErr      = errCode(30103, "ApiLoginErr")
 
-	RoomPlayerNumLimit  = errCode(30200, "RoomPlayerNumLimit")
-	PointsNotEnough  = errCode(30201, "PointsNotEnough")
-	PleaseUnlockSafe  = errCode(30202, "PleaseUnlockSafe")
-	PleaseActivationSafe  = errCode(30203, "PleaseActivationSafe")
-	RegisterLimit  = errCode(30204, "RegisterLimit")
-	QuitRoomAfterOver  = errCode(30205, "QuitRoomAfterOver")
-	QuitRoomCancel  = errCode(30206, "QuitRoomCancel")
+	RoomPlayerNumLimit   = errCode(30200, "RoomPlayerNumLimit")
+	PointsNotEnough      = errCode(30201, "PointsNotEnough")
+	PleaseUnlockSafe     = errCode(30202, "PleaseUnlockSafe")
+	PleaseActivationSafe = errCode(30203, "PleaseActivationSafe")
+	RegisterLimit        = errCode(30204, "RegisterLimit")
+	QuitRoomAfterOver    = errCode(30205, "QuitRoomAfterOver")
+	QuitRoomCancel       = errCode(30206, "QuitRoomCancel")
 )
 
 func errCode(code int, errMsg string) *common.Err {

@@ -36,7 +36,6 @@ var ReelsNormalList = [][]slotSexStorage.Symbol{
 		slotSexStorage.S2,
 		slotSexStorage.S7,
 		slotSexStorage.S2,
-
 	},
 	{
 		slotSexStorage.S8,
@@ -69,7 +68,6 @@ var ReelsNormalList = [][]slotSexStorage.Symbol{
 		slotSexStorage.S5,
 		slotSexStorage.SCATTER,
 		slotSexStorage.S3,
-
 	},
 	{
 		slotSexStorage.SCATTER,
@@ -102,7 +100,6 @@ var ReelsNormalList = [][]slotSexStorage.Symbol{
 		slotSexStorage.S6,
 		slotSexStorage.S4,
 		slotSexStorage.WILD,
-
 	},
 	{
 		slotSexStorage.S3,
@@ -265,7 +262,6 @@ var ReelsListTrial = [][]slotSexStorage.Symbol{
 		slotSexStorage.BONUS,
 		slotSexStorage.BONUS,
 		slotSexStorage.S8,
-
 	},
 	{
 		slotSexStorage.S4,
@@ -298,7 +294,6 @@ var ReelsListTrial = [][]slotSexStorage.Symbol{
 		slotSexStorage.S2,
 		slotSexStorage.S8,
 		slotSexStorage.S5,
-
 	},
 	{
 		slotSexStorage.S4,
@@ -334,19 +329,9 @@ var ReelsListTrial = [][]slotSexStorage.Symbol{
 	},
 }
 var ReelsListBase = [][]slotSexStorage.Symbol{
-	{
-
-	},
-	{
-
-	},
-	{
-
-	},
-	{
-
-	},
-	{
-
-	},
+	{},
+	{},
+	{},
+	{},
+	{},
 }

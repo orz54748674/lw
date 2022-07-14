@@ -579,7 +579,7 @@ func (s *RunOverViewRaw) getNewCharge() (sumAmount int64, sumPeople int64) {
 		}
 		orderDb.Joins("JOIN user ON user.oid=order.user_id")
 		orderDb.Where("user.create_at BETWEEN ? AND ? AND user.type=1 AND order.status=9 AND order.method_id <>? AND order.update_at BETWEEN ? AND ?",
-			s.dayStart, s.dayEnd,payConf.Oid.Hex(), s.dayStart, s.dayEnd)
+			s.dayStart, s.dayEnd, payConf.Oid.Hex(), s.dayStart, s.dayEnd)
 		var sum sumTmp
 		if err := orderDb.Select("sum(order.got_amount) sum_amount").Find(&sum).Error; err != nil {
 			log.Error(err.Error())

@@ -12,18 +12,18 @@ import (
 )
 
 var (
-	cApiUser         = "apiUser"
-	cApiCmdUserToken = "apiCmdUserToken"
-	cApiCmdUpdateMsg = "apiCmdUpdateMsg"
-	cApiCmdConf      = "apiCmdConf"
-	cApiCmdReference = "apiCmdReferenceRecord"
-	cApiCmdCashOutRecord = "apiCmdCashOutRecord"
-	cApiCmdParlayRecord = "apiCmdParlayRecord"
-	cApiCmdBetRecord = "apiCmdBetRecord"
+	cApiUser              = "apiUser"
+	cApiCmdUserToken      = "apiCmdUserToken"
+	cApiCmdUpdateMsg      = "apiCmdUpdateMsg"
+	cApiCmdConf           = "apiCmdConf"
+	cApiCmdReference      = "apiCmdReferenceRecord"
+	cApiCmdCashOutRecord  = "apiCmdCashOutRecord"
+	cApiCmdParlayRecord   = "apiCmdParlayRecord"
+	cApiCmdBetRecord      = "apiCmdBetRecord"
 	cApiCmdTeamLeagueInfo = "apiCmdTeamLeagueInfo"
-	cApiDgTransferRecord = "apiDgTransferRecord"
-	apiType = 3
-	cDgApiUser = "dgApiUser"
+	cApiDgTransferRecord  = "apiDgTransferRecord"
+	apiType               = 3
+	cDgApiUser            = "dgApiUser"
 )
 
 /**
@@ -33,21 +33,21 @@ var (
 
 func InitDgStorage() {
 	c := common.GetMongoDB().C(cApiCmdReference)
-	key1 := bsonx.Doc{{Key: "CreateAt",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key1,options.Index().
-		SetExpireAfterSeconds(30*24*3600));err != nil{
-		log.Error("create cApiCmdReferenceRecord Index: %s",err)
+	key1 := bsonx.Doc{{Key: "CreateAt", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key1, options.Index().
+		SetExpireAfterSeconds(30*24*3600)); err != nil {
+		log.Error("create cApiCmdReferenceRecord Index: %s", err)
 	}
 
 	c = common.GetMongoDB().C(cApiCmdUserToken)
-	key2 := bsonx.Doc{{Key: "updateAt",Value: bsonx.Int32(1)}}
-	if err := c.CreateIndex(key2,options.Index().
-		SetExpireAfterSeconds(60));err != nil{
-		log.Error("create cApiCmdUserToken Index: %s",err)
+	key2 := bsonx.Doc{{Key: "updateAt", Value: bsonx.Int32(1)}}
+	if err := c.CreateIndex(key2, options.Index().
+		SetExpireAfterSeconds(60)); err != nil {
+		log.Error("create cApiCmdUserToken Index: %s", err)
 	}
 }
 
-func GetDgUserInfoByUid(uid string) (DgUserInfo, error)  {
+func GetDgUserInfoByUid(uid string) (DgUserInfo, error) {
 	var userInfo DgUserInfo
 	query := bson.M{"Uid": uid}
 	c := common.GetMongoDB().C(cDgApiUser)
@@ -59,7 +59,7 @@ func GetDgUserInfoByUid(uid string) (DgUserInfo, error)  {
 
 func UpsertDgUserInfo(dgUserInfo DgUserInfo) error {
 	c := common.GetMongoDB().C(cDgApiUser)
-	query := bson.M{"Uid":dgUserInfo.Uid}
+	query := bson.M{"Uid": dgUserInfo.Uid}
 	if _, err := c.Upsert(query, dgUserInfo); err != nil {
 		log.Error("InsertReferenceRecord err:", err.Error())
 		return err
@@ -69,7 +69,7 @@ func UpsertDgUserInfo(dgUserInfo DgUserInfo) error {
 
 func GetTransferRecordBySerialNo(serialNo string) (DgTransferInfo, error) {
 	var transferRecord DgTransferInfo
-	query := bson.M{"SerialNo":serialNo}
+	query := bson.M{"SerialNo": serialNo}
 	c := common.GetMongoDB().C(cApiDgTransferRecord)
 	if err := c.Find(query).One(&transferRecord); err != nil {
 		return transferRecord, err
@@ -79,7 +79,7 @@ func GetTransferRecordBySerialNo(serialNo string) (DgTransferInfo, error) {
 
 func GetTransferRecordByTicketId(ticketId string) ([]DgTransferInfo, error) {
 	var transferRecords []DgTransferInfo
-	query := bson.M{"TicketId":ticketId}
+	query := bson.M{"TicketId": ticketId}
 	c := common.GetMongoDB().C(cApiDgTransferRecord)
 	if err := c.Find(query).All(&transferRecords); err != nil {
 		return transferRecords, err
@@ -89,7 +89,7 @@ func GetTransferRecordByTicketId(ticketId string) ([]DgTransferInfo, error) {
 
 func GetTransferRecordByToken(token string) ([]DgTransferInfo, error) {
 	var transferRecords []DgTransferInfo
-	query := bson.M{"Token":token}
+	query := bson.M{"Token": token}
 	c := common.GetMongoDB().C(cApiDgTransferRecord)
 	if err := c.Find(query).All(&transferRecords); err != nil {
 		return transferRecords, err
@@ -98,7 +98,7 @@ func GetTransferRecordByToken(token string) ([]DgTransferInfo, error) {
 }
 
 func RemoveTransferRecordBySerialNo(serialNo string) error {
-	query := bson.M{"SerialNo":serialNo}
+	query := bson.M{"SerialNo": serialNo}
 	c := common.GetMongoDB().C(cApiDgTransferRecord)
 	return c.Remove(query)
 }
@@ -120,7 +120,7 @@ func InsertTransferRecord(serialNo, ticketId, username, token string, balance, a
 	return nil
 }
 
-func GetDgUserInfoByUsername(username string) (DgUserInfo, error)  {
+func GetDgUserInfoByUsername(username string) (DgUserInfo, error) {
 	var userInfo DgUserInfo
 	fmt.Println("bogdgds.........", username)
 	query := bson.M{"Username": strings.ToLower(username)}

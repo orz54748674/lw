@@ -190,7 +190,7 @@ type ReferenceMsg struct {
 
 type CmdTeamLeagueInfo struct {
 	InfoType int
-	InfoID int
+	InfoID   int
 	InfoName string
 }
 
@@ -198,17 +198,17 @@ type DgTransferInfo struct {
 	Username string
 	SerialNo string
 	TicketId string
-	Token string
-	Amount int64
-	Balance int64
-	CreateAt    time.Time
+	Token    string
+	Amount   int64
+	Balance  int64
+	CreateAt time.Time
 }
 
 type DgUserInfo struct {
-	Uid string `bson:"Uid"`
-	Data string `bson:"Data"`
-	Username string `bson:"Username"`
-	Password string `bson:"Password"`
-	WinLimit int64 `bson:"WinLimit"`
+	Uid      string    `bson:"Uid"`
+	Data     string    `bson:"Data"`
+	Username string    `bson:"Username"`
+	Password string    `bson:"Password"`
+	WinLimit int64     `bson:"WinLimit"`
 	UpdateAt time.Time `bson:"UpdateAt"`
 }

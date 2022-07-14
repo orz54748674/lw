@@ -16,11 +16,11 @@
 package basemodule
 
 import (
+	"runtime"
+	"sync"
 	"vn/framework/mqant/conf"
 	"vn/framework/mqant/log"
 	"vn/framework/mqant/module"
-	"runtime"
-	"sync"
 )
 
 // DefaultModule 模块结构

@@ -23,9 +23,9 @@ type DataActivity struct {
 	AgentBalance  int64
 	CsBankend     int64
 	VipChargeGet  int64
-	VipWeek  	  int64
-	Vip  	  	  int64
-	TurnTable  	  int64
+	VipWeek       int64
+	Vip           int64
+	TurnTable     int64
 	Sum           int64
 	CreateAt      time.Time
 	UpdateAt      time.Time
@@ -75,14 +75,14 @@ type DataActivityReport struct {
 	DayGameCount        int64
 	DayInvite           int64
 	DayInvitePeople     int64
-	VipChargeGet  		int64
+	VipChargeGet        int64
 	VipChargeGetPeople  int64
-	VipWeek  	  		int64
-	VipWeekPeople  	  	int64
-	Vip  	  	  		int64
-	VipPeople  	  	  	int64
-	TurnTable  	  		int64
-	TurnTablePeople  	int64
+	VipWeek             int64
+	VipWeekPeople       int64
+	Vip                 int64
+	VipPeople           int64
+	TurnTable           int64
+	TurnTablePeople     int64
 	AgentBalance        int64
 	CsBankend           int64
 	Sum                 int64

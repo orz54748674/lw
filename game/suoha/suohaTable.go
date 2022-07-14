@@ -73,7 +73,7 @@ type Table struct {
 	secondRoundTimer     *time.Timer
 	autoActionTimer      *time.Timer
 	tableConf            suohaStorage.BaseInfo
-	curStartTime int64
+	curStartTime         int64
 }
 
 var (

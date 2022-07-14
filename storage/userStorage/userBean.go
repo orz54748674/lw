@@ -22,9 +22,9 @@ type User struct {
 	Platform          string             `bson:"Platform" gorm:"type:varchar(32);index:,type:hash"`
 	Remark            string             `bson:"Remark"`
 	ProfitPerThousand int                `bson:"ProfitPerThousand"`
-	ProfitType        int                `bson:"ProfitType"` //返佣类型 0默认 1管理员编辑
-	Status            int                `bson:"Status"`     //0 正常，1 禁止登录
-	RegisterIp        string             `bson:"RegisterIp"` //
+	ProfitType        int                `bson:"ProfitType"`   //返佣类型 0默认 1管理员编辑
+	Status            int                `bson:"Status"`       //0 正常，1 禁止登录
+	RegisterIp        string             `bson:"RegisterIp"`   //
 	RegisterUuid      string             `bson:"RegisterUuid"` //
 	CreateAt          time.Time          `bson:"CreateAt" gorm:"index:,type:btree"`
 	UpdateAt          time.Time          `bson:"UpdateAt"`
@@ -86,15 +86,15 @@ var (
 func NewUser(account string, password string, platform string,
 	channel string, uuid string, uuidWeb string, ip string) (*User, *Login) {
 	user := &User{
-		Oid:        primitive.NewObjectID(),
-		Account:    account,
-		Type:       TypeNormal,
-		CreateAt:   utils.Now(),
-		UpdateAt:   utils.Now(),
-		Channel:    channel,
-		Platform:   platform,
-		Avatar:     GetSystemAvatar(),
-		RegisterIp: ip,
+		Oid:          primitive.NewObjectID(),
+		Account:      account,
+		Type:         TypeNormal,
+		CreateAt:     utils.Now(),
+		UpdateAt:     utils.Now(),
+		Channel:      channel,
+		Platform:     platform,
+		Avatar:       GetSystemAvatar(),
+		RegisterIp:   ip,
 		RegisterUuid: uuid,
 	}
 	login := &Login{
@@ -110,7 +110,7 @@ func NewUser(account string, password string, platform string,
 func GetSystemAvatar() string {
 	//rand.Seed(time.Now().UnixNano())
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	id := utils.RandInt64(1, 53,r)
+	id := utils.RandInt64(1, 53, r)
 	return fmt.Sprintf("system_%d", id)
 }
 
@@ -144,7 +144,7 @@ func NewToken(id primitive.ObjectID, ip string) *Token {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	token := &Token{
 		Oid:         id,
-		AccessToken: utils.RandomString(32,r),
+		AccessToken: utils.RandomString(32, r),
 		CreateAt:    utils.Now(),
 		Ip:          ip,
 	}
@@ -167,7 +167,7 @@ type UserInfo struct {
 	ActivityTotal   int64              `bson:"ActivityTotal"`
 	GiftCode        int64              `bson:"GiftCode"`
 	VipLevel        int                `bson:"VipLevel"`
-	SafeStatus      int                `bson:"SafeStatus"`//保险箱状态 0未激活 1加锁 2解锁
+	SafeStatus      int                `bson:"SafeStatus"` //保险箱状态 0未激活 1加锁 2解锁
 }
 
 func (UserInfo) TableName() string {

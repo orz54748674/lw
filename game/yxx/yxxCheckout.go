@@ -19,7 +19,7 @@ import (
 	"vn/storage/yxxStorage"
 )
 
-func (this *MyTable) ControlResults(xiaZhuTotal int64) map[string]yxxStorage.XiaZhuResult{ //控制开盘结果
+func (this *MyTable) ControlResults(xiaZhuTotal int64) map[string]yxxStorage.XiaZhuResult { //控制开盘结果
 	gameProfit := gameStorage.QueryProfit(game.YuXiaXie)
 	//遍历所有结果
 	var resultsList []map[string]yxxStorage.XiaZhuResult
@@ -28,50 +28,50 @@ func (this *MyTable) ControlResults(xiaZhuTotal int64) map[string]yxxStorage.Xia
 	resultsList = []map[string]yxxStorage.XiaZhuResult{}
 	prizeList = []map[string]yxxStorage.XiaZhuResult{}
 
-	for i := 1;i < 7;i++{  //计算所有不亏的组合
-		for j := 1;j < 7;j++{
-			for k := 1;k < 7;k++{
+	for i := 1; i < 7; i++ { //计算所有不亏的组合
+		for j := 1; j < 7; j++ {
+			for k := 1; k < 7; k++ {
 				results := map[string]yxxStorage.XiaZhuResult{
-					"1":yxxStorage.XiaZhuResult(strconv.Itoa(i)),
-					"2":yxxStorage.XiaZhuResult(strconv.Itoa(j)),
-					"3":yxxStorage.XiaZhuResult(strconv.Itoa(k)),
+					"1": yxxStorage.XiaZhuResult(strconv.Itoa(i)),
+					"2": yxxStorage.XiaZhuResult(strconv.Itoa(j)),
+					"3": yxxStorage.XiaZhuResult(strconv.Itoa(k)),
 				}
 
 				//计算真实正常赔付
 				var playerPrize int64 = 0 //玩家中奖金额
 
-				for _,player := range this.PlayerList{ //遍历玩家
-					if player.Role == USER{
-						for seat,v := range player.XiaZhuResultTotal{ //遍历该玩家下注
+				for _, player := range this.PlayerList { //遍历玩家
+					if player.Role == USER {
+						for seat, v := range player.XiaZhuResultTotal { //遍历该玩家下注
 							isWinning := false
-							for _,res := range results{ //遍历开奖结果
-								if seat == res {  //单注中奖
-									playerPrize  += v//累计玩家中奖金额
+							for _, res := range results { //遍历开奖结果
+								if seat == res { //单注中奖
+									playerPrize += v //累计玩家中奖金额
 									isWinning = true
 								}
 							}
-							if isWinning{ //中奖返回本金
+							if isWinning { //中奖返回本金
 								playerPrize += v
 							}
 						}
 					}
 				}
 
-				if gameProfit.BotBalance >= playerPrize || playerPrize < xiaZhuTotal{ //当前剩余够赔
-					if results["1"] == results["2"] && results["2"] == results["3"]{
-						if this.PrizeSwitch{ //开大奖
+				if gameProfit.BotBalance >= playerPrize || playerPrize < xiaZhuTotal { //当前剩余够赔
+					if results["1"] == results["2"] && results["2"] == results["3"] {
+						if this.PrizeSwitch { //开大奖
 							//中大奖
 							pattern := results["1"]
-							if this.XiaZhuTotal[pattern] > 0{ //有人中奖
+							if this.XiaZhuTotal[pattern] > 0 { //有人中奖
 								var totalPrize = playerPrize
 								totalPrize += this.PrizePool * this.RealXiaZhuTotal[pattern] / this.XiaZhuTotal[pattern]
-								if gameProfit.BotBalance >= totalPrize{ //开大奖
-									prizeList = append(prizeList,results)
+								if gameProfit.BotBalance >= totalPrize { //开大奖
+									prizeList = append(prizeList, results)
 								}
 							}
 						}
-					}else{
-						resultsList = append(resultsList,results)
+					} else {
+						resultsList = append(resultsList, results)
 					}
 
 				}
@@ -80,21 +80,20 @@ func (this *MyTable) ControlResults(xiaZhuTotal int64) map[string]yxxStorage.Xia
 		}
 	}
 
-
 	if len(prizeList) > 0 { //开大奖
-		idx := this.RandInt64(1,int64(len(prizeList)) + 1) - 1
+		idx := this.RandInt64(1, int64(len(prizeList))+1) - 1
 		//log.Info("----------------------------1111111111111111111111-----------------------",prizeList,"--",idx)
 		return prizeList[idx]
 	}
 	if len(resultsList) > 0 { //随机图案
-		idx := this.RandInt64(1,int64(len(resultsList)) + 1) - 1
+		idx := this.RandInt64(1, int64(len(resultsList))+1) - 1
 		//	log.Info("----------------------------2222222222222222222222-----------------------",resultsList,"--",idx)
 		return resultsList[idx]
 	}
 	//	log.Info("----------------------------3333333333-----------------------")
 	return this.Results
 }
-func (this *MyTable) JieSuan(){
+func (this *MyTable) JieSuan() {
 	//log.Info("-------------------------start jie suan tableid = %s",this.tableID)
 	//start := time.Now().UnixNano()
 
@@ -102,11 +101,11 @@ func (this *MyTable) JieSuan(){
 	this.SwitchRoomState()
 	//先抽流水
 	var xiaZhuTotal int64 = 0
-	for _,v := range this.RealXiaZhuTotal{
+	for _, v := range this.RealXiaZhuTotal {
 		xiaZhuTotal += v
 	}
 	value := xiaZhuTotal * int64(this.GameConf.BotProfitPerThousand) / 1000
-	gameStorage.IncProfit("",game.YuXiaXie,0,xiaZhuTotal - value,value)
+	gameStorage.IncProfit("", game.YuXiaXie, 0, xiaZhuTotal-value, value)
 
 	if this.Results["1"] == this.Results["2"] && this.Results["2"] == this.Results["3"] { //记录开大奖
 		this.PrizeSwitch = true
@@ -114,15 +113,15 @@ func (this *MyTable) JieSuan(){
 	this.Results = this.ControlResults(xiaZhuTotal) //控制开奖
 
 	resultsRecord := yxxStorage.GetResultsRecord(this.tableID)
-	resultsRecord.Results = append(resultsRecord.Results,this.Results)
+	resultsRecord.Results = append(resultsRecord.Results, this.Results)
 	idx := len(resultsRecord.Results) - resultsRecord.ResultsRecordNum
-	if idx > 0{
-		resultsRecord.Results = append(resultsRecord.Results[:0],resultsRecord.Results[idx:]...)
+	if idx > 0 {
+		resultsRecord.Results = append(resultsRecord.Results[:0], resultsRecord.Results[idx:]...)
 	}
-	results := map[yxxStorage.XiaZhuResult] int{}
+	results := map[yxxStorage.XiaZhuResult]int{}
 	total := 0
-	for _,v := range resultsRecord.Results{
-		for _,v1 :=range v{
+	for _, v := range resultsRecord.Results {
+		for _, v1 := range v {
 			results[v1] += 1
 			total += 1
 		}
@@ -134,9 +133,9 @@ func (this *MyTable) JieSuan(){
 	resultsRecord.ResultsWinRate[yxxStorage.JI] = results[yxxStorage.JI] * 100 / total
 	resultsRecord.ResultsWinRate[yxxStorage.HULU] = 100 - resultsRecord.ResultsWinRate[yxxStorage.YU] - resultsRecord.ResultsWinRate[yxxStorage.XIA] - resultsRecord.ResultsWinRate[yxxStorage.XIE] - resultsRecord.ResultsWinRate[yxxStorage.JI] - resultsRecord.ResultsWinRate[yxxStorage.LU]
 
-	yxxStorage.UpsertResultsRecord(resultsRecord,this.tableID)
+	yxxStorage.UpsertResultsRecord(resultsRecord, this.tableID)
 
-	isPrizePool := false //是否中大奖
+	isPrizePool := false              //是否中大奖
 	var realTotalCommission int64 = 0 //真实总抽水
 	curPoolTotal := this.PrizePool
 	//中大奖
@@ -166,10 +165,10 @@ func (this *MyTable) JieSuan(){
 					}
 					prizeRecordList.PrizeList = append(prizeRecordList.PrizeList, pl) //插入中奖玩家
 
-					if v1.Role == USER{
+					if v1.Role == USER {
 						realTotalCommission += commission
 						this.PlayerList[idx].SysProfit += commission
-						lobbyStorage.Win(utils.ConvertOID(v1.UserID),v1.Name, this.PlayerList[k1].ResultsPool,game.YuXiaXie,true)
+						lobbyStorage.Win(utils.ConvertOID(v1.UserID), v1.Name, this.PlayerList[k1].ResultsPool, game.YuXiaXie, true)
 					}
 
 				}
@@ -183,8 +182,8 @@ func (this *MyTable) JieSuan(){
 			prizeRecord.PrizeRecordList = append(prizeRecord.PrizeRecordList, prizeRecordList) //插入中奖期数
 
 			idx := len(prizeRecord.PrizeRecordList) - ResultsPoolNum
-			if idx > 0{
-				prizeRecord.PrizeRecordList = append(prizeRecord.PrizeRecordList[:0],prizeRecord.PrizeRecordList[idx:]...)
+			if idx > 0 {
+				prizeRecord.PrizeRecordList = append(prizeRecord.PrizeRecordList[:0], prizeRecord.PrizeRecordList[idx:]...)
 			}
 
 			results = map[yxxStorage.XiaZhuResult]int{}
@@ -221,24 +220,23 @@ func (this *MyTable) JieSuan(){
 	//计算正常赔付
 	var playerPrize int64 = 0 //所有玩家中奖金额
 
-
-	for idx,player := range this.PlayerList{ //遍历玩家
-		for seat,v := range player.XiaZhuResultTotal{ //遍历该玩家下注
+	for idx, player := range this.PlayerList { //遍历玩家
+		for seat, v := range player.XiaZhuResultTotal { //遍历该玩家下注
 			isWinning := false
-			for _,res := range this.Results{ //遍历开奖结果
-				if seat == res {  //中奖
+			for _, res := range this.Results { //遍历开奖结果
+				if seat == res { //中奖
 					//算抽水
 					commission := v * int64(this.GameConf.ProfitPerThousand) / 1000
 					this.PlayerList[idx].TotalBackYxb += v - commission
 					playerPrize += v //所有玩家中奖金额
-					if player.Role == USER{
+					if player.Role == USER {
 						realTotalCommission += commission
 						this.PlayerList[idx].SysProfit += commission
 					}
 					isWinning = true
 				}
 			}
-			if isWinning{ //返回本金
+			if isWinning { //返回本金
 				//	this.PlayerList[idx].ResultsChipList = append(this.PlayerList[idx].ResultsChipList, xiaZhuV) //记录中奖筹码
 				this.PlayerList[idx].TotalBackYxb += v
 				playerPrize += v //所有玩家中奖金额
@@ -246,12 +244,12 @@ func (this *MyTable) JieSuan(){
 		}
 	}
 
-	if !isPrizePool{
+	if !isPrizePool {
 		var totalXiaZhu int64 = 0
-		for _,v := range this.XiaZhuTotal{
+		for _, v := range this.XiaZhuTotal {
 			totalXiaZhu += v
 		}
-		var curInPool =  (totalXiaZhu - playerPrize) * int64(this.GameConf.PoolScaleThousand) / 1000
+		var curInPool = (totalXiaZhu - playerPrize) * int64(this.GameConf.PoolScaleThousand) / 1000
 		if curInPool > 0 {
 			this.CurInPool += curInPool
 			this.PrizePool += curInPool
@@ -264,7 +262,7 @@ func (this *MyTable) JieSuan(){
 				CurInPool: curInPool,
 			}
 
-			ret := this.DealProtocolFormat(info,protocol.RefreshPrizePool,nil)
+			ret := this.DealProtocolFormat(info, protocol.RefreshPrizePool, nil)
 			this.onlinePush.NotifyAllPlayersNR(game.Push, ret)
 			this.onlinePush.ExecuteCallBackMsg(this.Trace())
 		}
@@ -276,99 +274,99 @@ func (this *MyTable) JieSuan(){
 	tmpRes["1"] = this.Results["1"]
 	tmpRes["2"] = this.Results["2"]
 	tmpRes["3"] = this.Results["3"]
-	if isPrizePool{
+	if isPrizePool {
 		tmpRes["4"] = this.XiaZhuTotal[this.Results["1"]]
 		tmpRes["5"] = curPoolTotal
 	}
-	resultStr,_ := json.Marshal(tmpRes)
-	for k,v := range this.PlayerList{
-		if v.Role!= ROBOT{
-			if v.TotalBackYxb > 0{
-				bill := walletStorage.NewBill(v.UserID,walletStorage.TypeIncome,walletStorage.EventGameYxx,this.EventID,v.TotalBackYxb)
+	resultStr, _ := json.Marshal(tmpRes)
+	for k, v := range this.PlayerList {
+		if v.Role != ROBOT {
+			if v.TotalBackYxb > 0 {
+				bill := walletStorage.NewBill(v.UserID, walletStorage.TypeIncome, walletStorage.EventGameYxx, this.EventID, v.TotalBackYxb)
 				walletStorage.OperateVndBalance(bill)
 				wallet := walletStorage.QueryWallet(utils.ConvertOID(v.UserID))
 				this.PlayerList[k].Yxb = wallet.VndBalance
 				sb := vGate.QuerySessionBean(v.UserID)
-				if sb != nil{
-					session,_ := basegate.NewSession(this.app, sb.Session)
-					playerInfoRet := this.GetPlayerInfo(v.UserID,false)
-					_ = this.sendPack(session.GetSessionID(),game.Push,playerInfoRet,protocol.UpdatePlayerInfo,nil)
+				if sb != nil {
+					session, _ := basegate.NewSession(this.app, sb.Session)
+					playerInfoRet := this.GetPlayerInfo(v.UserID, false)
+					_ = this.sendPack(session.GetSessionID(), game.Push, playerInfoRet, protocol.UpdatePlayerInfo, nil)
 				}
-				if v.Role == USER{
+				if v.Role == USER {
 					realTotalPay -= v.TotalBackYxb
 				}
 			}
 			var totalXiaZhu int64 = 0
-			for _,v1 := range v.XiaZhuResultTotal{
+			for _, v1 := range v.XiaZhuResultTotal {
 				totalXiaZhu += v1
 			}
-			if totalXiaZhu > 0{
+			if totalXiaZhu > 0 {
 				this.PlayerList[k].BotProfit = totalXiaZhu * int64(this.GameConf.BotProfitPerThousand) / 1000
 				betDetails := map[yxxStorage.XiaZhuResult]interface{}{
-					yxxStorage.YU: v.XiaZhuResultTotal[yxxStorage.YU],
-					yxxStorage.XIA: v.XiaZhuResultTotal[yxxStorage.XIA],
-					yxxStorage.XIE: v.XiaZhuResultTotal[yxxStorage.XIE],
+					yxxStorage.YU:   v.XiaZhuResultTotal[yxxStorage.YU],
+					yxxStorage.XIA:  v.XiaZhuResultTotal[yxxStorage.XIA],
+					yxxStorage.XIE:  v.XiaZhuResultTotal[yxxStorage.XIE],
 					yxxStorage.HULU: v.XiaZhuResultTotal[yxxStorage.HULU],
-					yxxStorage.LU: v.XiaZhuResultTotal[yxxStorage.LU],
-					yxxStorage.JI: v.XiaZhuResultTotal[yxxStorage.JI],
+					yxxStorage.LU:   v.XiaZhuResultTotal[yxxStorage.LU],
+					yxxStorage.JI:   v.XiaZhuResultTotal[yxxStorage.JI],
 				}
-				betDetailsStr,_ := json.Marshal(betDetails)
+				betDetailsStr, _ := json.Marshal(betDetails)
 				wallet := walletStorage.QueryWallet(utils.ConvertOID(v.UserID))
 				betRecordParam := gameStorage.BetRecordParam{
-					Uid: v.UserID,
-					GameType: game.YuXiaXie,
-					Income: v.TotalBackYxb - totalXiaZhu,
-					BetAmount: totalXiaZhu,
+					Uid:        v.UserID,
+					GameType:   game.YuXiaXie,
+					Income:     v.TotalBackYxb - totalXiaZhu,
+					BetAmount:  totalXiaZhu,
 					CurBalance: this.PlayerList[k].Yxb + wallet.SafeBalance,
-					SysProfit: this.PlayerList[k].SysProfit,
-					BotProfit: this.PlayerList[k].BotProfit,
+					SysProfit:  this.PlayerList[k].SysProfit,
+					BotProfit:  this.PlayerList[k].BotProfit,
 					BetDetails: string(betDetailsStr),
-					GameId: strconv.FormatInt(time.Now().Unix(),10),
-					GameNo: strconv.FormatInt(time.Now().Unix(),10),
+					GameId:     strconv.FormatInt(time.Now().Unix(), 10),
+					GameNo:     strconv.FormatInt(time.Now().Unix(), 10),
 					GameResult: string(resultStr),
-					IsSettled: true,
-					IsJackpot: v.IsJackpot,
+					IsSettled:  true,
+					IsJackpot:  v.IsJackpot,
 				}
-				if v.Role != USER{
+				if v.Role != USER {
 					betRecordParam.SysProfit = 0
 					betRecordParam.BotProfit = 0
 				}
 				gameStorage.InsertBetRecord(betRecordParam)
 				pay.CheckoutAgentIncome(utils.ConvertOID(v.UserID), totalXiaZhu, this.EventID, game.YuXiaXie)
 			}
-		} else{
+		} else {
 			this.PlayerList[k].Yxb += v.TotalBackYxb
 		}
 	}
 	pl := this.DeepCopyPlayerList(this.PlayerList)
 	go func() {
 		time.Sleep(time.Second * 5)
-		for _,v := range pl{
-			if v.Role == USER || v.Role == Agent{
+		for _, v := range pl {
+			if v.Role == USER || v.Role == Agent {
 				this.notifyWallet(v.UserID)
 			}
 		}
 	}()
-	gameStorage.IncProfit("",game.YuXiaXie,realTotalCommission,realTotalPay,0)
+	gameStorage.IncProfit("", game.YuXiaXie, realTotalCommission, realTotalPay, 0)
 	//发送前端的数据结构
 	var positionInfo []PositionInfo
-	for k,v := range this.PlayerList{
-		if k < this.SeatNum{
+	for k, v := range this.PlayerList {
+		if k < this.SeatNum {
 			info := PositionInfo{
 				TotalBackYxb: v.TotalBackYxb,
-				UserID: v.UserID,
-				Yxb: v.Yxb,
+				UserID:       v.UserID,
+				Yxb:          v.Yxb,
 			}
-			positionInfo = append(positionInfo,info)
-		}else{
+			positionInfo = append(positionInfo, info)
+		} else {
 			break
 		}
 	}
 	//记录玩家的一些状态值(没下注的次数)
 	realPlayerNum := 0
-	for k,v := range this.PlayerList{
+	for k, v := range this.PlayerList {
 		var xiaZhu int64 = 0
-		for _,v1 := range v.XiaZhuResultTotal{
+		for _, v1 := range v.XiaZhuResultTotal {
 			if v1 > 0 {
 				xiaZhu += v1
 				break
@@ -376,36 +374,36 @@ func (this *MyTable) JieSuan(){
 		}
 		if xiaZhu > 0 {
 			this.PlayerList[k].NotXiaZhuCnt = 0
-			gameStorage.IncGameWinLoseScore(game.YuXiaXie,v.Name,v.TotalBackYxb - xiaZhu)
-		}else{
+			gameStorage.IncGameWinLoseScore(game.YuXiaXie, v.Name, v.TotalBackYxb-xiaZhu)
+		} else {
 			this.PlayerList[k].NotXiaZhuCnt += 1
 		}
-		if v.Role == USER || v.Role == Agent{
+		if v.Role == USER || v.Role == Agent {
 			this.JieSuanData = JiesuanData{
-				RoomState: this.RoomState,
-				CountDown:this.CountDown,
-				PrizePool: this.PrizePool,
-				Results: this.Results,
-				XiaZhuTime: this.GameConf.XiaZhuTime,
-				JieSuanTime: this.GameConf.JieSuanTime,
+				RoomState:     this.RoomState,
+				CountDown:     this.CountDown,
+				PrizePool:     this.PrizePool,
+				Results:       this.Results,
+				XiaZhuTime:    this.GameConf.XiaZhuTime,
+				JieSuanTime:   this.GameConf.JieSuanTime,
 				ReadyGameTime: this.GameConf.ReadyGameTime,
-				CurInPool: this.CurInPool,
-				PositionInfo: positionInfo,
-				TotalBackYxb: v.TotalBackYxb,
-				IsPrizePool:isPrizePool,
-				PrizeResult: v.ResultsPool,
+				CurInPool:     this.CurInPool,
+				PositionInfo:  positionInfo,
+				TotalBackYxb:  v.TotalBackYxb,
+				IsPrizePool:   isPrizePool,
+				PrizeResult:   v.ResultsPool,
 			}
 			sb := vGate.QuerySessionBean(v.UserID)
-			if sb != nil{
-				session,_ := basegate.NewSession(this.app, sb.Session)
-				this.sendPack(session.GetSessionID(),game.Push,this.JieSuanData,protocol.JieSuan,nil)
+			if sb != nil {
+				session, _ := basegate.NewSession(this.app, sb.Session)
+				this.sendPack(session.GetSessionID(), game.Push, this.JieSuanData, protocol.JieSuan, nil)
 			}
 		}
 
-		if v.TotalBackYxb > 0 && v.Role == USER{
-			lobbyStorage.Win(utils.ConvertOID(v.UserID),v.Name, v.TotalBackYxb - v.ResultsPool,game.YuXiaXie,false)
+		if v.TotalBackYxb > 0 && v.Role == USER {
+			lobbyStorage.Win(utils.ConvertOID(v.UserID), v.Name, v.TotalBackYxb-v.ResultsPool, game.YuXiaXie, false)
 		}
-		if v.Role == USER{
+		if v.Role == USER {
 			realPlayerNum += 1
 		}
 	}
@@ -413,26 +411,26 @@ func (this *MyTable) JieSuan(){
 	tableInfo := yxxStorage.GetTableInfo(this.tableID)
 	tableInfo.PrizePool = this.PrizePool
 	tableInfo.PrizeSwitch = this.PrizeSwitch
-	yxxStorage.UpsertTableInfo(tableInfo,this.tableID)
+	yxxStorage.UpsertTableInfo(tableInfo, this.tableID)
 
-	for _,v := range this.PlayerList {
-		if v.Role != ROBOT {//玩家
+	for _, v := range this.PlayerList {
+		if v.Role != ROBOT { //玩家
 			var xiaZhu int64 = 0
-			for _,v1 := range v.XiaZhuResultTotal{
+			for _, v1 := range v.XiaZhuResultTotal {
 				if v1 > 0 {
 					xiaZhu += v1
 					break
 				}
 			}
-			if xiaZhu > 0{ //有下注
-				activityStorage.UpsertGameDataInBet(v.UserID,game.YuXiaXie,0)
+			if xiaZhu > 0 { //有下注
+				activityStorage.UpsertGameDataInBet(v.UserID, game.YuXiaXie, 0)
 				activity.CalcEncouragementFunc(v.UserID)
 			}
 		}
 	}
 
 	reboot := gameStorage.QueryGameReboot(game.YuXiaXie)
-	if reboot == "true"{
+	if reboot == "true" {
 		this.RoomState = ROOM_END
 	}
 	//end := time.Now().UnixNano()

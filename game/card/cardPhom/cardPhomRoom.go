@@ -21,17 +21,19 @@ var Module = func() module.Module {
 	this := new(Room)
 	return this
 }
+
 type Room struct {
 	basemodule.BaseModule
-	room *room.Room
-	app module.App
-	tablesID sync.Map
-	curTableID string
-	HallInfo map[HallType]map[int64]HallConfig
-	RoomRobotConf []cardPhomStorage.RobotConf
+	room                *room.Room
+	app                 module.App
+	tablesID            sync.Map
+	curTableID          string
+	HallInfo            map[HallType]map[int64]HallConfig
+	RoomRobotConf       []cardPhomStorage.RobotConf
 	HallOffsetPlayerNum map[HallType]map[int64]int
-	onlinePush *vGate.OnlinePush
+	onlinePush          *vGate.OnlinePush
 }
+
 func (self *Room) GetType() string {
 	//很关键,需要与配置文件中的Module配置对应
 	return string(game.CardPhom)
@@ -55,37 +57,37 @@ func (self *Room) OnInit(app module.App, settings *conf.ModuleSettings) {
 	//self.GetServer().RegisterGO("/slotLs/onLogin", self.onLogin)
 	//common.AddListener(self.GetServerID(),common.EventLogin,"/slotLs/onLogin")
 	self.GetServer().RegisterGO("/cardPhom/onDisconnect", self.onDisconnect)
-	common.AddListener(self.GetServerID(),common.EventDisconnect,"/cardPhom/onDisconnect")
+	common.AddListener(self.GetServerID(), common.EventDisconnect, "/cardPhom/onDisconnect")
 
 	hook := game.NewHook(self.GetType())
 
 	//需要队列
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.Enter,self.Enter)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.AutoEnter,self.AutoEnter)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GetEnterData,self.GetEnterData)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.QuitTable,self.QuitTable)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.Ready,self.Ready)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.AutoReady,self.AutoReady)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.MasterStartGame,self.MasterStartGame)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.PutPoker,self.PutPoker)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.EatPoker,self.EatPoker)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GetPhomPoker,self.GetPhomPoker)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.PhomPoker,self.PhomPoker)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GivePoker,self.GivePoker)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.DrawPoker,self.DrawPoker)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.SortPoker,self.SortPoker)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.HintPoker,self.HintPoker)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.InviteEnter,self.InviteEnter)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.Enter, self.Enter)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.AutoEnter, self.AutoEnter)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GetEnterData, self.GetEnterData)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.QuitTable, self.QuitTable)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.Ready, self.Ready)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.AutoReady, self.AutoReady)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.MasterStartGame, self.MasterStartGame)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.PutPoker, self.PutPoker)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.EatPoker, self.EatPoker)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GetPhomPoker, self.GetPhomPoker)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.PhomPoker, self.PhomPoker)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GivePoker, self.GivePoker)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.DrawPoker, self.DrawPoker)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.SortPoker, self.SortPoker)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.HintPoker, self.HintPoker)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.InviteEnter, self.InviteEnter)
 	//直接request
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.Info,self.Info)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GetHallInfo,self.GetHallInfo)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GetWinLoseRank,self.GetWinLoseRank)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.CheckPlayerInGame,self.CheckPlayerInGame)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GameInvite,self.GameInvite)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.Info, self.Info)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GetHallInfo, self.GetHallInfo)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GetWinLoseRank, self.GetWinLoseRank)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.CheckPlayerInGame, self.CheckPlayerInGame)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GameInvite, self.GameInvite)
 }
 
 func (self *Room) Run(closeSig chan bool) {
-	gameStorage.UpsertGameReboot(game.CardPhom,"false")
+	gameStorage.UpsertGameReboot(game.CardPhom, "false")
 	log.Info("%v模块运行中...", self.GetType())
 	self.RoomInit()
 	<-closeSig

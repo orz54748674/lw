@@ -4,6 +4,7 @@ type ShortCutMode struct {
 	Type string
 	Text string
 }
+
 var ShortCutText = map[Type][]string{
 	YuXiaXie: {
 		"Thanh xuân chờ hũ nổ .",
@@ -65,15 +66,16 @@ var ShortCutText = map[Type][]string{
 		"Cá dạo này phất nè .",
 	},
 }
-var ShortCut =  map[Type][]ShortCutMode{}
-func InitShortCut(){
-	for k,v := range ShortCutText{
-		for _,v1 := range v{
+var ShortCut = map[Type][]ShortCutMode{}
+
+func InitShortCut() {
+	for k, v := range ShortCutText {
+		for _, v1 := range v {
 			st := ShortCutMode{
 				Type: "System",
 				Text: v1,
 			}
-			ShortCut[k] = append(ShortCut[k][0:],st)
+			ShortCut[k] = append(ShortCut[k][0:], st)
 		}
 	}
 }

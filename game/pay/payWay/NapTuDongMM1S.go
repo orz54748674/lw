@@ -23,7 +23,7 @@ type NapTuDong struct {
 }
 
 var partnerId = "aWc5K0pQOXhkNWwzazJ3YnJUU1AxZz09"
-var accessKey= "2815579d7a177c1f3f5db4cb2f6ce494"
+var accessKey = "2815579d7a177c1f3f5db4cb2f6ce494"
 var telcoArray = []string{"VIETTEL", "VINAPHONE", "MOBIFONE"}
 
 func (s *NapTuDong) initKey() {
@@ -51,25 +51,25 @@ func (s *NapTuDong) Charge(order *payStorage.Order, payConf *payStorage.PayConf,
 	}
 	order.Remark = telco
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	requestId := utils.RandInt64(100000, 999999,r)
-	order.ThirdId = strconv.FormatInt(requestId,10) + strconv.FormatInt(time.Now().Unix(),10)
+	requestId := utils.RandInt64(100000, 999999, r)
+	order.ThirdId = strconv.FormatInt(requestId, 10) + strconv.FormatInt(time.Now().Unix(), 10)
 	order.Fee = order.Amount * int64(phoneChargeConf.FeePerThousand) / 1000
 	order.GotAmount = order.Amount - order.Fee
 	telcoNumber := int64(0)
-	for k,v := range telcoArray{
-		if v == telco{
+	for k, v := range telcoArray {
+		if v == telco {
 			telcoNumber = int64(k) + 1
 			break
 		}
 	}
 	requestParams := map[string]interface{}{
-		"ref_id": order.ThirdId,
-		"card_code":       code,
-		"card_serial":     serial,
-		"card_value": 	   order.Amount,
-		"card_telco":      telcoNumber,
-		"partner_id": 	   partnerId,
-		"callback_url":    order.NotifyUrl,
+		"ref_id":       order.ThirdId,
+		"card_code":    code,
+		"card_serial":  serial,
+		"card_value":   order.Amount,
+		"card_telco":   telcoNumber,
+		"partner_id":   partnerId,
+		"callback_url": order.NotifyUrl,
 	}
 	requestParams["signature"] = s.getSign(requestParams)
 
@@ -124,7 +124,7 @@ func (s *NapTuDong) Charge(order *payStorage.Order, payConf *payStorage.PayConf,
 	if res["status"].(float64) == 1 {
 		payStorage.InsertPhoneCharge(phoneCharge)
 		order.Status = payStorage.StatusProcess
-	}else {
+	} else {
 		order.Status = payStorage.StatusFailed
 		order.Remark = res["message"].(string)
 		//errCode.Code = -1
@@ -136,10 +136,10 @@ func (s *NapTuDong) Charge(order *payStorage.Order, payConf *payStorage.PayConf,
 
 func (s *NapTuDong) NotifyCharge(w http.ResponseWriter, r *http.Request) {
 	res := r.URL.Query()
-	log.Info("receive params: %s",res)
+	log.Info("receive params: %s", res)
 
 	if _, ok := utils.CheckParams(res,
-		[]string{"status", "amount_add", "amount_real", "amount", "ref_id", "message","signature"}); ok != nil {
+		[]string{"status", "amount_add", "amount_real", "amount", "ref_id", "message", "signature"}); ok != nil {
 		log.Error("---- error params---")
 		ToResponse(w, "error params")
 		return
@@ -151,10 +151,10 @@ func (s *NapTuDong) NotifyCharge(w http.ResponseWriter, r *http.Request) {
 	amount, _ := utils.ConvertInt(res["amount"][0]) //您收到的金额（VND）
 	value, _ := utils.ConvertInt(res["amount_real"][0])
 	message := res["message"][0]
-	signStr := fmt.Sprintf("%s|%s|%s|%s", res["status"][0], res["amount"][0], res["ref_id"][0],accessKey)
+	signStr := fmt.Sprintf("%s|%s|%s|%s", res["status"][0], res["amount"][0], res["ref_id"][0], accessKey)
 	sum := md5.Sum([]byte(signStr))
 	sign := fmt.Sprintf("%x", sum)
-	if sign != res["signature"][0]{
+	if sign != res["signature"][0] {
 		log.Error("callback_sign is error")
 		ToResponse(w, "callback_sign is error")
 		return
@@ -172,8 +172,8 @@ func (s *NapTuDong) NotifyCharge(w http.ResponseWriter, r *http.Request) {
 	phoneCharge := payStorage.QueryPhoneCharge(order.Oid)
 	phoneCharge.RealAmount = value
 	payStorage.UpdatePhoneCharge(phoneCharge)
-	if status == 1{
-		phoneChargeConf := payStorage.QueryPhoneChargeConf(order.Remark,int(amount))
+	if status == 1 {
+		phoneChargeConf := payStorage.QueryPhoneChargeConf(order.Remark, int(amount))
 		if phoneChargeConf == nil {
 			return
 		}

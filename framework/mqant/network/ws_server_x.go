@@ -2,7 +2,6 @@ package network
 
 import (
 	"crypto/tls"
-	"vn/framework/mqant/log"
 	"golang.org/x/net/websocket"
 	"net"
 	"net/http"
@@ -10,6 +9,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"vn/framework/mqant/log"
 )
 
 // WSServer websocket服务器

@@ -18,12 +18,14 @@ var Module = func() module.Module {
 	this := new(Room)
 	return this
 }
+
 type Room struct {
 	basemodule.BaseModule
-	room *room.Room
-	app module.App
+	room     *room.Room
+	app      module.App
 	tablesID sync.Map
 }
+
 func (self *Room) GetType() string {
 	//很关键,需要与配置文件中的Module配置对应
 	return string(game.SeDie)
@@ -40,31 +42,31 @@ func (self *Room) OnInit(app module.App, settings *conf.ModuleSettings) {
 	self.room = room.NewRoom(app)
 	self.app = app
 	self.GetServer().RegisterGO("/sd/onLogin", self.onLogin)
-	common.AddListener(self.GetServerID(),common.EventLogin,"/sd/onLogin")
+	common.AddListener(self.GetServerID(), common.EventLogin, "/sd/onLogin")
 	self.GetServer().RegisterGO("/sd/onDisconnect", self.onDisconnect)
-	common.AddListener(self.GetServerID(),common.EventDisconnect,"/sd/onDisconnect")
+	common.AddListener(self.GetServerID(), common.EventDisconnect, "/sd/onDisconnect")
 
 	hook := game.NewHook(self.GetType())
 
 	//需要队列
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.XiaZhu,self.TableQueue)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.LastXiaZhu,self.TableQueue)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.DoubleXiaZhu,self.TableQueue)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.Enter,self.Enter)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.QuitTable,self.QuitTable)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GetShortCutList,self.GetShortCutList)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.SendShortCut,self.SendShortCut)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GetEnterData,self.GetEnterData)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.XiaZhu, self.TableQueue)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.LastXiaZhu, self.TableQueue)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.DoubleXiaZhu, self.TableQueue)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.Enter, self.Enter)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.QuitTable, self.QuitTable)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GetShortCutList, self.GetShortCutList)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.SendShortCut, self.SendShortCut)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GetEnterData, self.GetEnterData)
 
 	//直接request
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GetPlayerList,self.GetPlayerList)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GetPlayerList, self.GetPlayerList)
 
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GetTableList,self.GetTableList)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GetBaseScoreList,self.GetBaseScoreList)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.CreateTableReq,self.CreateTableReq)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.GetWinLoseRank,self.GetWinLoseRank)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GetTableList, self.GetTableList)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GetBaseScoreList, self.GetBaseScoreList)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.CreateTableReq, self.CreateTableReq)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.GetWinLoseRank, self.GetWinLoseRank)
 	//hook.RegisterAndCheckLogin(self.GetServer(),protocol.Info,self.Info)
-	hook.RegisterAndCheckLogin(self.GetServer(),protocol.CheckPlayerInGame,self.CheckPlayerInGame)
+	hook.RegisterAndCheckLogin(self.GetServer(), protocol.CheckPlayerInGame, self.CheckPlayerInGame)
 }
 
 func (self *Room) Run(closeSig chan bool) {

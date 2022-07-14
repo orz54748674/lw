@@ -16,40 +16,40 @@ import (
 
 type MyTable struct {
 	room.QTable
-	module  module.RPCModule
-	app module.App
-
+	module module.RPCModule
+	app    module.App
 
 	onlinePush *vGate.OnlinePush
-	tableID string
-	Players map[string] room.BasePlayer
-	BroadCast bool  //广播标志
-	SeatNum int  //座位数量
+	tableID    string
+	Players    map[string]room.BasePlayer
+	BroadCast  bool //广播标志
+	SeatNum    int  //座位数量
 
-	GameConf *yxxStorage.Conf
+	GameConf        *yxxStorage.Conf
 	RobotXiaZhuList map[string]RobotXiaZhuList
-	SeqExecFlag bool //顺序执行标记
-	OnlyExecOne bool //执行一次标志
-	CountDown int  //倒计时
-	RoomState Room_v //房间状态
-	PlayerList []PlayerList `bson:"PlayerList" json:"PlayerList"`
-	ResultsChipList map[yxxStorage.XiaZhuResult] []int64  `bson:"XiaZhuResult" json:"XiaZhuResult"`//桌上下注筹码结果
-	Results map[string]yxxStorage.XiaZhuResult  `bson:"Results" json:"Results"`//开奖结果图案
+	SeqExecFlag     bool                                //顺序执行标记
+	OnlyExecOne     bool                                //执行一次标志
+	CountDown       int                                 //倒计时
+	RoomState       Room_v                              //房间状态
+	PlayerList      []PlayerList                        `bson:"PlayerList" json:"PlayerList"`
+	ResultsChipList map[yxxStorage.XiaZhuResult][]int64 `bson:"XiaZhuResult" json:"XiaZhuResult"` //桌上下注筹码结果
+	Results         map[string]yxxStorage.XiaZhuResult  `bson:"Results" json:"Results"`           //开奖结果图案
 
-	XiaZhuTotal map[yxxStorage.XiaZhuResult] int64 `bson:"XiaZhuTotal" json:"XiaZhuTotal"`//桌上下注结果总数
+	XiaZhuTotal     map[yxxStorage.XiaZhuResult]int64 `bson:"XiaZhuTotal" json:"XiaZhuTotal"`         //桌上下注结果总数
 	RealXiaZhuTotal map[yxxStorage.XiaZhuResult]int64 `bson:"RealXiaZhuTotal" json:"RealXiaZhuTotal"` //每轮真实玩家下注总和
 
-	PositionNum int
+	PositionNum  int
 	PositionList []PlayerList `bson:"PositionList" json:"PositionList"`
-	Rand *rand.Rand
-	PrizePool int64  //奖池
-	PrizeSwitch bool //开大奖状态
-	PlayerNum int    //人数
-	CurInPool int64
-	EventID string
+	Rand         *rand.Rand
+	PrizePool    int64 //奖池
+	PrizeSwitch  bool  //开大奖状态
+	PlayerNum    int   //人数
+	CurInPool    int64
+	EventID      string
 	RobotYxbConf []yxxStorage.Robot
-	JieSuanData JiesuanData
+	JieSuanData  JiesuanData
 }
+
 func (this *MyTable) GetSeats() map[string]room.BasePlayer {
 	return this.Players
 }
@@ -63,7 +63,6 @@ func (this *MyTable) OnCreate() {
 	//可以加载数据
 	log.Info("Yxx Table OnCreate")
 	//一定要调用QTable.OnCreate()
-
 
 	this.QTable.OnCreate()
 }
@@ -82,11 +81,11 @@ func (this *MyTable) Update(ds time.Duration) {
 	}()
 }
 
-func NewTable(module module.RPCModule,app module.App,tableID string,opts ...room.Option) *MyTable {
+func NewTable(module module.RPCModule, app module.App, tableID string, opts ...room.Option) *MyTable {
 	this := &MyTable{
 		module:  module,
-		app: app,
-		tableID:tableID,
+		app:     app,
+		tableID: tableID,
 	}
 	opts = append(opts, room.TimeOut(0))
 	opts = append(opts, room.Update(this.Update))
@@ -103,29 +102,26 @@ func NewTable(module module.RPCModule,app module.App,tableID string,opts ...room
 	this.OnInit(this, opts...)
 	//this.OnCreate()
 
-	this.TableInit(module,app,tableID)
-	this.Register(protocol.Empty, this.Empty)             //下注
+	this.TableInit(module, app, tableID)
+	this.Register(protocol.Empty, this.Empty)               //下注
 	this.Register(protocol.XiaZhu, this.XiaZhu)             //下注
 	this.Register(protocol.LastXiaZhu, this.LastXiaZhu)     //上轮下注
 	this.Register(protocol.DoubleXiaZhu, this.DoubleXiaZhu) //加倍下注
 
-	this.Register(protocol.Enter, this.Enter)             //进入房间
-	this.Register(protocol.QuitTable, this.QuitTable)             //进入房间
+	this.Register(protocol.Enter, this.Enter)         //进入房间
+	this.Register(protocol.QuitTable, this.QuitTable) //进入房间
 
 	//队列函数
-	this.Register(protocol.StartGame, this.StartGame)             //下注
-	this.Register(protocol.RobotXiaZhu, this.RobotXiaZhu)             //下注
-	this.Register(protocol.ReadyGame, this.ReadyGame)             //
-	this.Register(protocol.JieSuan, this.JieSuan)             //
-	this.Register(protocol.UpdatePlayerList, this.UpdatePlayerList)             //
+	this.Register(protocol.StartGame, this.StartGame)               //下注
+	this.Register(protocol.RobotXiaZhu, this.RobotXiaZhu)           //下注
+	this.Register(protocol.ReadyGame, this.ReadyGame)               //
+	this.Register(protocol.JieSuan, this.JieSuan)                   //
+	this.Register(protocol.UpdatePlayerList, this.UpdatePlayerList) //
 	this.Register(protocol.ClearTable, this.ClearTable)             //
 	//this.Register(protocol.GetShortCutList, this.GetShortCutList)             //
-	this.Register(protocol.SendShortCut, this.SendShortCut)             //
-	this.Register(protocol.RobotEnter, this.RobotEnter)             //
-	this.Register(protocol.RobotQuitTable, this.RobotQuitTable)             //
-	this.Register(protocol.RobotBetCalc, this.RobotBetCalc)             //
+	this.Register(protocol.SendShortCut, this.SendShortCut)     //
+	this.Register(protocol.RobotEnter, this.RobotEnter)         //
+	this.Register(protocol.RobotQuitTable, this.RobotQuitTable) //
+	this.Register(protocol.RobotBetCalc, this.RobotBetCalc)     //
 	return this
 }
-
-
-

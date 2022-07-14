@@ -10,10 +10,10 @@ import (
 
 var (
 	cRoomData           = "FishRoomData"
-	cFishConf           = "FishConf"            //捕鱼配置表
-	cFishPlayerFireInfo = "FishPlayerFireInfo"  //玩家每日发射子弹表
-	cFishPlayerConf     = "FishPlayerConf"      //玩家信息
-	cFishSysBalance     = "FishSysBalance"      //捕鱼三个房间的系统余额
+	cFishConf           = "FishConf"           //捕鱼配置表
+	cFishPlayerFireInfo = "FishPlayerFireInfo" //玩家每日发射子弹表
+	cFishPlayerConf     = "FishPlayerConf"     //玩家信息
+	cFishSysBalance     = "FishSysBalance"     //捕鱼三个房间的系统余额
 )
 
 func GetTablesInfo() map[string]TableInfo {
@@ -42,7 +42,7 @@ func GetFishSysBalance(tableType int) (int64, int64) {
 	c := common.GetMongoDB().C(cFishSysBalance)
 	var tmp FishSysBalance
 	date := time.Now().Format("2006-01-02")
-	query := bson.M{"Date":date}
+	query := bson.M{"Date": date}
 	if err := c.Find(query).One(&tmp); err != nil {
 		log.Error("GetFishSysBalance err:%s", err.Error())
 		tmp.Date = date
@@ -80,7 +80,7 @@ func UpsertFishSysBalance(tableType int, balance int64, effectBet int64) {
 		effectBetStr = "EffectBetRoom3"
 	}
 	update := bson.M{"$inc": bson.M{roomStr: balance, effectBetStr: effectBet}}
-	query := bson.M{"Date":time.Now().Format("2006-01-02")}
+	query := bson.M{"Date": time.Now().Format("2006-01-02")}
 	if _, err := c.Upsert(query, update); err != nil {
 		log.Error("UpsertFishSysBalance err:%s", err.Error())
 	}

@@ -3,6 +3,7 @@ package http
 type BackendController struct {
 	BaseController
 }
+
 //func (s *BackendController)profitUpdate(w http.ResponseWriter, r *http.Request){
 //	_ = r.ParseForm()
 //	p := r.Form

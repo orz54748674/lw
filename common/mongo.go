@@ -1,4 +1,5 @@
 package common
+
 //
 //var onceMongo sync.Once
 //var instance *myMongo
@@ -10,7 +11,9 @@ type DBConf struct {
 	Password string
 	MysqlDns string
 }
+
 var MongoConfig *DBConf
+
 //var mgoSession *mgo.Session
 //func InitMongo(conf *DBConf)  {
 //	onceMongo.Do(func() {

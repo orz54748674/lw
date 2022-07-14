@@ -62,7 +62,7 @@ func (s *Bot) RandInt64(min, max int64) int64 {
 	}
 	return s.r.Int63n(max-min) + min
 }
-func (s *Bot) DoingBet(timeLeft int, curDx *dxStorage.Dx,curRoundBet *[]CurRoundBet) {
+func (s *Bot) DoingBet(timeLeft int, curDx *dxStorage.Dx, curRoundBet *[]CurRoundBet) {
 	if timeLeft == 3 {
 		go func() {
 			//log.Info("bot length: %d",len(s.botBetLog))
@@ -74,23 +74,23 @@ func (s *Bot) DoingBet(timeLeft int, curDx *dxStorage.Dx,curRoundBet *[]CurRound
 		return
 	}
 	go func() {
-		s.parseAmount(s.smallMax, curDx.BetSmall, timeLeft, "small", curDx,curRoundBet)
-		s.parseAmount(s.bigMax, curDx.BetBig, timeLeft, "big", curDx,curRoundBet)
+		s.parseAmount(s.smallMax, curDx.BetSmall, timeLeft, "small", curDx, curRoundBet)
+		s.parseAmount(s.bigMax, curDx.BetBig, timeLeft, "big", curDx, curRoundBet)
 	}()
 }
-func (s *Bot) parseAmount(max int64, curBet int64, timeLeft int, position string, curDx *dxStorage.Dx,curRoundBet *[]CurRoundBet) {
+func (s *Bot) parseAmount(max int64, curBet int64, timeLeft int, position string, curDx *dxStorage.Dx, curRoundBet *[]CurRoundBet) {
 	difference := max - curBet
 	perSecond := difference / int64(timeLeft-3)
 	betListObj := &betList{}
-	s.parseBet(perSecond, betListObj,timeLeft)
-	botList := common2.RandomAndNotIn(len(betListObj.amountList), s.getBotIdsArray(),s.r)
+	s.parseBet(perSecond, betListObj, timeLeft)
+	botList := common2.RandomAndNotIn(len(betListObj.amountList), s.getBotIdsArray(), s.r)
 	if len(botList) < len(betListObj.amountList) {
 		log.Error("botList length is %v ", len(botList))
 		return
 	}
 	for index, amount := range betListObj.amountList {
 		s.userIds.Add(botList[index].Oid)
-		s.bet(amount, position, &botList[index], curDx,curRoundBet)
+		s.bet(amount, position, &botList[index], curDx, curRoundBet)
 	}
 }
 func (s *Bot) getBotIdsArray() []primitive.ObjectID {
@@ -101,12 +101,12 @@ func (s *Bot) getBotIdsArray() []primitive.ObjectID {
 	})
 	return userIds
 }
-func (s *Bot) oneBet(position string, curDx *dxStorage.Dx,curRoundBet *[]CurRoundBet) {
+func (s *Bot) oneBet(position string, curDx *dxStorage.Dx, curRoundBet *[]CurRoundBet) {
 	amount := GetOneBetAmount(s.dxConf, s.r)
-	bots := common2.RandomAndNotIn(1, s.getBotIdsArray(),s.r)
-	s.bet(amount, position, &bots[0], curDx,curRoundBet)
+	bots := common2.RandomAndNotIn(1, s.getBotIdsArray(), s.r)
+	s.bet(amount, position, &bots[0], curDx, curRoundBet)
 }
-func (s *Bot) bet(amount int64, position string, bot *common2.Bot, curDx *dxStorage.Dx,curRoundBet *[]CurRoundBet) {
+func (s *Bot) bet(amount int64, position string, bot *common2.Bot, curDx *dxStorage.Dx, curRoundBet *[]CurRoundBet) {
 	gameId := curDx.ShowId
 	var big int64 = 0
 	var small int64 = 0
@@ -132,15 +132,15 @@ func (s *Bot) bet(amount int64, position string, bot *common2.Bot, curDx *dxStor
 		CreateAt:  utils.Now(),
 	}
 	find := false
-	for k,v := range *curRoundBet{
-		if bot.NickName == v.NickName{
+	for k, v := range *curRoundBet {
+		if bot.NickName == v.NickName {
 			(*curRoundBet)[k].Bets += amount
 		}
 	}
-	if !find{
-		*curRoundBet = append(*curRoundBet,CurRoundBet{
+	if !find {
+		*curRoundBet = append(*curRoundBet, CurRoundBet{
 			NickName: bot.NickName,
-			Bets: amount,
+			Bets:     amount,
 			Position: position,
 		})
 	}
@@ -179,32 +179,32 @@ type betList struct {
 	amountList []int64
 }
 
-func (s *Bot) parseBet(perSecond int64, betList *betList,timeLeft int) *betList {
+func (s *Bot) parseBet(perSecond int64, betList *betList, timeLeft int) *betList {
 	amount := GetOneBetAmount(s.dxConf, s.r)
 	betList.amountList = append(betList.amountList, amount)
 	betList.sumBet += amount
 	flag := false
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	if timeLeft == timeLeftDefault{
-		v := utils.RandInt64(1,4,r)
-		if len(betList.amountList) >= int(v){
+	if timeLeft == timeLeftDefault {
+		v := utils.RandInt64(1, 4, r)
+		if len(betList.amountList) >= int(v) {
 			flag = true
 		}
-	}else if timeLeft == timeLeftDefault - 1{
-		v := utils.RandInt64(3,6,r)
-		if len(betList.amountList) >= int(v){
+	} else if timeLeft == timeLeftDefault-1 {
+		v := utils.RandInt64(3, 6, r)
+		if len(betList.amountList) >= int(v) {
 			flag = true
 		}
-	}else if timeLeft == timeLeftDefault - 2{
-		v := utils.RandInt64(6,9,r)
-		if len(betList.amountList) >= int(v){
+	} else if timeLeft == timeLeftDefault-2 {
+		v := utils.RandInt64(6, 9, r)
+		if len(betList.amountList) >= int(v) {
 			flag = true
 		}
 	}
-	if betList.sumBet > perSecond || flag{
+	if betList.sumBet > perSecond || flag {
 		return betList
 	} else {
-		return s.parseBet(perSecond, betList,timeLeft)
+		return s.parseBet(perSecond, betList, timeLeft)
 	}
 }
 func (s *Bot) openResult(curDx *dxStorage.Dx) {
@@ -227,11 +227,11 @@ func GetOneBetAmount(dxConf *dxStorage.Conf, r *rand.Rand) int64 {
 	mCount := int64(len(dxConf.BotBetChip)) + 3 - chipIndex //筹码数量
 	chipCount := RandInt64(1, mCount, r)
 	//为了区分不同的下注
-	randV := utils.RandInt64(2,6,r)
-	chip = RandInt64(chip / randV,chip * randV,r)
-	v := utils.RandInt64(1,4,r)
+	randV := utils.RandInt64(2, 6, r)
+	chip = RandInt64(chip/randV, chip*randV, r)
+	v := utils.RandInt64(1, 4, r)
 	res := chipCount * chip
-	if v != 1 && res >= 1000000{
+	if v != 1 && res >= 1000000 {
 		res = res / 1000000 * 1000000
 	}
 	return res

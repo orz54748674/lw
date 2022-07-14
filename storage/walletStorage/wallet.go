@@ -326,9 +326,9 @@ func safeBalance2vnd(m mongo.SessionContext, bill Bill) error {
 	bill.ID = 0
 	bill.Oid = primitive.NewObjectID()
 	bill.Amount = -1 * bill.Amount
-	if bill.Amount < 0{
+	if bill.Amount < 0 {
 		bill.Type = TypeIncome
-	}else{
+	} else {
 		bill.Type = TypeExpenses
 	}
 	bill.Event = EventSafeChange
@@ -339,6 +339,7 @@ func safeBalance2vnd(m mongo.SessionContext, bill Bill) error {
 	common.GetMysql().Create(&bill)
 	return nil
 }
+
 // 余额不允许北扣成负数
 func OperateVndBalanceV1(bill *Bill, cbs ...CallBack) (err error) {
 	b := *bill

@@ -11,10 +11,11 @@ import (
 	"vn/framework/mqant/log"
 )
 
-var(
-	cMail = "Mail"
+var (
+	cMail       = "Mail"
 	cMailRecord = "MailRecord"
 )
+
 func InitMail() {
 	//c := common.GetMongoDB().C(cMail)
 	//index := mgo.Index{
@@ -55,67 +56,67 @@ func InitMailRecord(incDataExpireDay time.Duration) {
 		SetExpireAfterSeconds(int32(incDataExpireDay/time.Second))); err != nil {
 		log.Error("create MailRecord Index: %s", err)
 	}
-	key = bsonx.Doc{{Key: "Account", Value: bsonx.Int32(1)},{Key: "ReadState", Value: bsonx.Int32(1)},{Key: "Type", Value: bsonx.Int32(1)}}
+	key = bsonx.Doc{{Key: "Account", Value: bsonx.Int32(1)}, {Key: "ReadState", Value: bsonx.Int32(1)}, {Key: "Type", Value: bsonx.Int32(1)}}
 	if err := c.CreateIndex(key, options.Index()); err != nil {
 		log.Error("create MailRecord Index: %s", err)
 	}
-	key = bsonx.Doc{{Key: "Account", Value: bsonx.Int32(1)},{Key: "Type", Value: bsonx.Int32(1)}}
+	key = bsonx.Doc{{Key: "Account", Value: bsonx.Int32(1)}, {Key: "Type", Value: bsonx.Int32(1)}}
 	if err := c.CreateIndex(key, options.Index()); err != nil {
 		log.Error("create MailRecord Index: %s", err)
 	}
 }
 
-func InsertMail(mail *Mail)*common.Err{
+func InsertMail(mail *Mail) *common.Err {
 	c := common.GetMongoDB().C(cMail)
-	if error := c.Insert(mail); error != nil{
+	if error := c.Insert(mail); error != nil {
 		log.Info("Insert mail error: %s", error)
 		return errCode.ServerError.SetErr(error.Error())
 	}
 	return nil
 }
-func InsertMailRecord(mailRecord *MailRecord)*common.Err{
+func InsertMailRecord(mailRecord *MailRecord) *common.Err {
 	c := common.GetMongoDB().C(cMailRecord)
-	if error := c.Insert(mailRecord); error != nil{
+	if error := c.Insert(mailRecord); error != nil {
 		log.Info("Insert mail Record error: %s", error)
 		return errCode.ServerError.SetErr(error.Error())
 	}
 	return nil
 }
-func QueryMailUnreadNum(account string,mailType MailType) int{
+func QueryMailUnreadNum(account string, mailType MailType) int {
 	c := common.GetMongoDB().C(cMailRecord)
 	var query map[string]interface{}
-	if mailType == MailAll{
-		query = bson.M{"Account":account,"ReadState":"unread"}
-	}else{
-		query = bson.M{"Account":account,"ReadState":"unread","Type":mailType}
+	if mailType == MailAll {
+		query = bson.M{"Account": account, "ReadState": "unread"}
+	} else {
+		query = bson.M{"Account": account, "ReadState": "unread", "Type": mailType}
 	}
-	num,err := c.Find(query).Count()
-	if err != nil{
+	num, err := c.Find(query).Count()
+	if err != nil {
 		log.Info("QueryMailUnreadNum error: %s", err)
 		return 0
 	}
 	return int(num)
 }
-func UpdateMailRecordReadState(oid primitive.ObjectID,readState ReadStatus){
+func UpdateMailRecordReadState(oid primitive.ObjectID, readState ReadStatus) {
 	c := common.GetMongoDB().C(cMailRecord)
-	selector := bson.M{"_id":oid}
-	update := bson.M{"$set":bson.M{"ReadState":readState}}
-	c.Update(selector,update)
+	selector := bson.M{"_id": oid}
+	update := bson.M{"$set": bson.M{"ReadState": readState}}
+	c.Update(selector, update)
 }
-func DeleteMail(oid primitive.ObjectID){
+func DeleteMail(oid primitive.ObjectID) {
 	c := common.GetMongoDB().C(cMailRecord)
-	selector := bson.M{"_id":oid}
+	selector := bson.M{"_id": oid}
 	c.Remove(selector)
 }
-func QueryMailRecord(account string,mailType MailType) []MailRecord {
+func QueryMailRecord(account string, mailType MailType) []MailRecord {
 	c := common.GetMongoDB().C(cMailRecord)
 	var mailRecord []MailRecord
-	query := bson.M{"Account":account,"Type":mailType}
-	if err := c.Find(query).Sort("-SendTime").All(&mailRecord); err != nil{
-		log.Info("not found mailRecord ",err)
+	query := bson.M{"Account": account, "Type": mailType}
+	if err := c.Find(query).Sort("-SendTime").All(&mailRecord); err != nil {
+		log.Info("not found mailRecord ", err)
 		return []MailRecord{}
 	}
-	if mailRecord == nil{
+	if mailRecord == nil {
 		return []MailRecord{}
 	}
 	return mailRecord

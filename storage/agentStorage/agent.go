@@ -34,7 +34,7 @@ type AgentIncome struct {
 	ID        int64              `bson:"-"`
 	AgentUid  primitive.ObjectID `bson:"AgentUid"`
 	VipUid    primitive.ObjectID `bson:"VipUid"`
-	Level     int 				 `bson:"Level"`
+	Level     int                `bson:"Level"`
 	Amount    int64              `bson:"Amount"`
 	BetAmount int64              `bson:"BetAmount"`
 	GameType  game.Type          `bson:"GameType"`
@@ -75,14 +75,14 @@ func incAgentIncome(uid primitive.ObjectID, amount int64) {
 		log.Info(err.Error())
 	}
 }
-func NewAgentIncome(agentUid primitive.ObjectID, vipUid primitive.ObjectID, amount int64, betAmount int64, gameType game.Type,level int) {
+func NewAgentIncome(agentUid primitive.ObjectID, vipUid primitive.ObjectID, amount int64, betAmount int64, gameType game.Type, level int) {
 	agentIncome := AgentIncome{
 		AgentUid:  agentUid,
 		VipUid:    vipUid,
 		Amount:    amount,
 		BetAmount: betAmount,
 		GameType:  gameType,
-		Level: level,
+		Level:     level,
 		CreateAt:  utils.Now(),
 	}
 	c := common.GetMongoDB().C(cAgentIncome)

@@ -44,19 +44,20 @@ type CurRoundBet struct {
 	Bets     int64
 	Position string
 }
+
 var (
 	openResultWaiteTime = 15
 	timeLeftDefault     = 30
 	//timeLeftDefault     = 20
 	stopBetLeftTime = 4
-	curRoundBetMax = 20
-	curRoundGroup = "dxCurBet"
+	curRoundBetMax  = 20
+	curRoundGroup   = "dxCurBet"
 
 	actionDoingBet = "doingBet"
 	actionResult   = "result"
 	actionWaite    = "waiteNext"
 	actionCheckout = "checkout"
-	actionRefund = "refund"
+	actionRefund   = "refund"
 )
 
 func (s *dxRun) initConf() {
@@ -88,7 +89,7 @@ func (s *dxRun) Run() {
 	for {
 		s.initConf()
 		s.curDx = dxStorage.NewDxGame()
-		s.curRoundBet = make([]CurRoundBet,0)
+		s.curRoundBet = make([]CurRoundBet, 0)
 		//log.Info("NewDxGame: %v", s.curDx)
 		//s.gameProfit = gameStorage.QueryProfit(game.BiDaXiao)
 		s.bot.NewDxGame()
@@ -97,7 +98,7 @@ func (s *dxRun) Run() {
 			s.TimeLeft = timeLeft
 			start := time.Now().UnixNano()
 			if s.allowBot {
-				s.bot.DoingBet(timeLeft, s.curDx,&s.curRoundBet)
+				s.bot.DoingBet(timeLeft, s.curDx, &s.curRoundBet)
 			}
 			s.doingBet(timeLeft)
 			go s.doingCurRoundBet()
@@ -193,7 +194,7 @@ func (s *dxRun) parseResult() {
 	if sum > 10 {
 		if s.isJackpot(dice) && s.curDx.BetBigCount%5 == 0 {
 			if isCheatJackpot {
-				s.bot.oneBet("big", s.curDx,&s.curRoundBet)
+				s.bot.oneBet("big", s.curDx, &s.curRoundBet)
 			} else {
 				s.curDx.ResultJackpot = 1
 			}
@@ -202,7 +203,7 @@ func (s *dxRun) parseResult() {
 			diff := int(s.curDx.BetBigCount % 5)
 			if diff != 0 {
 				for i := 0; i < (5 - diff); i++ {
-					s.bot.oneBet("big", s.curDx,&s.curRoundBet)
+					s.bot.oneBet("big", s.curDx, &s.curRoundBet)
 				}
 			}
 		}
@@ -210,7 +211,7 @@ func (s *dxRun) parseResult() {
 	} else {
 		if s.isJackpot(dice) && s.curDx.BetSmallCount%5 == 0 {
 			if isCheatJackpot {
-				s.bot.oneBet("small", s.curDx,&s.curRoundBet)
+				s.bot.oneBet("small", s.curDx, &s.curRoundBet)
 			} else {
 				s.curDx.ResultJackpot = 1
 			}
@@ -219,7 +220,7 @@ func (s *dxRun) parseResult() {
 			diff := int(s.curDx.BetSmallCount % 5)
 			if diff != 0 {
 				for i := 0; i < (5 - diff); i++ {
-					s.bot.oneBet("small", s.curDx,&s.curRoundBet)
+					s.bot.oneBet("small", s.curDx, &s.curRoundBet)
 				}
 			}
 		}
@@ -338,9 +339,9 @@ func (s *dxRun) doingCurRoundBet() {
 		return s.curRoundBet[i].Bets > s.curRoundBet[j].Bets
 	})
 	var res []CurRoundBet
-	if len(s.curRoundBet) > curRoundBetMax{
-		res = append(s.curRoundBet[:0],s.curRoundBet[:curRoundBetMax]...)
-	}else{
+	if len(s.curRoundBet) > curRoundBetMax {
+		res = append(s.curRoundBet[:0], s.curRoundBet[:curRoundBetMax]...)
+	} else {
 		res = s.curRoundBet
 	}
 	msg["Data"] = res
@@ -358,7 +359,7 @@ func (s *dxRun) toCurRoundBet(msg map[string]interface{}) {
 	uids := chatStorage.QueryGroup(curRoundGroup)
 	userIds := utils.ConvertUidToOid(uids)
 	sessionIds := gate.GetSessionIds(userIds)
-	if err := s.table.onlinePush.SendCallBackMsgNR(sessionIds,game.Push, byte); err != nil {
+	if err := s.table.onlinePush.SendCallBackMsgNR(sessionIds, game.Push, byte); err != nil {
 		log.Error(err.Error())
 	}
 }
@@ -451,22 +452,22 @@ func (s *dxRun) Bet(uid string, big int64, small int64) map[string]interface{} {
 	find := false
 	var position string
 	var amount int64
-	if big > 0{
+	if big > 0 {
 		position = "big"
 		amount = big
-	}else{
+	} else {
 		position = "small"
 		amount = small
 	}
-	for k,v := range s.curRoundBet{
-		if user.NickName == v.NickName{
+	for k, v := range s.curRoundBet {
+		if user.NickName == v.NickName {
 			s.curRoundBet[k].Bets += amount
 		}
 	}
-	if !find{
-		s.curRoundBet = append(s.curRoundBet,CurRoundBet{
+	if !find {
+		s.curRoundBet = append(s.curRoundBet, CurRoundBet{
 			NickName: user.NickName,
-			Bets: amount,
+			Bets:     amount,
 			Position: position,
 		})
 	}

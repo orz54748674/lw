@@ -35,10 +35,10 @@ func (h *CmdHttp) CheckParams(r *http.Request, params []string) bool {
 
 func (h *CmdHttp) VerifyToken(w http.ResponseWriter, r *http.Request) {
 	type Authenticate struct {
-		XMLName xml.Name `xml:"authenticate"`
-		MemberID    string      `xml:"member_id"`
-		StatusCode  int  `xml:"status_code"`
-		Message string `xml:"message"`
+		XMLName    xml.Name `xml:"authenticate"`
+		MemberID   string   `xml:"member_id"`
+		StatusCode int      `xml:"status_code"`
+		Message    string   `xml:"message"`
 	}
 
 	var rep Authenticate
@@ -85,12 +85,12 @@ func (h *CmdHttp) GetBalance(w http.ResponseWriter, r *http.Request) {
 	log.Info("GetBalance request info:", string(tmpByte))
 
 	rep := struct {
-		StatusCode int	`json:"StatusCode"`
-		StatusMessage string	`json:"StatusMessage"`
-		PackageId string	`json:"PackageId"`
-		Balance float64	`json:"Balance"`
-		DateReceived int64 `json:"DateReceived"`
-		DateSent int64	`json:"DateSent"`
+		StatusCode    int     `json:"StatusCode"`
+		StatusMessage string  `json:"StatusMessage"`
+		PackageId     string  `json:"PackageId"`
+		Balance       float64 `json:"Balance"`
+		DateReceived  int64   `json:"DateReceived"`
+		DateSent      int64   `json:"DateSent"`
 	}{}
 	if !h.CheckParams(r, []string{"method", "balancePackage", "packageId", "dateSent"}) {
 		rep.StatusCode = 0
@@ -127,7 +127,7 @@ func (h *CmdHttp) GetBalance(w http.ResponseWriter, r *http.Request) {
 		rep.PackageId = packageId
 		rep.DateReceived = dataSent
 		rep.DateSent = dataSent
-		rep.Balance = float64(wallet.VndBalance)/1000
+		rep.Balance = float64(wallet.VndBalance) / 1000
 		h.encryptResponse(w, rep)
 	} else {
 		rep.StatusCode = 0
@@ -139,19 +139,19 @@ func (h *CmdHttp) GetBalance(w http.ResponseWriter, r *http.Request) {
 
 func (h *CmdHttp) DeductBalance(w http.ResponseWriter, r *http.Request) {
 	data := &struct {
-		Method string `json:"Method"`
+		Method         string `json:"Method"`
 		BalancePackage string `json:"balancePackage"`
-		PackageId string `json:"packageId"`
-		DateSent string `json:"dateSent"`
+		PackageId      string `json:"packageId"`
+		DateSent       string `json:"dateSent"`
 	}{}
 
 	rep := struct {
-		StatusCode int	`json:"StatusCode"`
-		StatusMessage string	`json:"StatusMessage"`
-		PackageId string	`json:"PackageId"`
-		Balance float64	`json:"Balance"`
-		DateReceived int64 `json:"DateReceived"`
-		DateSent int64	`json:"DateSent"`
+		StatusCode    int     `json:"StatusCode"`
+		StatusMessage string  `json:"StatusMessage"`
+		PackageId     string  `json:"PackageId"`
+		Balance       float64 `json:"Balance"`
+		DateReceived  int64   `json:"DateReceived"`
+		DateSent      int64   `json:"DateSent"`
 	}{}
 
 	if err := h.parse(r, data); err != nil {
@@ -173,10 +173,10 @@ func (h *CmdHttp) DeductBalance(w http.ResponseWriter, r *http.Request) {
 	}
 
 	param := &struct {
-		ActionId   int    `json:"ActionId"`
-		SourceName string `json:"SourceName"`
+		ActionId          int     `json:"ActionId"`
+		SourceName        string  `json:"SourceName"`
 		TransactionAmount float64 `json:"TransactionAmount"`
-		ReferenceNo string `json:"ReferenceNo"`
+		ReferenceNo       string  `json:"ReferenceNo"`
 	}{}
 	json.Unmarshal(tmpByte, param)
 	fmt.Println("DeductBalance........", param)
@@ -191,7 +191,7 @@ func (h *CmdHttp) DeductBalance(w http.ResponseWriter, r *http.Request) {
 		}
 		score := int64(param.TransactionAmount * 1000)
 		wallet := walletStorage.QueryWallet(utils.ConvertOID(mApiUser.Uid))
-		if wallet.VndBalance + score < 0 {
+		if wallet.VndBalance+score < 0 {
 			rep.StatusCode = 0
 			h.encryptResponse(w, rep)
 			return
@@ -199,12 +199,12 @@ func (h *CmdHttp) DeductBalance(w http.ResponseWriter, r *http.Request) {
 		eventID := param.ReferenceNo
 		bill := walletStorage.NewBill(mApiUser.Uid, walletStorage.TypeExpenses, walletStorage.EventApiCmd, eventID, score)
 		walletStorage.OperateVndBalanceV1(bill)
-		activityStorage.UpsertGameDataInBet(mApiUser.Uid, game.ApiCmd,1)
+		activityStorage.UpsertGameDataInBet(mApiUser.Uid, game.ApiCmd, 1)
 
 		var recordParams gameStorage.BetRecordParam
 		recordParams.Uid = mApiUser.Uid
 		recordParams.GameNo = eventID
-		recordParams.BetAmount = int64(math.Abs(param.TransactionAmount*1000))
+		recordParams.BetAmount = int64(math.Abs(param.TransactionAmount * 1000))
 		recordParams.BotProfit = 0
 		recordParams.SysProfit = 0
 		recordParams.BetDetails = ""
@@ -228,7 +228,7 @@ func (h *CmdHttp) DeductBalance(w http.ResponseWriter, r *http.Request) {
 		rep.PackageId = data.PackageId
 		rep.DateReceived = tmpTime
 		rep.DateSent = tmpTime
-		rep.Balance = float64(wallet.VndBalance)/1000
+		rep.Balance = float64(wallet.VndBalance) / 1000
 		h.encryptResponse(w, rep)
 	} else {
 		rep.StatusCode = 0
@@ -245,9 +245,9 @@ func (h *CmdHttp) HandleUpdateBalance(msg apiCmdStorage.UpdateBalanceMsg, msgStr
 		if uid == "" {
 			continue
 		}
-		score := int64(v.TransactionAmount*1000)
+		score := int64(v.TransactionAmount * 1000)
 		wallet := walletStorage.QueryWallet(utils.ConvertOID(uid))
-		if wallet.VndBalance + score < 0 {
+		if wallet.VndBalance+score < 0 {
 			continue
 		}
 		eventID := v.ReferenceNo
@@ -257,7 +257,7 @@ func (h *CmdHttp) HandleUpdateBalance(msg apiCmdStorage.UpdateBalanceMsg, msgStr
 		}
 		bill := walletStorage.NewBill(uid, billType, walletStorage.EventApiCmd, eventID, score)
 		walletStorage.OperateVndBalanceV1(bill)
-		activityStorage.UpsertGameDataInBet(uid, game.ApiCmd,-1)
+		activityStorage.UpsertGameDataInBet(uid, game.ApiCmd, -1)
 		activity.CalcEncouragementFunc(uid)
 
 		var recordParams gameStorage.BetRecordParam
@@ -273,35 +273,35 @@ func (h *CmdHttp) HandleUpdateBalance(msg apiCmdStorage.UpdateBalanceMsg, msgStr
 		recordParams.Income = score
 		recordParams.GameId = strconv.FormatInt(msg.MatchID, 10)
 		if msg.ActionId == 2001 || msg.ActionId == 2002 || msg.ActionId == 6001 || msg.ActionId == 6002 {
-			gameStorage.UpdateApiCmdBetRecord(recordParams,1)
+			gameStorage.UpdateApiCmdBetRecord(recordParams, 1)
 		} else if msg.ActionId == 4001 || msg.ActionId == 4002 || msg.ActionId == 4003 {
-			gameStorage.UpdateApiCmdBetRecord(recordParams,2)
+			gameStorage.UpdateApiCmdBetRecord(recordParams, 2)
 		} else if msg.ActionId == 5001 || msg.ActionId == 5002 || msg.ActionId == 5003 {
 			recordParams.Income = 0
-			gameStorage.UpdateApiCmdBetRecord(recordParams,3)
+			gameStorage.UpdateApiCmdBetRecord(recordParams, 3)
 		} else if msg.ActionId == 7001 || msg.ActionId == 7002 {
 			betAmount := apiCmdStorage.GetReferenceBetAmount(uid, v.ReferenceNo)
 			recordParams.BetAmount = betAmount
-			gameStorage.UpdateApiCmdBetRecord(recordParams,4)
+			gameStorage.UpdateApiCmdBetRecord(recordParams, 4)
 		} else if msg.ActionId == 9000 {
-			gameStorage.UpdateApiCmdBetRecord(recordParams,5)
+			gameStorage.UpdateApiCmdBetRecord(recordParams, 5)
 		}
 	}
 }
 
 func (h *CmdHttp) UpdateBalance(w http.ResponseWriter, r *http.Request) {
 	data := &struct {
-		Method string `json:"Method"`
+		Method         string `json:"Method"`
 		BalancePackage string `json:"balancePackage"`
-		PackageId string `json:"packageId"`
-		DateSent string `json:"dateSent"`
+		PackageId      string `json:"packageId"`
+		DateSent       string `json:"dateSent"`
 	}{}
 	rep := struct {
-		StatusCode int	`json:"StatusCode"`
-		StatusMessage string	`json:"StatusMessage"`
-		PackageId string	`json:"PackageId"`
-		DateReceived int64 `json:"DateReceived"`
-		DateSent int64	`json:"DateSent"`
+		StatusCode    int    `json:"StatusCode"`
+		StatusMessage string `json:"StatusMessage"`
+		PackageId     string `json:"PackageId"`
+		DateReceived  int64  `json:"DateReceived"`
+		DateSent      int64  `json:"DateSent"`
 	}{}
 
 	if err := h.parse(r, data); err != nil {

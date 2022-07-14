@@ -36,7 +36,7 @@ func (s *IpInfo) Save() {
 		s.CreateAt = utils.Now()
 		s.UpdateAt = utils.Now()
 		common.GetMysql().Create(s)
-	}else{
+	} else {
 		s.UpdateAt = utils.Now()
 		s.CreateAt = ip.CreateAt
 		common.GetMysql().Updates(s)
@@ -54,12 +54,12 @@ func (s *IpInfo) Exists() bool {
 	db.Where("ip=?", s.Ip).First(&ip)
 	if ip.Ip == "" {
 		return false
-	}else{
+	} else {
 		return true
 	}
 }
-func (s *IpInfo)RequestIpInfo() error {
-	addr := fmt.Sprintf("https://pro.ip-api.com/json/%s?key=tITdaDWA7dqCBN7",s.Ip)
+func (s *IpInfo) RequestIpInfo() error {
+	addr := fmt.Sprintf("https://pro.ip-api.com/json/%s?key=tITdaDWA7dqCBN7", s.Ip)
 	//url := "http://pro.ip-api.com/json"
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -79,7 +79,7 @@ func (s *IpInfo)RequestIpInfo() error {
 	}
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	if err := json.Unmarshal(body,s);err != nil{
+	if err := json.Unmarshal(body, s); err != nil {
 		//log.Error(err.Error())
 		return err
 	}

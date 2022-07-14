@@ -39,7 +39,7 @@ func getSign(queryStr string) string {
 	date := t.Format("06012")
 	keyG := doMd5(fmt.Sprintf("%s%s%s", date, agentId, agentKey))
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	key := utils.RandomString(6,r) + doMd5(queryStr+keyG) + utils.RandomStringV1(6)
+	key := utils.RandomString(6, r) + doMd5(queryStr+keyG) + utils.RandomStringV1(6)
 	return key
 }
 func doMd5(str string) string {

@@ -5,31 +5,31 @@ import (
 )
 
 type Conf struct {
-	ProfitPerThousand    int   `bson:"ProfitPerThousand" json:"ProfitPerThousand"`       //系统抽水 2%
-	BotProfitPerThousand int   `bson:"BotProfitPerThousand" json:"BotProfitPerThousand"` //机器人抽水 8%
-	PlayerChipsList      []int `bson:"PlayerChipsList" json:"PlayerChipsList"`           //玩家筹码列表
-	XiaZhuTime           int   `bson:"XiaZhuTime" json:"XiaZhuTime"`                     //下注时间
-	JieSuanTime          int   `bson:"JieSuanTime" json:"JieSuanTime"`                   //结算时间
-	ReadyGameTime        int   `bson:"ReadyGameTime" json:"ReadyGameTime"`               //摇盆时间
-	KickRoomCnt          int   `bson:"KickRoomCnt" json:"KickRoomCnt"`                   //连续三轮不下注，踢出房间
+	ProfitPerThousand    int                    `bson:"ProfitPerThousand" json:"ProfitPerThousand"`       //系统抽水 2%
+	BotProfitPerThousand int                    `bson:"BotProfitPerThousand" json:"BotProfitPerThousand"` //机器人抽水 8%
+	PlayerChipsList      []int                  `bson:"PlayerChipsList" json:"PlayerChipsList"`           //玩家筹码列表
+	XiaZhuTime           int                    `bson:"XiaZhuTime" json:"XiaZhuTime"`                     //下注时间
+	JieSuanTime          int                    `bson:"JieSuanTime" json:"JieSuanTime"`                   //结算时间
+	ReadyGameTime        int                    `bson:"ReadyGameTime" json:"ReadyGameTime"`               //摇盆时间
+	KickRoomCnt          int                    `bson:"KickRoomCnt" json:"KickRoomCnt"`                   //连续三轮不下注，踢出房间
 	OddsList             map[XiaZhuResult]int64 `bson:"OddsList" json:"OddsList"`
-	ShortCutPrivate      int   `bson:"ShortCutPrivate" json:"ShortCutPrivate"`           //私人快捷语条数
-	ShortCutInterval     int   `bson:"ShortCutInterval" json:"ShortCutInterval"`         //消息发送间隔
-	ShortYxbLimit        int   `bson:"ShortYxbLimit" json:"ShortYxbLimit"`               //最低金币限制
+	ShortCutPrivate      int                    `bson:"ShortCutPrivate" json:"ShortCutPrivate"`   //私人快捷语条数
+	ShortCutInterval     int                    `bson:"ShortCutInterval" json:"ShortCutInterval"` //消息发送间隔
+	ShortYxbLimit        int                    `bson:"ShortYxbLimit" json:"ShortYxbLimit"`       //最低金币限制
 }
 type XiaZhuResult string
 
 const (
-	LONG   XiaZhuResult = "1" //龙
-	HU  XiaZhuResult = "2" //虎
-	HE  XiaZhuResult = "3" //和
+	LONG XiaZhuResult = "1" //龙
+	HU   XiaZhuResult = "2" //虎
+	HE   XiaZhuResult = "3" //和
 )
 
 type RoomData struct {
-	ID             int64                `bson:"-" json:"-"`
-	Oid            primitive.ObjectID   `bson:"_id,omitempty" json:"Oid"`
-	TablesInfo     map[string]TableInfo `bson:"TablesInfo" json:"TablesInfo"` //桌子信息
-	CurTableID     string               `bson:"CurTableID" json:"CurTableID"`
+	ID         int64                `bson:"-" json:"-"`
+	Oid        primitive.ObjectID   `bson:"_id,omitempty" json:"Oid"`
+	TablesInfo map[string]TableInfo `bson:"TablesInfo" json:"TablesInfo"` //桌子信息
+	CurTableID string               `bson:"CurTableID" json:"CurTableID"`
 }
 type TableInfo struct {
 	TableID  string `bson:"TableID" json:"TableID"`
@@ -42,9 +42,9 @@ type RoomRecord struct {
 	ResultsRecord map[string]ResultsRecord `bson:"ResultsRecord" json:"ResultsRecord"` //开奖结果
 }
 type ResultsRecord struct {
-	ResultsRecordNum int                       `bson:"ResultsRecordNum" json:"ResultsRecordNum"` //战绩记录条数
-	ResultsWinRate   map[XiaZhuResult]int      `bson:"ResultsWinRate" json:"ResultsWinRate"`     //图案出现几率
-	Results          []XiaZhuResult `bson:"Results" json:"Results"`                   //开奖结果图案
+	ResultsRecordNum int                  `bson:"ResultsRecordNum" json:"ResultsRecordNum"` //战绩记录条数
+	ResultsWinRate   map[XiaZhuResult]int `bson:"ResultsWinRate" json:"ResultsWinRate"`     //图案出现几率
+	Results          []XiaZhuResult       `bson:"Results" json:"Results"`                   //开奖结果图案
 }
 type RobotType string
 
@@ -72,9 +72,9 @@ type RobotRange struct {
 }
 
 type RobotConf struct { //机器人
-	TableID    string `bson:"TableID" json:"TableID"`       //房间号
-	StartHour  int `bson:"StartHour" json:"StartHour"` //分4个时间段 0就是 0-6点
-	BaseNum  int `bson:"BaseNum" json:"BaseNum"` //数量
-	MaxOffset int `bson:"MaxOffset" json:"MaxOffset"` //最大偏移量
-	StepNum int `bson:"StepNum" json:"StepNum"` //每局增加量
+	TableID   string `bson:"TableID" json:"TableID"`     //房间号
+	StartHour int    `bson:"StartHour" json:"StartHour"` //分4个时间段 0就是 0-6点
+	BaseNum   int    `bson:"BaseNum" json:"BaseNum"`     //数量
+	MaxOffset int    `bson:"MaxOffset" json:"MaxOffset"` //最大偏移量
+	StepNum   int    `bson:"StepNum" json:"StepNum"`     //每局增加量
 }

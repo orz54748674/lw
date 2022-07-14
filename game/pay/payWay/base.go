@@ -40,11 +40,11 @@ type Response struct {
 	QrCode    string
 }
 
-func ToResponse(w http.ResponseWriter,content string) {
-	if content != "success"{
+func ToResponse(w http.ResponseWriter, content string) {
+	if content != "success" {
 		log.Error(content)
 	}
-	if _,err := w.Write([]byte(content));err != nil{
+	if _, err := w.Write([]byte(content)); err != nil {
 		log.Error(err.Error())
 	}
 }
@@ -56,6 +56,7 @@ func DealInfoFormat() map[string]interface{} {
 	res["GameType"] = "lobby"
 	return res
 }
+
 //func ActivityDeal(order *payStorage.Order){
 //	activityList := gameStorage.QueryActivityConfListAsc()
 //	for _,activity := range activityList {
@@ -125,33 +126,33 @@ func DealInfoFormat() map[string]interface{} {
 //		}
 //	}
 //}
-func SuccessOrder(order *payStorage.Order)  {
+func SuccessOrder(order *payStorage.Order) {
 	order.Status = payStorage.StatusSuccess
 	order.UpdateAt = utils.Now()
 	//ActivityDeal(order)
 	go activity.NotifyDealChargeActivity(order)
 
-	bill := walletStorage.NewBill(order.UserId.Hex(),walletStorage.TypeIncome,
-		walletStorage.EventCharge,order.Oid.Hex(),order.GotAmount)
-	if err := walletStorage.OperateVndBalance(bill);err != nil{
+	bill := walletStorage.NewBill(order.UserId.Hex(), walletStorage.TypeIncome,
+		walletStorage.EventCharge, order.Oid.Hex(), order.GotAmount)
+	if err := walletStorage.OperateVndBalance(bill); err != nil {
 		return
 	}
 	payStorage.UpdateOrder(order)
 	NotifyUserWallet(order.UserId.Hex())
-	agentStorage.OnPayData(order.UserId.Hex(),order.GotAmount,0)
-	userStorage.IncUserDouDouBet(order.UserId,order.GotAmount)
+	agentStorage.OnPayData(order.UserId.Hex(), order.GotAmount, 0)
+	userStorage.IncUserDouDouBet(order.UserId, order.GotAmount)
 	userStorage.IncUserCharge(order.UserId, order.GotAmount)
-	gameStorage.ChargeCalcProfitByUser(order.UserId.Hex(),order.GotAmount)
+	gameStorage.ChargeCalcProfitByUser(order.UserId.Hex(), order.GotAmount)
 
 	uInfo := userStorage.QueryUserInfo(order.UserId)
-	if uInfo.HaveCharge == 0{
+	if uInfo.HaveCharge == 0 {
 		uInfo.HaveCharge = 1
 		uInfo.FistChargeTime = utils.Now()
-		userStorage.UpsertUserInfo(order.UserId,uInfo)
+		userStorage.UpsertUserInfo(order.UserId, uInfo)
 	}
 }
 
-func NotifyUserWallet(uid string)  {
+func NotifyUserWallet(uid string) {
 	go func() {
 		topic := game.Push
 		wallet := walletStorage.QueryWallet(utils.ConvertOID(uid))
@@ -161,16 +162,15 @@ func NotifyUserWallet(uid string)  {
 		msg["GameType"] = game.All
 		b, _ := json.Marshal(msg)
 		sessionBean := gate.QuerySessionBean(uid)
-		if sessionBean !=nil{
-			session,err := basegate.NewSession(common.App, sessionBean.Session)
-			if err != nil{
+		if sessionBean != nil {
+			session, err := basegate.NewSession(common.App, sessionBean.Session)
+			if err != nil {
 				log.Error(err.Error())
-			}else{
-				if err := session.SendNR(topic, b);err != ""{
+			} else {
+				if err := session.SendNR(topic, b); err != "" {
 					log.Error(err)
 				}
 			}
 		}
 	}()
 }
-

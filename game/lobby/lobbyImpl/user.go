@@ -65,7 +65,7 @@ func TcpLogin(app module.App, token string, a gate.Session) (map[string]interfac
 		return nil, "", err.GetError()
 	}
 	login := userStorage.QueryLogin(tokenObj.Oid)
-	if login == nil{
+	if login == nil {
 		return nil, "", errCode.Forbidden.GetError()
 	}
 	login.LastTime = utils.Now()
@@ -237,7 +237,7 @@ func getRewardAmount() int64 {
 	max, _ := utils.ConvertInt(conf[0])
 	mini, _ := utils.ConvertInt(conf[1])
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	reward := utils.RandInt64(mini, max,r) * 100
+	reward := utils.RandInt64(mini, max, r) * 100
 	return reward
 }
 

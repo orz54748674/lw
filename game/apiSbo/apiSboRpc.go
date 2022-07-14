@@ -249,7 +249,7 @@ func (s *SboRpc) Settle(data map[string]interface{}) (resp map[string]interface{
 	if params.ProductType != 1 {
 		gameStorage.InsertBetRecord(betRecordData)
 	} else {
-		gameStorage.UpdateSboBetRecord(record.Oid.Hex(), record.Uid, record.TransferCode, string(btResInfo), game.ApiSbo, income, wallet.VndBalance + wallet.SafeBalance, int64(record.Amount))
+		gameStorage.UpdateSboBetRecord(record.Oid.Hex(), record.Uid, record.TransferCode, string(btResInfo), game.ApiSbo, income, wallet.VndBalance+wallet.SafeBalance, int64(record.Amount))
 	}
 
 	resp["Body"] = map[string]interface{}{

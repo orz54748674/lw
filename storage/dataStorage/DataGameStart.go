@@ -21,6 +21,7 @@ type UserOnlinePage struct {
 func (UserOnlinePage) TableName() string {
 	return "data_game_start_log"
 }
+
 type DataGameStart struct {
 	ID        uint64
 	Date      string
@@ -41,12 +42,12 @@ func (DataGameStart) TableName() string {
 
 func (d *DataGameStart) Save() {
 	d.UpdateAt = utils.Now()
-	if err := common.GetMysql().Save(d).Error;err != nil{
+	if err := common.GetMysql().Save(d).Error; err != nil {
 		log.Error(err.Error())
 	}
 }
 
-func GetDataGameStart(user userStorage.User,game game.Type, date string) DataGameStart {
+func GetDataGameStart(user userStorage.User, game game.Type, date string) DataGameStart {
 	db := common.GetMysql().Model(&DataGameStart{})
 	uid := user.Oid.Hex()
 	var data DataGameStart
@@ -54,20 +55,20 @@ func GetDataGameStart(user userStorage.User,game game.Type, date string) DataGam
 		First(&data)
 	if data.ID == 0 {
 		data = DataGameStart{
-			Date: date,
-			Channel: user.Channel,
-			Uid: user.Oid.Hex(),
-			Game: game,
-			Account: user.Account,
+			Date:     date,
+			Channel:  user.Channel,
+			Uid:      user.Oid.Hex(),
+			Game:     game,
+			Account:  user.Account,
 			UserType: user.Type,
 			CreateAt: utils.Now(),
 			UpdateAt: utils.Now(),
 		}
 		var d DataGameStart
 		common.GetMysql().Model(&DataGameStart{}).
-			Where("uid =? and game=?",uid,game).
+			Where("uid =? and game=?", uid, game).
 			First(&d)
-		if d.ID == 0{
+		if d.ID == 0 {
 			data.IsNew = 1
 		}
 	}
